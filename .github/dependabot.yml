@@ -1,0 +1,24 @@
+version: 2
+
+registries:
+  github-packages:
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: ${{secrets.DEPENDABOT_GITHUB_TOKEN}}
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    registries:
+      - github-packages
+    allow:
+      # Only auto-update the design system — leave Next.js etc. for manual review
+      - dependency-name: "@studio-manfred/manfred-design-system"
+    commit-message:
+      prefix: "chore"
+    labels:
+      - "design-system"
+      - "dependencies"
