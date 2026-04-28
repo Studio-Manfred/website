@@ -1,5 +1,5 @@
-import { NavBar } from "@/components/NavBar";
 import { Hero } from "@/components/sections/Hero";
+import { Tagline } from "@/components/sections/Tagline";
 import { Mission } from "@/components/sections/Mission";
 import { Services } from "@/components/sections/Services";
 import { Team } from "@/components/sections/Team";
@@ -11,10 +11,9 @@ import { Marquee } from "@/components/Marquee";
 export default function Home() {
   return (
     <>
-      <NavBar />
       <main>
         <Hero />
-        <Marquee />
+        <Tagline />
         <Mission />
         <Services />
         <Marquee />

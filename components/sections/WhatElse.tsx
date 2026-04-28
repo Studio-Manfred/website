@@ -1,54 +1,66 @@
-import { Typography } from "@/components/ds";
 import { FadeIn } from "@/components/FadeIn";
 
 export function WhatElse() {
   return (
-    <section className="bg-[var(--color-business-blue)] py-28 md:py-40 px-6 md:px-12">
-      <div className="mx-auto text-center" style={{ maxWidth: "var(--size-container-lg)" }}>
+    <section className="bg-white py-28 md:py-40 px-6 md:px-12">
+      <div className="mx-auto text-center" style={{ maxWidth: "960px" }}>
         <FadeIn>
           <h2
-            className="font-extrabold leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] text-white mb-16 md:mb-20"
+            className="font-extrabold leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] text-[var(--color-business-blue)] mb-12 md:mb-16"
             style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
           >
             What else?
           </h2>
         </FadeIn>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/20">
-          <FadeIn>
-            <div className="bg-[var(--color-business-blue)] p-10 md:p-14 h-full text-left">
-              <Typography variant="headline4" color="inverse" as="h3" className="mb-4">
-                Upplevelseblomman
-              </Typography>
-              <Typography variant="body" color="inverse" as="p" className="opacity-60 font-light leading-relaxed mb-8">
-                Our book on customer experience design — a practical guide to
-                building products people love.
-              </Typography>
+        <FadeIn delay={1}>
+          <p
+            className="font-light leading-relaxed text-[var(--color-text-primary)] mx-auto text-center"
+            style={{ fontSize: "clamp(1.25rem, 2.5vw, 2rem)", maxWidth: "70ch" }}
+          >
+            We mainly do consulting.{" "}
+            <strong className="font-extrabold">But also{" "}
+              <a
+                href="/training-and-courses"
+                className="underline underline-offset-2"
+              >
+                courses &amp; training
+              </a>
+            </strong>
+            , workshops, coaching, sparring, co-creating, winging it with a
+            whiteboard… We do services, if that&apos;s what you&apos;re looking for.
+            <br /><br />
+            Want to make your org feel smarter and more human?{" "}
+            <strong className="font-extrabold">
               <a
                 href="mailto:hello@studiomanfred.com"
-                className="text-sm font-semibold text-white border-b border-white/40 pb-0.5 hover:border-white transition-colors"
+                className="underline underline-offset-2"
               >
-                Learn more
+                Get in touch.
               </a>
-            </div>
-          </FadeIn>
-          <FadeIn delay={1}>
-            <div className="bg-[var(--color-business-blue)] p-10 md:p-14 h-full text-left">
-              <Typography variant="headline4" color="inverse" as="h3" className="mb-4">
-                Thought Leadership
-              </Typography>
-              <Typography variant="body" color="inverse" as="p" className="opacity-60 font-light leading-relaxed mb-8">
-                Strategic writings, articles, and insights from the Manfred
-                team on product, design, and research.
-              </Typography>
+            </strong>
+            <br /><br />
+            Sometimes we{" "}
+            <strong className="font-extrabold">
               <a
-                href="mailto:hello@studiomanfred.com"
-                className="text-sm font-semibold text-white border-b border-white/40 pb-0.5 hover:border-white transition-colors"
+                href="/news"
+                className="underline underline-offset-2"
               >
-                Read more
+                write stuff.
               </a>
-            </div>
-          </FadeIn>
-        </div>
+            </strong>{" "}
+            Sometimes deep,{" "}
+            <strong className="font-extrabold">
+              <a
+                href="https://www.upplevelseblomman.se/"
+                className="underline underline-offset-2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                like a book.
+              </a>
+            </strong>
+          </p>
+        </FadeIn>
       </div>
     </section>
   );

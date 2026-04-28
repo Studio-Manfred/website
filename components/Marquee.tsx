@@ -141,7 +141,7 @@ export function Marquee() {
     >
       <div className="text-center mb-8 px-6">
         <h2
-          className="font-bold text-[#2c28ec] tracking-[var(--letter-spacing-tight)] leading-[var(--line-height-tight)]"
+          className="font-extrabold text-[#2c28ec] tracking-[var(--letter-spacing-tight)] leading-[var(--line-height-tight)]"
           style={{ fontSize: `${titleSize}px` }}
         >
           Brands that trust us
