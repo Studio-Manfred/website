@@ -62,9 +62,9 @@ export function Footer() {
               Mather Studio
             </a>
             , a curated network of top-tier independent contractors. Hello there{" "}
-            <a href="https://www.seventyoneconsulting.se/kontakt/hakan-appelgren" className="text-[#efd6d3] underline underline-offset-2 hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@håkan</a>,{" "}
-            <a href="https://www.seventyoneconsulting.se/kontakt/david-cederblad" className="text-[#efd6d3] underline underline-offset-2 hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@david</a> and{" "}
-            <a href="https://www.matherstudio.se/contact" className="text-[#efd6d3] underline underline-offset-2 hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@moa</a> 👋🏽
+            <a href="https://www.seventyoneconsulting.se/kontakt/hakan-appelgren" className="text-[#efd6d3] hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@håkan</a>,{" "}
+            <a href="https://www.seventyoneconsulting.se/kontakt/david-cederblad" className="text-[#efd6d3] hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@david</a> and{" "}
+            <a href="https://www.matherstudio.se/contact" className="text-[#efd6d3] hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@moa</a> 👋🏽
           </p>
           <a
             href="https://www.studiomanfred.com/privacy-policy"

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
 import { FadeIn } from "@/components/FadeIn";
 import { Button } from "@/components/ds";
+import { courses } from "@/lib/courses";
 
 export const metadata: Metadata = {
   title: "Training & Courses — Studio Manfred",
@@ -10,55 +12,17 @@ export const metadata: Metadata = {
     "Open classes, custom-made training and workshops to keep you and your organisation up to date with the basics and the latest.",
 };
 
-const courses = [
-  {
-    title: "Design Leadership",
-    description:
-      "For design leaders and managers seeking to increase organisational design maturity through strategic capability development.",
-  },
-  {
-    title: "Product Discovery",
-    description:
-      "Focused on preventing product failure by validating market demand and user needs before development begins.",
-  },
-  {
-    title: "Customer Journey Mapping and Customer-Centricity",
-    description:
-      "Uses data and insights to align teams and improve customer experience and business outcomes.",
-  },
-  {
-    title: "Business Design",
-    description:
-      "Teaches innovation and business development through practical frameworks and methodology.",
-  },
-  {
-    title: "DesignOps",
-    description:
-      "Covers building, scaling, and streamlining design organisational structures and workflows.",
-  },
-  {
-    title: "Design Thinking for HR",
-    description:
-      "Applies design methodology in workplace settings for creative problem-solving and culture change.",
-  },
-  {
-    title: "CX Management and Specialist",
-    description:
-      "A two-year education partnership with IHM business school covering customer experience integration across the organisation.",
-  },
-];
-
 export default function TrainingPage() {
   return (
     <>
       <PageNav />
       <main>
         {/* Hero */}
-        <section className="cursor-white bg-[var(--color-business-blue)] px-6 md:px-12 py-24 md:py-32">
-          <div className="mx-auto" style={{ maxWidth: "960px" }}>
+        <section className="cursor-white bg-[var(--color-business-blue)] px-6 md:px-12 py-24 md:py-40 min-h-[60vh] flex items-end">
+          <div className="mx-auto w-full" style={{ maxWidth: "960px" }}>
             <FadeIn>
               <h1
-                className="font-extrabold text-white leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)]"
+                className="font-extrabold text-white leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] mb-6"
                 style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
               >
                 Training &amp; Courses
@@ -66,8 +30,8 @@ export default function TrainingPage() {
             </FadeIn>
             <FadeIn delay={1}>
               <p
-                className="font-light text-white/80 mt-6"
-                style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)", maxWidth: "52ch" }}
+                className="font-light text-white/80"
+                style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)", maxWidth: "52ch", lineHeight: 1.6 }}
               >
                 We offer open classes, custom-made training and workshops — just to keep you and your organisation up to date with the basics and the latest.
               </p>
@@ -80,21 +44,30 @@ export default function TrainingPage() {
           <div className="mx-auto" style={{ maxWidth: "960px" }}>
             <div className="flex flex-col divide-y divide-[var(--color-border-default)]">
               {courses.map((course, i) => (
-                <FadeIn key={course.title} delay={(i % 3) as 0 | 1 | 2}>
-                  <div className="py-10 md:py-14">
-                    <h2
-                      className="font-extrabold text-[var(--color-business-blue)] leading-[var(--line-height-tight)] mb-4"
-                      style={{ fontSize: "clamp(1.25rem, 2.5vw, 2rem)" }}
-                    >
-                      {course.title}
-                    </h2>
-                    <p
-                      className="font-light text-[var(--color-text-secondary)] leading-relaxed"
-                      style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}
-                    >
-                      {course.description}
-                    </p>
-                  </div>
+                <FadeIn key={course.slug} delay={(i % 3) as 0 | 1 | 2}>
+                  <Link
+                    href={`/training-and-courses/${course.slug}`}
+                    className="group py-10 md:py-14 flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-16"
+                  >
+                    <div className="flex-1">
+                      <h2
+                        className="font-extrabold text-[var(--color-business-blue)] leading-[var(--line-height-tight)] mb-3 group-hover:underline underline-offset-4 transition-all"
+                        style={{ fontSize: "clamp(1.25rem, 2.5vw, 2rem)" }}
+                      >
+                        {course.title}
+                      </h2>
+                      <p
+                        className="font-light text-[var(--color-text-secondary)] leading-relaxed"
+                        style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}
+                      >
+                        {course.tagline}
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0 flex flex-col gap-1 md:text-right">
+                      <p className="text-sm font-light text-[var(--color-text-muted)]">{course.duration}</p>
+                      <p className="text-sm font-extrabold text-[var(--color-text-primary)]">{course.price}</p>
+                    </div>
+                  </Link>
                 </FadeIn>
               ))}
             </div>
@@ -104,7 +77,7 @@ export default function TrainingPage() {
         {/* Custom training CTA */}
         <section className="bg-white px-6 md:px-12 pb-24 md:pb-40">
           <div
-            className="cursor-white mx-auto rounded-[var(--radius-sm)] bg-[var(--color-business-blue)] px-8 py-16 md:px-16 md:py-20 text-center"
+            className="cursor-white mx-auto rounded-none bg-[var(--color-business-blue)] px-8 py-16 md:px-16 md:py-20 text-center"
             style={{ maxWidth: "960px" }}
           >
             <FadeIn>
@@ -112,20 +85,20 @@ export default function TrainingPage() {
                 className="font-extrabold text-white leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] mb-6"
                 style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
               >
-                Need something custom?
+                Yeah, we do custom stuff too
               </h2>
             </FadeIn>
             <FadeIn delay={1}>
               <p
                 className="font-light text-white/80 mx-auto mb-10"
-                style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)", maxWidth: "48ch", lineHeight: 1.6 }}
+                style={{ fontSize: "clamp(1.125rem, 2vw, 1.5rem)", maxWidth: "52ch", lineHeight: 1.6 }}
               >
-                We design bespoke training for product companies — Design Sprints, Impact Mapping, organisational consulting, and more.
+                Custom-made training or programmes for product companies. Product Discovery, Design Thinking, Impact Mapping, Customer Journey Mapping, Design Sprints, DesignOps — say the word and we come running.
               </p>
             </FadeIn>
             <FadeIn delay={2}>
               <Button variant="inverse" size="lg" asChild>
-                <a href="mailto:hello@studiomanfred.com">Get in touch</a>
+                <a href="mailto:hello@studiomanfred.com">Ping us</a>
               </Button>
             </FadeIn>
           </div>

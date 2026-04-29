@@ -11,7 +11,7 @@ const MAX_FONT = 64;
 const AMPLITUDE_RATIO = 0.035;
 const WAVE_PAD = 32;
 const FREQUENCY = 2;
-const BASE_SPEED = 1.6;
+const BASE_SPEED = 1.1;
 const LETTER_SPACING = 1;
 
 type Glyph = { char: string; isWave: boolean };
