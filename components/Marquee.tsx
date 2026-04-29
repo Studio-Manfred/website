@@ -5,33 +5,41 @@ import { useEffect, useRef, useState } from "react";
 const BRANDS = ["Boka Direkt", "Mentimeter", "Fishbrain", "Svea Bank", "Trygg-Hansa"];
 const WAVE = "〰️";
 
-// These scale with viewport — recalculated on resize
-const BASE_FONT = 64;      // max font size px
-const BASE_AMPLITUDE = 60; // max wave amplitude px
-const WAVE_PAD = 32;       // extra px either side of 〰️
-const FREQUENCY = 2;       // sine cycles per screen width
-const SPEED = 0.8;         // px per frame (layout pixels)
+const MAX_FONT = 64;
+// Amplitude as a fraction of viewport width — keeps max letter angle
+// constant across all screen sizes (angle = atan(AMPLITUDE_RATIO * FREQUENCY * 2π))
+const AMPLITUDE_RATIO = 0.035;
+const WAVE_PAD = 32;
+const FREQUENCY = 2;
+const BASE_SPEED = 1.6;
 const LETTER_SPACING = 1;
 
-type Glyph = { char: string; isWave: boolean; padBefore: number; padAfter: number };
+type Glyph = { char: string; isWave: boolean };
 
 const GLYPHS: Glyph[] = [];
 for (const brand of BRANDS) {
   for (const char of brand) {
-    GLYPHS.push({ char, isWave: false, padBefore: 0, padAfter: LETTER_SPACING });
+    GLYPHS.push({ char, isWave: false });
   }
-  GLYPHS.push({ char: WAVE, isWave: true, padBefore: WAVE_PAD, padAfter: WAVE_PAD });
+  GLYPHS.push({ char: WAVE, isWave: true });
 }
 
-function getFontSize(viewportWidth: number) {
-  // Scale from 32px on 320px screens up to 64px at 640px+
-  return Math.round(Math.max(28, Math.min(BASE_FONT, viewportWidth * 0.1)));
+function getFontSize(vw: number) {
+  return Math.round(Math.max(24, Math.min(MAX_FONT, vw * 0.1)));
 }
+
+function getCanvasHeight(vw: number, fontSize: number) {
+  const amplitude = Math.round(vw * AMPLITUDE_RATIO);
+  return amplitude * 2 + fontSize * 2 + 80;
+}
+
 
 export function Marquee() {
   const ref = useRef<HTMLCanvasElement>(null);
-  const [canvasHeight, setCanvasHeight] = useState(BASE_AMPLITUDE * 2 + BASE_FONT + 48);
-  const [titleSize, setTitleSize] = useState(BASE_FONT);
+
+  // Initialize from actual viewport width immediately to avoid flash on mobile
+  const initVw = typeof window !== "undefined" ? window.innerWidth : 640;
+  const [canvasHeight, setCanvasHeight] = useState(() => getCanvasHeight(initVw, getFontSize(initVw)));
 
   useEffect(() => {
     if (!ref.current) return;
@@ -44,31 +52,32 @@ export function Marquee() {
     let totalWidth = 0;
     let running = true;
     let fontSize = getFontSize(window.innerWidth);
-    let amplitude = Math.round((fontSize / BASE_FONT) * BASE_AMPLITUDE);
-
-    const dpr = window.devicePixelRatio || 1;
+    let amplitude = Math.round(window.innerWidth * AMPLITUDE_RATIO);
+    const speed = BASE_SPEED;
 
     function getFont(size: number) {
       return `300 ${size}px 'Host Grotesk', sans-serif`;
     }
 
     function resize() {
-      fontSize = getFontSize(window.innerWidth);
-      amplitude = Math.round((fontSize / BASE_FONT) * BASE_AMPLITUDE);
-      const h = amplitude * 2 + fontSize + 48;
+      const dpr = window.devicePixelRatio || 1;
+      const vw = window.innerWidth;
+      fontSize = getFontSize(vw);
+      amplitude = Math.round(vw * AMPLITUDE_RATIO);
+      const h = getCanvasHeight(vw, fontSize);
       setCanvasHeight(h);
-      setTitleSize(fontSize);
       el.width = el.offsetWidth * dpr;
       el.height = el.offsetHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       measure();
     }
 
     function measure() {
+      const dpr = window.devicePixelRatio || 1;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.font = getFont(fontSize);
-      const wavePad = Math.round((fontSize / BASE_FONT) * WAVE_PAD);
+      const wavePad = Math.round((fontSize / MAX_FONT) * WAVE_PAD);
       glyphWidths = GLYPHS.map((g) => {
-        const pad = g.isWave ? wavePad : LETTER_SPACING;
         const extra = g.isWave ? wavePad * 2 : LETTER_SPACING;
         return ctx.measureText(g.char).width + extra;
       });
@@ -77,7 +86,7 @@ export function Marquee() {
 
     function draw() {
       if (!running) return;
-
+      const dpr = window.devicePixelRatio || 1;
       const W = el.offsetWidth;
       const H = el.offsetHeight;
 
@@ -86,6 +95,11 @@ export function Marquee() {
       ctx.font = getFont(fontSize);
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
+
+      if (totalWidth === 0) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
 
       const reps = Math.ceil((W + totalWidth) / totalWidth) + 2;
       const off = offset % totalWidth;
@@ -96,7 +110,7 @@ export function Marquee() {
         for (let gi = 0; gi < GLYPHS.length; gi++) {
           const g = GLYPHS[gi];
           const w = glyphWidths[gi];
-          const wavePad = g.isWave ? Math.round((fontSize / BASE_FONT) * WAVE_PAD) : 0;
+          const wavePad = g.isWave ? Math.round((fontSize / MAX_FONT) * WAVE_PAD) : 0;
           const charWidth = w - (g.isWave ? wavePad * 2 : LETTER_SPACING);
           const cx = x + (g.isWave ? wavePad : 0) + charWidth / 2;
 
@@ -116,11 +130,15 @@ export function Marquee() {
         }
       }
 
-      offset += SPEED;
+      offset += speed;
       animId = requestAnimationFrame(draw);
     }
 
-    window.addEventListener("resize", resize);
+    // Resize immediately so canvas dimensions are correct before fonts load
+    resize();
+
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(el);
 
     document.fonts.ready.then(() => {
       resize();
@@ -130,19 +148,19 @@ export function Marquee() {
     return () => {
       running = false;
       cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
+      ro.disconnect();
     };
   }, []);
 
   return (
     <section
-      className="bg-white border-y border-[#1e1e24]/10"
-      style={{ paddingTop: "4%", paddingBottom: "4%" }}
+      className="bg-white overflow-hidden"
+      style={{ paddingTop: "8%", paddingBottom: "10%" }}
     >
       <div className="text-center mb-8 px-6">
         <h2
           className="font-extrabold text-[#2c28ec] tracking-[var(--letter-spacing-tight)] leading-[var(--line-height-tight)]"
-          style={{ fontSize: `${titleSize}px` }}
+          style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
         >
           Brands that trust us
         </h2>

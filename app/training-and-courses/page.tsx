@@ -54,7 +54,7 @@ export default function TrainingPage() {
       <PageNav />
       <main>
         {/* Hero */}
-        <section className="bg-[var(--color-business-blue)] px-6 md:px-12 py-24 md:py-32">
+        <section className="cursor-white bg-[var(--color-business-blue)] px-6 md:px-12 py-24 md:py-32">
           <div className="mx-auto" style={{ maxWidth: "960px" }}>
             <FadeIn>
               <h1
@@ -104,7 +104,7 @@ export default function TrainingPage() {
         {/* Custom training CTA */}
         <section className="bg-white px-6 md:px-12 pb-24 md:pb-40">
           <div
-            className="mx-auto rounded-[var(--radius-sm)] bg-[var(--color-business-blue)] px-8 py-16 md:px-16 md:py-20 text-center"
+            className="cursor-white mx-auto rounded-[var(--radius-sm)] bg-[var(--color-business-blue)] px-8 py-16 md:px-16 md:py-20 text-center"
             style={{ maxWidth: "960px" }}
           >
             <FadeIn>

@@ -2,7 +2,7 @@ import { FadeIn } from "@/components/FadeIn";
 
 export function Tagline() {
   return (
-    <section className="bg-white py-28 md:py-40 px-6 md:px-12">
+    <section className="bg-white min-h-screen flex items-center px-6 md:px-12 py-24">
       <div className="mx-auto text-center" style={{ maxWidth: "960px" }}>
         <FadeIn>
           <p

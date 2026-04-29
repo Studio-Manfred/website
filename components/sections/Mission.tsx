@@ -4,7 +4,7 @@ export function Mission() {
   return (
     <>
       {/* Part 1: mission statement */}
-      <section className="bg-white py-28 md:py-40 px-6 md:px-12">
+      <section className="bg-white py-40 md:py-56 px-6 md:px-12">
         <div className="mx-auto text-center" style={{ maxWidth: "960px" }}>
           <FadeIn>
             <h2
@@ -21,7 +21,7 @@ export function Mission() {
       </section>
 
       {/* Part 2: Manfred Magic + image */}
-      <section className="bg-white pt-0 pb-28 md:pb-40 px-6 md:px-12">
+      <section className="bg-white pt-40 md:pt-56 pb-40 md:pb-56 px-6 md:px-12">
         <div className="mx-auto text-center flex flex-col items-center gap-12" style={{ maxWidth: "960px" }}>
           <FadeIn>
             <h2
@@ -38,7 +38,7 @@ export function Mission() {
               src="/manfred-magic.gif"
               alt="Manfred Magic"
               className="rounded-[var(--radius-sm)]"
-              style={{ width: "250px", height: "auto" }}
+              style={{ width: "313px", height: "auto" }}
             />
           </FadeIn>
         </div>

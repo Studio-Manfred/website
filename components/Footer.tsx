@@ -2,7 +2,7 @@ export function Footer() {
   return (
     <>
       {/* Studio Manfred AB */}
-      <section className="bg-[var(--color-business-blue)] text-white text-center px-6 md:px-12 pt-28 pb-20 md:pt-40 md:pb-28">
+      <section className="cursor-white bg-[var(--color-business-blue)] text-white text-center px-6 md:px-12 pt-28 pb-20 md:pt-40 md:pb-28">
         <div className="mx-auto" style={{ maxWidth: "960px" }}>
           <h2
             className="font-extrabold text-white mb-10"
@@ -31,7 +31,7 @@ export function Footer() {
       </section>
 
       {/* SeventyOne Group */}
-      <section className="bg-[var(--color-business-blue)] text-white text-center px-6 md:px-12 pb-28 md:pb-40">
+      <section className="cursor-white bg-[var(--color-business-blue)] text-white text-center px-6 md:px-12 pb-28 md:pb-40">
         <div className="mx-auto" style={{ maxWidth: "960px" }}>
           <h2
             className="font-extrabold text-white mb-10"

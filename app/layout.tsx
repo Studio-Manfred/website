@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "@studio-manfred/manfred-design-system/styles";
+import { CursorBlob } from "@/components/CursorBlob";
 
 export const metadata: Metadata = {
   title: "Studio Manfred — Building Better Product Companies",
@@ -15,7 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full light">
-<body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <CursorBlob />
+        {children}
+      </body>
     </html>
   );
 }

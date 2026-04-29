@@ -22,6 +22,8 @@ export function WhatElse() {
               <a
                 href="/training-and-courses"
                 className="underline underline-offset-2"
+                data-cursor="view"
+                style={{ cursor: "none" }}
               >
                 courses &amp; training
               </a>
@@ -34,6 +36,8 @@ export function WhatElse() {
               <a
                 href="mailto:hello@studiomanfred.com"
                 className="underline underline-offset-2"
+                data-cursor="view"
+                style={{ cursor: "none" }}
               >
                 Get in touch.
               </a>
@@ -44,6 +48,8 @@ export function WhatElse() {
               <a
                 href="/news"
                 className="underline underline-offset-2"
+                data-cursor="view"
+                style={{ cursor: "none" }}
               >
                 write stuff.
               </a>
@@ -55,6 +61,8 @@ export function WhatElse() {
                 className="underline underline-offset-2"
                 target="_blank"
                 rel="noopener noreferrer"
+                data-cursor="view"
+                style={{ cursor: "none" }}
               >
                 like a book.
               </a>

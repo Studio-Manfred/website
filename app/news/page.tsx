@@ -52,7 +52,7 @@ export default function NewsPage() {
       <PageNav />
       <main>
         {/* Hero */}
-        <section className="bg-[var(--color-business-blue)] px-6 md:px-12 py-24 md:py-32">
+        <section className="cursor-white bg-[var(--color-business-blue)] px-6 md:px-12 py-24 md:py-32">
           <div className="mx-auto" style={{ maxWidth: "960px" }}>
             <FadeIn>
               <h1

@@ -3,7 +3,7 @@ import { FadeIn } from "@/components/FadeIn";
 
 export function Hero() {
   return (
-    <section className="bg-[var(--color-business-blue)] min-h-[85vh] flex items-center px-6 md:px-12 py-24">
+    <section className="cursor-white bg-[var(--color-business-blue)] min-h-screen flex items-center px-6 md:px-12 py-24">
       <div className="mx-auto w-full text-center" style={{ maxWidth: "960px" }}>
         <FadeIn>
           <div className="flex justify-center mb-10">
