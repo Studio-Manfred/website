@@ -26,7 +26,7 @@ export const courses: Course[] = [
   {
     slug: "design-leadership",
     title: "Design Leadership",
-    tagline: "Are you a design leader, manager or in the transition to become one?",
+    tagline: "Are you design leader, manager or in the transition to become one? You know that design has become a strategic and tactical capability and want to increase the organisational design maturity.",
     description:
       "You know that design has become a strategic and tactical capability and want to increase the organisational design maturity. This one-day training gives you the fundamentals of leading design teams and influencing organisations — whether you lead up, down or sideways.",
     audience: [
@@ -60,7 +60,7 @@ export const courses: Course[] = [
   {
     slug: "product-discovery",
     title: "Product Discovery",
-    tagline: "Most products and services will never be used or bought. Why build something nobody wants?",
+    tagline: "Most product and services will never be used or bought. Why build something nobody wants?",
     description:
       "This one-day training teaches practitioners how to validate ideas and assumptions before investing in development. You'll leave with a practical toolkit for continuous discovery and a mindset shift from delivery-first to discovery-first.",
     audience: [
@@ -90,7 +90,7 @@ export const courses: Course[] = [
   {
     slug: "customer-journey-mapping",
     title: "Customer Journey Mapping and Customer-Centricity",
-    tagline: "Align your team around the customer and create stronger loyalty.",
+    tagline: "With help of data and customer insights, customer journey mapping and customer-centricity can help you align your team and organisation, and thereby improve the customer experience, create stronger loyalty and a healthier business.",
     description:
       "With the help of data and customer insights, customer journey mapping and customer-centricity can help you align your team and organisation — and thereby improve the customer experience, create stronger loyalty and a healthier business.",
     audience: [
@@ -120,7 +120,7 @@ export const courses: Course[] = [
   {
     slug: "business-design",
     title: "Business Design",
-    tagline: "Innovation and business development are more than just theoretical models.",
+    tagline: "Innovation and business development are more than just theoretical models. Here, you will learn how to use Business Design to improve your business development and innovation work.",
     description:
       "Here you will learn how to use Business Design to improve your business development and innovation work. The course bridges user-centred product thinking with strategic business strategy — applying it to real challenges from your own organisation.",
     audience: [
@@ -160,7 +160,7 @@ export const courses: Course[] = [
   {
     slug: "designops",
     title: "DesignOps",
-    tagline: "Build, scale and streamline your design organisation.",
+    tagline: "Learn to work with DesignOps in a structured way, where you build, scale and streamline your design organization.",
     description:
       "Learn to work with DesignOps in a structured way. This four-session programme takes you through practical frameworks and case-based learning, and you'll work on real challenges from your own organisation throughout.",
     audience: [
@@ -200,7 +200,7 @@ export const courses: Course[] = [
   {
     slug: "design-thinking-for-hr",
     title: "Design Thinking for HR",
-    tagline: "Apply Design Thinking in your workplace and lead creative, innovative teams.",
+    tagline: "Design Thinking for HR will let you apply Design Thinking in your workplace, or lead group exercises that strengthen creative thinking and innovation skills.",
     description:
       "Design Thinking for HR will let you apply Design Thinking in your workplace, or lead group exercises that strengthen creative thinking and innovation skills. You'll learn about its roots in mid-1900s creativity research, the Double Diamond framework, and how to use it practically in HR and organisational contexts.",
     audience: [
@@ -239,7 +239,7 @@ export const courses: Course[] = [
   {
     slug: "cx-management",
     title: "CX Management and Specialist",
-    tagline: "Integrate customer experience in all processes and strengthen your brand.",
+    tagline: "Integrate customer experience in all processes, strengthen the brand, and retain your existing customers. This course is a two year education held by IHM business school, where we together with House of CX hold a six month class in CX Management.",
     description:
       "This is a two-year education held by IHM Business School, where we together with House of CX hold a six-month class in CX Management. You'll learn to integrate customer experience across all organisational processes, strengthen the brand and retain existing customers.",
     audience: [
