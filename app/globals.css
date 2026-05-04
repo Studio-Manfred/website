@@ -16,31 +16,24 @@
   cursor: url('/m-cursor-white.svg') 22 22, auto;
 }
 
-/* ─── Scroll fade-in ────────────────────────────────────────────────────────── */
+/* ─── Scroll reveal: fade + scale ───────────────────────────────────────────── */
 .fade-up {
   opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
+  transform: translateY(28px) scale(0.97);
+  transform-origin: center top;
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .fade-up.in-view {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
-.fade-up-delay-1 { transition-delay: 0.15s; }
-.fade-up-delay-2 { transition-delay: 0.30s; }
-.fade-up-delay-3 { transition-delay: 0.45s; }
-
-/* ─── Image reveal scale ────────────────────────────────────────────────────── */
-.fade-up img {
-  transform: scale(0.78);
-  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.fade-up.in-view img {
-  transform: scale(1);
-}
+.fade-up-delay-1 { transition-delay: 0.1s; }
+.fade-up-delay-2 { transition-delay: 0.2s; }
+.fade-up-delay-3 { transition-delay: 0.3s; }
 
 /* ─── Wave marquee keyframe ─────────────────────────────────────────────────── */
 @keyframes marquee-scroll {
