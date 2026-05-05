@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ds";
@@ -8,29 +8,9 @@ import { courses } from "@/lib/courses";
 
 export default function TrainingPage() {
   const [open, setOpen] = useState<string | null>(null);
-  const [pending, setPending] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function toggle(slug: string) {
-    if (timerRef.current) clearTimeout(timerRef.current);
-
-    if (open === slug) {
-      // Close current
-      setOpen(null);
-      return;
-    }
-
-    if (open) {
-      // Close current first, then open next after transition
-      setPending(slug);
-      setOpen(null);
-      timerRef.current = setTimeout(() => {
-        setOpen(slug);
-        setPending(null);
-      }, 450);
-    } else {
-      setOpen(slug);
-    }
+    setOpen((prev) => (prev === slug ? null : slug));
   }
 
   return (
@@ -62,13 +42,13 @@ export default function TrainingPage() {
             <div className="border-t border-[#efd6d3]/40">
               {courses.map((course) => {
                 const isOpen = open === course.slug;
-                const isPending = pending === course.slug;
                 return (
                   <div key={course.slug} className="border-b border-[#efd6d3]/40">
                     {/* Accordion header */}
                     <button
                       onClick={() => toggle(course.slug)}
-                      className="w-full flex items-center justify-between gap-8 py-7 md:py-9 text-left group"
+                      className="w-full flex items-center justify-between gap-8 text-left"
+                      style={{ padding: "28px 0", minHeight: "80px" }}
                     >
                       <h2
                         className="font-light text-white leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)]"
@@ -81,7 +61,7 @@ export default function TrainingPage() {
                         style={{
                           fontSize: "3.5rem",
                           fontWeight: 100,
-                          transform: isOpen || isPending ? "rotate(45deg)" : "rotate(0deg)",
+                          transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
                         }}
                       >
                         +
@@ -90,8 +70,8 @@ export default function TrainingPage() {
 
                     {/* Accordion body */}
                     <div
-                      className="overflow-hidden transition-all duration-500 ease-in-out"
-                      style={{ maxHeight: isOpen ? "600px" : "0px" }}
+                      className="overflow-hidden transition-all duration-400 ease-in-out"
+                      style={{ maxHeight: isOpen ? "1000px" : "0px" }}
                     >
                       <div className="pb-10 max-w-2xl">
                         <p

@@ -132,7 +132,7 @@ function Block({ block }: { block: ContentBlock }) {
 export function CourseDetail({ course }: { course: Course }) {
   return (
     <>
-      <PageNav variant="blue" />
+      <PageNav variant="white" />
       <main>
         <section className="bg-white px-6 md:px-12 py-20 md:py-32">
           <div className="mx-auto" style={{ maxWidth: "1200px" }}>
