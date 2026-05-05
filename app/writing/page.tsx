@@ -1,73 +1,40 @@
-import type { Metadata } from "next";
 import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
-import { FadeIn } from "@/components/FadeIn";
-import { articles } from "@/lib/articles";
+import { getArticles } from "@/lib/articles";
+import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "Writing — Studio Manfred",
-  description: "Thoughts, articles, and insights from the Studio Manfred team.",
-};
+export default async function WritingPage() {
+  const articles = await getArticles();
 
-export default function WritingPage() {
   return (
     <>
       <PageNav variant="blue" />
       <main className="bg-[var(--color-business-blue)] min-h-screen">
-        <section style={{ padding: "0 60px" }} className="pt-32 md:pt-44 pb-24 md:pb-40">
-          <div>
-            {articles.map((article, i) => (
-              <FadeIn key={article.title} delay={(i % 3) as 0 | 1 | 2}>
-                <div style={{ paddingTop: "28px", paddingBottom: "40px" }}>
-                  {/* Row */}
-                  <a
-                    href={`/writing/${article.slug}`}
-                    className="group"
-                    style={{ display: "flex", gap: "32px", alignItems: "flex-start", textDecoration: "none" }}
-                  >
-                    {/* Thumbnail */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={article.image}
-                      alt={article.title}
-                      style={{
-                        flexShrink: 0,
-                        width: "325px",
-                        height: "325px",
-                        objectFit: "cover",
-                        display: "block",
-                      }}
-                    />
-
-                    {/* Text */}
-                    <div style={{ flex: 1 }}>
-                      <p
-                        style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.6)", marginBottom: "14px", fontWeight: 300 }}
-                      >
-                        {article.date}
-                      </p>
-                      <h2
-                        className="font-light text-white tracking-[var(--letter-spacing-tight)]"
-                        style={{ fontSize: "62px", lineHeight: 1.05, marginBottom: "16px" }}
-                      >
-                        {article.title}
-                      </h2>
-                      <p
-                        className="font-light text-white/75"
-                        style={{ fontSize: "24px", lineHeight: 1.4, marginBottom: "20px" }}
-                      >
-                        {article.excerpt}
-                      </p>
-                      <span
-                        style={{ fontSize: "24px", color: "#efd6d3", textDecoration: "underline", textUnderlineOffset: "3px", fontWeight: 300 }}
-                      >
-                        Read more
-                      </span>
-                    </div>
-                  </a>
-                </div>
-              </FadeIn>
-            ))}
+        <section style={{ padding: "160px 60px 80px" }}>
+          <div style={{ maxWidth: "812px", margin: "0 auto" }}>
+            <h1
+              className="font-light text-white tracking-[var(--letter-spacing-tight)]"
+              style={{ fontSize: "86px", lineHeight: 1.0, marginBottom: "80px" }}
+            >
+              Writing
+            </h1>
+            <div style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
+              {articles.map((article) => (
+                <Link key={article.id} href={`/writing/${article.slug}`} style={{ textDecoration: "none" }}>
+                  <div>
+                    <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", fontWeight: 300, marginBottom: "12px" }}>
+                      {new Date(article.published_at).toLocaleDateString("en-GB")} {" · "} {article.author}
+                    </p>
+                    <h2 className="font-light text-white" style={{ fontSize: "48px", lineHeight: 1.05, marginBottom: "16px" }}>
+                      {article.title}
+                    </h2>
+                    <p style={{ fontSize: "18px", color: "rgba(255,255,255,0.7)", fontWeight: 300 }}>
+                      {article.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       </main>
