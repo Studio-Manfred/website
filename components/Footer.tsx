@@ -2,17 +2,17 @@ export function Footer() {
   return (
     <>
       {/* Studio Manfred AB */}
-      <section className="cursor-white bg-[var(--color-business-blue)] text-white text-center px-6 md:px-12 pt-28 pb-20 md:pt-40 md:pb-28">
+      <section className="cursor-white bg-[var(--color-business-blue)] text-white text-center px-6 md:px-12 pt-20 pb-14 md:pt-32 md:pb-20">
         <div className="mx-auto" style={{ maxWidth: "960px" }}>
           <h2
-            className="font-extrabold text-white mb-10"
-            style={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}
+            className="font-extrabold text-white mb-8"
+            style={{ fontSize: "clamp(2rem, 4vw, 2.75rem)", letterSpacing: "-0.02em" }}
           >
             Studio Manfred AB
           </h2>
           <p
-            className="font-light text-white/90 leading-relaxed"
-            style={{ fontSize: "clamp(1.125rem, 2.5vw, 2rem)" }}
+            className="font-light text-white/90"
+            style={{ fontSize: "clamp(1rem, 1.75vw, 1.4rem)", lineHeight: 1.8 }}
           >
             Stockholm, Sweden
             <br />
@@ -31,17 +31,17 @@ export function Footer() {
       </section>
 
       {/* SeventyOne Group */}
-      <section className="cursor-white bg-[var(--color-business-blue)] text-white text-center px-6 md:px-12 pb-28 md:pb-40">
+      <section className="cursor-white bg-[var(--color-business-blue)] text-white text-center px-6 md:px-12 pb-20 md:pb-32">
         <div className="mx-auto" style={{ maxWidth: "960px" }}>
           <h2
-            className="font-extrabold text-white mb-10"
-            style={{ fontSize: "clamp(2.5rem, 5vw, 3.5rem)", letterSpacing: "-0.02em" }}
+            className="font-extrabold text-white mb-8"
+            style={{ fontSize: "clamp(2rem, 4vw, 2.75rem)", letterSpacing: "-0.02em" }}
           >
             SeventyOne Group
           </h2>
           <p
-            className="font-light text-white/90 leading-relaxed mb-10"
-            style={{ fontSize: "clamp(1.125rem, 2.5vw, 2rem)" }}
+            className="font-light text-white/90 mb-8"
+            style={{ fontSize: "clamp(1rem, 1.75vw, 1.4rem)", lineHeight: 1.8 }}
           >
             We are part of the SeventyOne Group. Our fellow companies include{" "}
             <a
@@ -67,11 +67,9 @@ export function Footer() {
             <a href="https://www.matherstudio.se/contact" className="text-[#efd6d3] hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@moa</a> 👋🏽
           </p>
           <a
-            href="https://www.studiomanfred.com/privacy-policy"
+            href="/privacy-policy"
             className="font-light underline underline-offset-2 text-[#efd6d3] hover:text-white transition-colors"
-            style={{ fontSize: "clamp(1.125rem, 2.5vw, 2rem)" }}
-            target="_blank"
-            rel="noopener noreferrer"
+            style={{ fontSize: "clamp(1rem, 1.75vw, 1.4rem)" }}
           >
             Privacy Policy
           </a>

@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
 
-              <p className="font-light text-[var(--color-text-primary)] leading-relaxed" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
+              <p className="font-light text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1.15rem, 1.75vw, 1.4rem)", lineHeight: 1.6 }}>
                 This privacy policy will explain how our company uses your personal data we collect from you when you use our website.
               </p>
 
@@ -137,7 +137,7 @@ function Section({ heading, children }: { heading: string; children: React.React
       </h2>
       <div
         className="font-light text-[var(--color-text-secondary)] leading-relaxed flex flex-col gap-3 [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:mt-2 [&_li]:list-disc [&_ul]:pl-5 [&_strong]:font-semibold [&_strong]:text-[var(--color-text-primary)]"
-        style={{ fontSize: "clamp(1rem, 1.5vw, 1.15rem)", lineHeight: 1.75 }}
+        style={{ fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", lineHeight: 1.6 }}
       >
         {children}
       </div>
