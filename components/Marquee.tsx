@@ -37,9 +37,8 @@ function getCanvasHeight(vw: number, fontSize: number) {
 export function Marquee() {
   const ref = useRef<HTMLCanvasElement>(null);
 
-  // Initialize from actual viewport width immediately to avoid flash on mobile
-  const initVw = typeof window !== "undefined" ? window.innerWidth : 640;
-  const [canvasHeight, setCanvasHeight] = useState(() => getCanvasHeight(initVw, getFontSize(initVw)));
+  // Use a fixed SSR-safe fallback; useEffect updates it to the real viewport size
+  const [canvasHeight, setCanvasHeight] = useState(() => getCanvasHeight(640, getFontSize(640)));
 
   useEffect(() => {
     if (!ref.current) return;
