@@ -46,7 +46,7 @@ export function WhatElse() {
             Sometimes we{" "}
             <strong className="font-extrabold">
               <a
-                href="/news"
+                href="/writing"
                 className="underline underline-offset-2"
                 data-cursor="view"
                 style={{ cursor: "none" }}

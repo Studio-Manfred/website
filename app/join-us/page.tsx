@@ -35,14 +35,8 @@ export default function JoinUsPage() {
               className="font-extrabold text-white leading-[0.9] tracking-[var(--letter-spacing-tight)] mb-10"
               style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
             >
-              Recruitment,<br />salary and benefits
+              Want to join us?
             </h1>
-            <p
-              className="font-light text-white mx-auto"
-              style={{ fontSize: "clamp(1.125rem, 1.75vw, 1.4rem)", maxWidth: "40ch", lineHeight: 1.6 }}
-            >
-              We are a small transformation studio specializing in business development, innovation, and design — and we are looking for people who want to help build it with us.
-            </p>
           </div>
         </section>
 
@@ -51,70 +45,95 @@ export default function JoinUsPage() {
           <section className="bg-white px-6 md:px-12 py-24 md:py-40">
             <div className="mx-auto" style={{ maxWidth: "1100px" }}>
 
-              <div style={{ display: "flex", alignItems: "flex-start", gap: "60px", marginBottom: "56px" }}>
-                <h2
-                  className="font-extrabold text-[var(--color-text-primary)]"
-                  style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.03em", flexShrink: 0 }}
-                >
-                  Who are we<br />
-                  <span className="text-[var(--color-business-blue)]">recruiting?</span>
-                </h2>
-                <p
-                  className="font-light text-[var(--color-text-secondary)]"
-                  style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.7, maxWidth: "38ch", paddingTop: "8px" }}
-                >
-                  We are mainly searching for people we have worked with, trust, and who can complement us in terms of skills, personality, and diversity.
-                </p>
-              </div>
+              {/* Heading */}
+              <h2
+                className="font-extrabold text-[var(--color-text-primary)]"
+                style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.03em", marginBottom: "40px" }}
+              >
+                Who are we<br />
+                <span className="text-[var(--color-business-blue)]">recruiting?</span>
+              </h2>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1.5fr", gap: "12px" }}>
+              {/* Opening paragraph */}
+              <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.75, maxWidth: "72ch", marginBottom: "64px" }}>
+                We are initially a small <strong className="font-extrabold text-[var(--color-text-primary)]">transformation studio</strong> that specializes in business development, innovation, and design. We are mainly searching for people we have worked with, trust, and who can complement us in terms of skills, personality, and diversity. We are primarily seeking mid and senior individuals with experience in consulting and working within companies or organizations.
+              </p>
 
-                {/* Card 01 — cream */}
-                <div style={{ backgroundColor: "#f5f3ee", borderRadius: "16px", padding: "32px" }}>
-                  <h3 className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", lineHeight: 1.25, marginBottom: "24px" }}>
-                    Primary expertise we&apos;re seeking.
-                  </h3>
-                  <ul style={{ listStyle: "disc", paddingLeft: "18px", margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
-                    {["Strategic or tactical design", "Customer research", "Service design, CX or UX", "Innovation, business design and business development", "Operations (for example designops)"].map((item) => (
-                      <li key={item} className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.5 }}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Card 02 — blue */}
-                <div className="cursor-white" style={{ backgroundColor: "var(--color-business-blue)", borderRadius: "16px", padding: "32px" }}>
-                  <h3 className="font-extrabold text-white" style={{ fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", lineHeight: 1.25, marginBottom: "24px" }}>
-                    We also value experience with:
-                  </h3>
-                  <ul style={{ listStyle: "disc", paddingLeft: "18px", margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
-                    {["Leadership", "Change management", "Communication", "Coaching", "Visualization", "Facilitation", "Education"].map((item) => (
-                      <li key={item} className="font-light text-white/80" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.5 }}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Card 03 — cream, wider */}
-                <div style={{ backgroundColor: "#f5f3ee", borderRadius: "16px", padding: "32px" }}>
-                  <h3 className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1.1rem, 1.6vw, 1.3rem)", lineHeight: 1.25, marginBottom: "16px" }}>
-                    Roles we believe our employees have worked in.
-                  </h3>
-                  <p className="font-light text-[var(--color-text-secondary)] mb-6" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.65 }}>
-                    We are looking for those who have worked as managers, leaders, or in tactical or strategic roles in business development, design, and innovation.
-                  </p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                    {["Business Developer", "Service Designer or UX", "Design Lead, director or manager", "Strategic Designer", "Design Coach", "Innovation Coach", "CXO", "Head of…", "VP of…"].map((role) => (
-                      <span key={role} className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "0.8rem", border: "1px solid var(--color-border-default)", borderRadius: "100px", padding: "4px 12px", whiteSpace: "nowrap" }}>
-                        {role}
-                      </span>
-                    ))}
+              {/* Skills */}
+              <div style={{ borderTop: "1px solid var(--color-border-default)", paddingTop: "40px", marginBottom: "40px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
+                  <p className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)" }}>Skills</p>
+                  <div>
+                    <p className="font-light text-[var(--color-text-secondary)] mb-5" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>
+                      We are primarily seeking people with expertise in the following areas:
+                    </p>
+                    <ul style={{ listStyle: "disc", paddingLeft: "18px", margin: "0 0 24px", display: "flex", flexDirection: "column", gap: "6px" }}>
+                      {["Strategic or tactical design", "Customer research", "Service design, CX or UX", "Innovation, business design and business development", "Operations (for example designops)"].map((item) => (
+                        <li key={item} className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.6 }}>{item}</li>
+                      ))}
+                    </ul>
+                    <p className="font-light text-[var(--color-text-secondary)] mb-5" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>
+                      We also value people who have experience with:
+                    </p>
+                    <ul style={{ listStyle: "disc", paddingLeft: "18px", margin: 0, display: "flex", flexDirection: "column", gap: "6px" }}>
+                      {["Leadership", "Change management", "Communication", "Coaching", "Visualization", "Facilitation", "Education"].map((item) => (
+                        <li key={item} className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.6 }}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-
               </div>
+
+              {/* Experience */}
+              <div style={{ borderTop: "1px solid var(--color-border-default)", paddingTop: "40px", marginBottom: "40px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
+                  <p className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)" }}>Experience</p>
+                  <div>
+                    <p className="font-light text-[var(--color-text-secondary)] mb-5" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>
+                      We believe that our employees have experience in leading, coaching, and driving change. We are looking for those who have worked as managers, leaders, or in tactical or strategic roles in business development, design, and innovation. We believe that our employees have worked in roles such as:
+                    </p>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                      {["Business Developer", "Service Designer or UX", "Design Lead, director or manager", "Strategic Designer", "Design Coach", "Innovation Coach", "CXO", "Head of…", "VP of…"].map((role) => (
+                        <span key={role} className="font-light italic text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", border: "1px solid var(--color-border-default)", borderRadius: "100px", padding: "4px 14px", whiteSpace: "nowrap" }}>
+                          {role}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Personality, Diversity, Seniority, Language, Location */}
+              {[
+                {
+                  label: "Personality",
+                  text: "We are seeking people in our network who match our values and have a human focus, courage, honesty, believe in transparency and building trust, and doing things together and sharing. At first, we need people who are fine with handling risk, drive and entrepreneurship, who like to create and build new things and don't mind doing stuff to build our company.",
+                },
+                {
+                  label: "Diversity",
+                  text: "We need to constantly challenge ourselves so we do not become too homogeneous, and we believe that diversity will strengthen us in the long run. So a balance in gender, age and a diverse background is important.",
+                },
+                {
+                  label: "Seniority",
+                  text: "We believe that we can be senior in different ways. It can be about skills, attitude, experience, and behaviour.",
+                },
+                {
+                  label: "Language",
+                  text: "We will probably hire people in the beginning who can speak and write both Swedish and English. We use English as documentation if we would hire an English speaking colleague in the future.",
+                },
+                {
+                  label: "Location",
+                  text: "We hire people mainly in Stockholm as a start, but might go remote in the future.",
+                },
+              ].map(({ label, text }) => (
+                <div key={label} style={{ borderTop: "1px solid var(--color-border-default)", paddingTop: "40px", marginBottom: "40px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
+                    <p className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)" }}>{label}</p>
+                    <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>{text}</p>
+                  </div>
+                </div>
+              ))}
+
             </div>
           </section>
         </FadeIn>
@@ -172,30 +191,37 @@ export default function JoinUsPage() {
                 Our model is basic, but different compared to many other companies.
               </p>
 
-              {/* 4 points — editorial rows in 2 columns */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 60px" }}>
+              {/* 4 points — colored cards in 2 columns */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridAutoRows: "1fr", gap: "12px" }}>
                 {[
                   {
                     title: "A guaranteed salary, even between assignments.",
                     body: "Studio Manfred pays a guaranteed salary of 40.000:-, even if you as an employee have no assignment or are on holiday (this is when we use our financial buffer).",
+                    bg: "var(--color-business-blue)",
+                    dark: true,
                   },
                   {
                     title: "You decide your salary.",
                     body: "By selecting your assignments, how much you work, and how much you get paid by the customers. With this model, you don't need to have a salary discussion with your manager (Jens).",
+                    bg: "#f5f3ee",
+                    dark: false,
                   },
                   {
                     title: "You decide your own levels.",
                     body: "You decide for yourself your own levels of education, equipment and pension, but have to pay for it yourself.",
+                    bg: "#f5f3ee",
+                    dark: false,
                   },
                   {
                     title: "Manfred pays the collective part.",
                     body: "Studio Manfred pays for our collective part like administration, some general software, financial buffer and profit.",
+                    bg: "var(--color-business-blue)",
+                    dark: true,
                   },
-                ].map(({ title, body }, i) => (
-                  <div key={title} style={{ borderBottom: "1px solid var(--color-border-default)", padding: "32px 0" }}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22, color: "var(--color-business-blue)", marginBottom: "16px" }}><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                    <h3 className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.3, marginBottom: "10px" }}>{title}</h3>
-                    <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>{body}</p>
+                ].map(({ title, body, bg, dark }) => (
+                  <div key={title} className={dark ? "cursor-white" : ""} style={{ backgroundColor: bg, borderRadius: "16px", padding: "36px" }}>
+                    <h3 className={`font-extrabold ${dark ? "text-white" : "text-[var(--color-text-primary)]"}`} style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.3, marginBottom: "10px" }}>{title}</h3>
+                    <p className={`font-light ${dark ? "text-white/80" : "text-[var(--color-text-secondary)]"}`} style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>{body}</p>
                   </div>
                 ))}
               </div>
@@ -271,6 +297,18 @@ export default function JoinUsPage() {
                     As 42% of revenue goes to Manfred, we use it for…
                   </p>
                 </div>
+
+                {/* Salary model image */}
+                <div style={{ marginBottom: "40px" }}>
+                  <Image
+                    src="/salary-model.png"
+                    alt="Salary model diagram"
+                    width={1200}
+                    height={600}
+                    style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+                  />
+                </div>
+
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0 60px" }}>
                   {[
                     {
