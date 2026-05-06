@@ -14,22 +14,65 @@ export default async function WritingPage() {
           <div style={{ maxWidth: "812px", margin: "0 auto" }}>
             <h1
               className="font-light text-white tracking-[var(--letter-spacing-tight)]"
-              style={{ fontSize: "86px", lineHeight: 1.0, marginBottom: "80px" }}
+              style={{
+                fontSize: "86px",
+                lineHeight: 1.0,
+                marginBottom: "80px",
+              }}
             >
               Writing
             </h1>
-            <div style={{ display: "flex", flexDirection: "column", gap: "60px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "60px" }}
+            >
               {articles.map((article) => (
-                <Link key={article.id} href={`/writing/${article.slug}`} style={{ textDecoration: "none" }}>
+                <Link
+                  key={article.id}
+                  href={`/writing/${article.slug}`}
+                  style={{ textDecoration: "none" }}
+                >
                   <div>
-                    <p style={{ fontSize: "14px", color: "rgba(255,255,255,0.5)", fontWeight: 300, marginBottom: "12px" }}>
-                      {new Date(article.published_at).toLocaleDateString("en-GB")} {" · "} {article.author}
+                    <p
+                      style={{
+                        fontSize: "14px",
+                        color: "rgba(255,255,255,0.5)",
+                        fontWeight: 300,
+                        marginBottom: "12px",
+                      }}
+                    >
+                      {new Date(article.published_at).toLocaleDateString(
+                        "en-GB",
+                      )}{" "}
+                      {" · "} {article.author}
                     </p>
-                    <h2 className="font-light text-white" style={{ fontSize: "48px", lineHeight: 1.05, marginBottom: "16px" }}>
+                    <h2
+                      className="font-light text-white"
+                      style={{
+                        fontSize: "48px",
+                        lineHeight: 1.05,
+                        marginBottom: "16px",
+                      }}
+                    >
                       {article.title}
                     </h2>
-                    <p style={{ fontSize: "18px", color: "rgba(255,255,255,0.7)", fontWeight: 300 }}>
+                    <p
+                      style={{
+                        fontSize: "18px",
+                        color: "rgba(255,255,255,0.7)",
+                        fontWeight: 300,
+                      }}
+                    >
                       {article.excerpt}
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                        color: "#efd6d3",
+                        marginTop: "12px",
+                        fontWeight: 300,
+                      }}
+                    >
+                      Read more →
                     </p>
                   </div>
                 </Link>
