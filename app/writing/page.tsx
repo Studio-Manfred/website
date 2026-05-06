@@ -15,7 +15,7 @@ export default async function WritingPage() {
             <h1
               className="font-light text-white tracking-[var(--letter-spacing-tight)]"
               style={{
-                fontSize: "86px",
+                fontSize: "clamp(48px, 10vw, 86px)",
                 lineHeight: 1.0,
                 marginBottom: "80px",
               }}
@@ -48,7 +48,7 @@ export default async function WritingPage() {
                     <h2
                       className="font-light text-white"
                       style={{
-                        fontSize: "48px",
+                        fontSize: "clamp(28px, 5vw, 48px)",
                         lineHeight: 1.05,
                         marginBottom: "16px",
                       }}

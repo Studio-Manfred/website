@@ -94,3 +94,10 @@
   color: rgba(255,255,255,0.5);
   margin-top: 8px;
 }
+
+/* ─── Responsive typography ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .article-body {
+    font-size: 18px;
+  }
+}

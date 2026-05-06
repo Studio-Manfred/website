@@ -37,7 +37,7 @@ export default async function ArticlePage({
       <PageNav variant="blue" />
       <main className="bg-[var(--color-business-blue)] min-h-screen">
         {/* Hero */}
-        <section style={{ padding: "160px 60px 80px" }}>
+        <section style={{ padding: "clamp(100px, 15vw, 160px) clamp(20px, 5vw, 60px) 80px" }}>
           <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
             <p
               style={{
@@ -53,10 +53,10 @@ export default async function ArticlePage({
             <h1
               className="font-light text-white tracking-[var(--letter-spacing-tight)]"
               style={{
-                fontSize: "86px",
-                lineHeight: 1.0,
-                marginBottom: "48px",
-              }}
+  fontSize: "clamp(48px, 10vw, 86px)",
+  lineHeight: 1.05,
+  marginBottom: "16px",
+}}
             >
               {article.title}
             </h1>
