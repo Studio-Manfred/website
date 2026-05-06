@@ -13,7 +13,7 @@ export function Hero() {
         <FadeIn delay={1}>
           <h1
             className="font-extrabold leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] text-white text-center mb-20"
-            style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)", whiteSpace: "nowrap" }}
+            style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)" }}
           >
             Building Better Product Companies
           </h1>

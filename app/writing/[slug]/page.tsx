@@ -77,7 +77,7 @@ export default async function ArticlePage({
         </section>
 
         {/* Body */}
-        <section style={{ padding: "0 60px 120px" }}>
+        <section style={{ padding: "0 clamp(20px, 5vw, 60px) 120px" }}>
           <div
             style={{
               maxWidth: "1000px",
