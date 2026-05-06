@@ -153,8 +153,7 @@ export function CourseDetail({ course }: { course: Course }) {
               </h1>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "row", gap: "5rem", alignItems: "flex-start" }}>
-
+            <div className="course-layout" style={{ display: "flex", gap: "5rem", alignItems: "flex-start" }}>
               {/* Left: content blocks in order */}
               <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "3rem" }}>
                 {course.content.map((block, i) => (
@@ -165,7 +164,7 @@ export function CourseDetail({ course }: { course: Course }) {
               </div>
 
               {/* Right sidebar */}
-              <div style={{ width: "320px", flexShrink: 0 }}>
+              <div style={{ width: "320px", flexShrink: 0 }} className="course-sidebar">
                 <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
 
                   {/* When and where */}

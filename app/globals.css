@@ -101,3 +101,14 @@
     font-size: 18px;
   }
 }
+
+/* ─── Course layout ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .course-layout {
+    flex-direction: column !important;
+  }
+  
+  .course-sidebar {
+    width: 100% !important;
+  }
+}
