@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import type { CSSProperties } from "react";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 interface LoopingPhotoProps {
   images: string[];
@@ -21,6 +22,8 @@ export function LoopingPhoto({
 
   useEffect(() => {
     if (images.length <= 1) return;
+    // STU-290: no cycling for reduced-motion users — first image stays put.
+    if (prefersReducedMotion()) return;
     const t = setInterval(() => {
       setIdx((i) => (i + 1) % images.length);
     }, interval);

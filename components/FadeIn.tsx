@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 interface FadeInProps {
   children: React.ReactNode;
@@ -14,6 +15,13 @@ export function FadeIn({ children, className = "", delay = 0 }: FadeInProps) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // STU-290: reduced-motion users get the final state immediately and we
+    // skip the observer entirely.
+    if (prefersReducedMotion()) {
+      el.classList.add("in-view");
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {

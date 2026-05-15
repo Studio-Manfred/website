@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 export function CursorBlob() {
   const blobRef = useRef<HTMLDivElement>(null);
@@ -10,6 +11,9 @@ export function CursorBlob() {
   const raf = useRef<number>(0);
 
   useEffect(() => {
+    // STU-290: skip the mousemove + RAF chase loop for reduced-motion users.
+    if (prefersReducedMotion()) return;
+
     function onMove(e: MouseEvent) {
       pos.current = { x: e.clientX, y: e.clientY };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 const BRANDS = ["Boka Direkt", "Mentimeter", "Fishbrain", "Svea Bank", "Trygg-Hansa"];
 const WAVE = "〰️";
@@ -53,6 +54,7 @@ export function Marquee() {
     let fontSize = getFontSize(window.innerWidth);
     let amplitude = Math.round(window.innerWidth * AMPLITUDE_RATIO);
     const speed = BASE_SPEED;
+    const reduced = prefersReducedMotion();
 
     function getFont(size: number) {
       return `300 ${size}px 'Host Grotesk', sans-serif`;
@@ -129,6 +131,9 @@ export function Marquee() {
         }
       }
 
+      // STU-290: reduced-motion holds the first frame indefinitely. The
+      // aria-label still announces all five brand names.
+      if (reduced) return;
       offset += speed;
       animId = requestAnimationFrame(draw);
     }

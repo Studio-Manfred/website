@@ -60,4 +60,35 @@ describe("CursorBlob", () => {
     expect(cancelSpy).toHaveBeenCalled();
     cancelSpy.mockRestore();
   });
+
+  it("skips the mousemove + RAF loop when prefers-reduced-motion is on (STU-290)", () => {
+    const original = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((q: string) => ({
+      matches: q === "(prefers-reduced-motion: reduce)",
+      media: q,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })) as unknown as typeof window.matchMedia;
+    const rafSpy = vi.spyOn(globalThis, "requestAnimationFrame");
+    try {
+      const before = rafSpy.mock.calls.length;
+      const { container } = render(<CursorBlob />);
+      const el = container.firstElementChild as HTMLElement;
+      // No RAF scheduled by the effect when reduced motion is active.
+      expect(rafSpy.mock.calls.length).toBe(before);
+
+      // Mousemove should not change the transform.
+      const initial = el.style.transform;
+      act(() => {
+        document.body.dispatchEvent(
+          new MouseEvent("mousemove", { clientX: 500, clientY: 300, bubbles: true }),
+        );
+      });
+      flushRaf(10);
+      expect(el.style.transform).toBe(initial);
+    } finally {
+      window.matchMedia = original;
+      rafSpy.mockRestore();
+    }
+  });
 });

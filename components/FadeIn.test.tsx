@@ -101,4 +101,27 @@ describe("FadeIn", () => {
     );
     expect(container.firstElementChild?.className).toContain("fade-up-delay-1");
   });
+
+  it("skips the observer and marks in-view immediately when prefers-reduced-motion is on (STU-290)", () => {
+    const original = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((q: string) => ({
+      matches: q === "(prefers-reduced-motion: reduce)",
+      media: q,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })) as unknown as typeof window.matchMedia;
+    try {
+      const { container } = render(
+        <FadeIn>
+          <span>content</span>
+        </FadeIn>,
+      );
+      expect(lastObserver).toBeNull();
+      expect(
+        (container.firstElementChild as HTMLElement).classList.contains("in-view"),
+      ).toBe(true);
+    } finally {
+      window.matchMedia = original;
+    }
+  });
 });

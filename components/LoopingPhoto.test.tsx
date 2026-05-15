@@ -56,4 +56,29 @@ describe("LoopingPhoto", () => {
     expect(setSpy.mock.calls.length).toBe(before);
     setSpy.mockRestore();
   });
+
+  it("does not start an interval when prefers-reduced-motion is on (STU-290)", () => {
+    const original = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((q: string) => ({
+      matches: q === "(prefers-reduced-motion: reduce)",
+      media: q,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    })) as unknown as typeof window.matchMedia;
+    const setSpy = vi.spyOn(globalThis, "setInterval");
+    try {
+      const before = setSpy.mock.calls.length;
+      const { getByTestId } = render(<LoopingPhoto images={images} interval={1000} />);
+      expect(setSpy.mock.calls.length).toBe(before);
+
+      // Index stays on the first image.
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+      expect(getByTestId("looping-photo-img").getAttribute("src")).toBe(images[0]);
+    } finally {
+      window.matchMedia = original;
+      setSpy.mockRestore();
+    }
+  });
 });

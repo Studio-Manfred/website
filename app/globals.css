@@ -56,9 +56,19 @@ main:focus {
   cursor: url('/m-cursor.svg') 22 22, auto;
 }
 
+/* Interactive elements keep the custom cursor but fall back to `pointer`, not
+   `auto` — preserves the click affordance lost in STU-291. */
+a, button, [role="button"], [role="link"], summary, label[for] {
+  cursor: url('/m-cursor.svg') 22 22, pointer;
+}
+
 /* White cursor on blue sections */
 .cursor-white, .cursor-white *, .cursor-white *::before, .cursor-white *::after {
   cursor: url('/m-cursor-white.svg') 22 22, auto;
+}
+
+.cursor-white a, .cursor-white button, .cursor-white [role="button"], .cursor-white [role="link"] {
+  cursor: url('/m-cursor-white.svg') 22 22, pointer;
 }
 
 /* White cursor on brand (blue) buttons */
@@ -158,8 +168,44 @@ main:focus {
   .course-layout {
     flex-direction: column !important;
   }
-  
+
   .course-sidebar {
     width: 100% !important;
+  }
+}
+
+/* ─── Reduced motion (WCAG 2.3.3 / 2.2.2) ───────────────────────────────────── */
+/* Freeze scroll-reveal, marquee animations, and drop the custom cursor so OS
+   pointer-magnification / high-contrast pointers come back (STU-290 + STU-291). */
+@media (prefers-reduced-motion: reduce) {
+  .fade-up,
+  .fade-up.in-view {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .vibes-marquee {
+    animation: none !important;
+  }
+
+  *, *::before, *::after {
+    cursor: auto;
+  }
+
+  a, button, [role="button"], [role="link"], summary, label[for] {
+    cursor: pointer;
+  }
+}
+
+/* High-contrast / forced-colors mode: defer to system cursors entirely so the
+   OS pointer-customisation theme is preserved (STU-291). */
+@media (forced-colors: active) {
+  *, *::before, *::after {
+    cursor: auto;
+  }
+
+  a, button, [role="button"], [role="link"], summary, label[for] {
+    cursor: pointer;
   }
 }

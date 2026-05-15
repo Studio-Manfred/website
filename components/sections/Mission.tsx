@@ -36,7 +36,7 @@ export function Mission() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/manfred-magic.gif"
-              alt="Manfred Magic"
+              alt=""
               className="rounded-[var(--radius-sm)]"
               style={{ width: "313px", height: "auto" }}
             />

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 
 function CyclingImage({ images, interval, priority }: {
   images: string[];
@@ -13,6 +14,8 @@ function CyclingImage({ images, interval, priority }: {
 
   useEffect(() => {
     if (images.length <= 1) return;
+    // STU-290: hold on the first image for reduced-motion users.
+    if (prefersReducedMotion()) return;
     const timer = setInterval(() => {
       setVisible(false);
       const swap = setTimeout(() => {

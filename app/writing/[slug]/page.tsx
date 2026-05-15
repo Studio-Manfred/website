@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { PageNav } from "@/components/PageNav";
@@ -58,18 +59,17 @@ export default async function ArticlePage({
             >
               {article.title}
             </h1>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             {article.image && (
-              <img
-                src={article.image}
-                alt={article.title}
-                style={{
-                  width: "100%",
-                  height: "480px",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
+              <div style={{ position: "relative", width: "100%", height: "480px" }}>
+                <Image
+                  src={article.image}
+                  alt={article.title}
+                  fill
+                  priority
+                  sizes="(max-width: 1000px) 100vw, 1000px"
+                  style={{ objectFit: "cover", display: "block" }}
+                />
+              </div>
             )}
           </div>
         </section>
