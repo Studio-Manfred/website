@@ -32,16 +32,26 @@ export default defineConfig({
       use: { ...devices["Pixel 5"] },
     },
   ],
-  webServer: {
-    command: "npm run start",
-    url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-    stdout: "pipe",
-    stderr: "pipe",
-    env: {
-      NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co",
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "placeholder",
+  webServer: [
+    {
+      command: "node e2e/mock-supabase.mjs",
+      url: "http://localhost:54321/health",
+      reuseExistingServer: !process.env.CI,
+      timeout: 30_000,
+      stdout: "pipe",
+      stderr: "pipe",
     },
-  },
+    {
+      command: "npm run start",
+      url: baseURL,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      stdout: "pipe",
+      stderr: "pipe",
+      env: {
+        NEXT_PUBLIC_SUPABASE_URL: "http://localhost:54321",
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "test-anon-key",
+      },
+    },
+  ],
 });
