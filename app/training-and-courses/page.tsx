@@ -42,11 +42,14 @@ export default function TrainingPage() {
             <div className="border-t border-[#efd6d3]/40">
               {courses.map((course) => {
                 const isOpen = open === course.slug;
+                const panelId = `course-panel-${course.slug}`;
                 return (
                   <div key={course.slug} className="border-b border-[#efd6d3]/40">
                     {/* Accordion header */}
                     <button
                       onClick={() => toggle(course.slug)}
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
                       className="w-full flex items-center justify-between gap-8 text-left"
                       style={{ padding: "28px 0", minHeight: "80px" }}
                     >
@@ -70,6 +73,9 @@ export default function TrainingPage() {
 
                     {/* Accordion body */}
                     <div
+                      id={panelId}
+                      role="region"
+                      aria-label={course.title}
                       className="overflow-hidden transition-all duration-400 ease-in-out"
                       style={{ maxHeight: isOpen ? "1000px" : "0px" }}
                     >
