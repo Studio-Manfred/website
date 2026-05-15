@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 
 export function WhatElse() {
@@ -45,14 +46,14 @@ export function WhatElse() {
             <br /><br />
             Sometimes we{" "}
             <strong className="font-extrabold">
-              <a
+              <Link
                 href="/writing"
                 className="underline underline-offset-2"
                 data-cursor="view"
                 style={{ cursor: "none" }}
               >
                 write stuff.
-              </a>
+              </Link>
             </strong>{" "}
             Sometimes deep,{" "}
             <strong className="font-extrabold">

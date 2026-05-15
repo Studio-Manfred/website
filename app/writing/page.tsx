@@ -3,6 +3,8 @@ import { Footer } from "@/components/Footer";
 import { getArticles } from "@/lib/articles";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function WritingPage() {
   const articles = await getArticles();
 

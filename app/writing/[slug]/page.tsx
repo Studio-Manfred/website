@@ -1,13 +1,11 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
-import { getArticle, getArticles } from "@/lib/articles";
+import { getArticle } from "@/lib/articles";
 
-export async function generateStaticParams() {
-  const articles = await getArticles();
-  return articles.map((a) => ({ slug: a.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -110,7 +108,7 @@ export default async function ArticlePage({
                 paddingTop: "40px",
               }}
             >
-              <a
+              <Link
                 href="/writing"
                 className="font-light"
                 style={{
@@ -121,7 +119,7 @@ export default async function ArticlePage({
                 }}
               >
                 ← All writing
-              </a>
+              </Link>
             </div>
           </div>
         </section>

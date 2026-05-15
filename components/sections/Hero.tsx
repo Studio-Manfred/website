@@ -1,4 +1,4 @@
-import { Button, Logo, Typography } from "@/components/ds";
+import { Button, Logo } from "@/components/ds";
 import { FadeIn } from "@/components/FadeIn";
 
 export function Hero() {

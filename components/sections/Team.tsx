@@ -66,6 +66,9 @@ export function Team() {
     } else {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (flashRef.current) clearInterval(flashRef.current);
+      // Intentional: clear visual state when rave switches off. The cascading
+      // render is the desired UX (snap back to the calm layout immediately).
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFloaters([]);
       setFlash(false);
     }
