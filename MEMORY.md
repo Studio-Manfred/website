@@ -93,3 +93,52 @@ Mode: static (source review against WCAG 2.2 AA). No dev server / axe-core runti
 - Screen-reader pass (VoiceOver on macOS; verify Marquee `aria-label` reads correctly and CursorBlob stays silent).
 - 400% zoom + 320 px viewport reflow check.
 - Touch-target audit (≥24×24 px, ideally ≥44×44 px) — particularly the accordion header chevrons and footer mailto links.
+
+---
+
+## Testing infrastructure (2026-05-15, epic STU-297)
+
+Built out top-to-bottom in one session. Tracks:
+
+| Layer | Stack | Where |
+|---|---|---|
+| Unit / component | Vitest + RTL + jest-dom + user-event | `vitest.config.ts`, `test/setup.ts` |
+| HTTP mocking (unit) | MSW v2 | `test/msw/handlers.ts`, `test/fixtures/blog-posts.json` |
+| E2E | Playwright (chromium-desktop + chromium-mobile via Pixel 5) | `playwright.config.ts`, `e2e/` |
+| Mock Supabase for E2E | Node http server emulating PostgREST | `e2e/mock-supabase.mjs` |
+| Runtime a11y | `@axe-core/playwright` (warn-only until 2026-05-29) | `e2e/a11y.spec.ts` |
+| Coverage ratchet | `@vitest/coverage-v8` + custom script | `scripts/coverage-ratchet.mjs`, `.coverage-baseline.json` |
+| CI | GitHub Actions, two jobs (`verify` + `e2e`) | `.github/workflows/ci.yml` |
+| PR template | TDD rule + test-added checkbox | `.github/pull_request_template.md` |
+
+**Current shape on `main`:**
+- 57 unit/component tests across 11 files.
+- 58 Playwright specs (smoke + redirects + skip-link + 26 a11y warn-only).
+- Coverage baseline: `statements 55.53 / branches 77.23 / functions 57.57 / lines 55.53`. `lib/` is 100% statements & lines.
+- CI ~3m 15s wall-clock (verify ~50s, e2e ~2m 25s).
+
+**Tickets shipped under STU-297:** STU-298 (Vitest foundation), STU-299 (CI verify), STU-300 (coverage ratchet), STU-301 (MSW), STU-302 (stateful component tests), STU-303 (accordion ARIA + STU-287 fix), STU-304 (lib unit tests), STU-305 (Playwright setup), STU-306 (E2E smoke), STU-307 (axe a11y), STU-308 (CI e2e job), STU-309 (PR template + this doc).
+
+**Deferred:** STU-310 (auto-bump coverage baseline on main — blocked by org `default_workflow_permissions: read`).
+
+**Known a11y backlog still open** (axe is currently surfacing these in warn-only):
+- STU-288 — `:focus-visible` styles (axe rule: not directly flagged, manual)
+- STU-289 — low-contrast white-on-blue text (axe: `color-contrast`, 3 nodes on /writing, 1 on /writing/hello-world)
+- STU-290 — `prefers-reduced-motion`
+- STU-291 — custom-cursor system
+- "link-in-text-block" (serious, ~3 nodes per page) — links rely on colour alone to distinguish from surrounding text. Probably folded into STU-289 fix.
+
+When STU-288 + STU-289 land, set `AXE_ENFORCE=1` in [.github/workflows/ci.yml](.github/workflows/ci.yml) e2e job env to flip axe from warn-only to merge-blocking.
+
+### Local commands cheat sheet
+
+```bash
+npm test                 # unit + component
+npm run test:coverage    # writes coverage/coverage-summary.json
+npm run e2e              # full Playwright run (auto-spins mock-supabase + next start)
+npm run e2e:ui           # Playwright UI mode
+node scripts/coverage-ratchet.mjs           # check against committed baseline
+node scripts/coverage-ratchet.mjs --update  # bump baseline locally if it rose
+```
+
+The Playwright `webServer` pipes `NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321` into `next start`. If `.next/` is stale from earlier dev runs, `next start` can fall back into dev-mode runtime — `rm -rf .next && npm run build` clears that.
