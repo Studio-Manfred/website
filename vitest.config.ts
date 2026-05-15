@@ -14,6 +14,7 @@ export default defineConfig({
     setupFiles: ["./test/setup.ts"],
     globals: true,
     css: false,
+    exclude: ["node_modules/**", ".next/**", ".claude/**", "dist/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json-summary", "json"],
