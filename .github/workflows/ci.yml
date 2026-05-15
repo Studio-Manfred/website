@@ -12,6 +12,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   verify:
     name: Lint, typecheck, test, build
@@ -35,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_RC_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_RC_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Lint
         run: npm run lint
@@ -53,6 +57,7 @@ jobs:
           name: coverage-summary
           path: coverage/coverage-summary.json
           retention-days: 14
+          if-no-files-found: ignore
 
       - name: Build
         run: npm run build
