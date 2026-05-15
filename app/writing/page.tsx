@@ -9,7 +9,7 @@ export default async function WritingPage() {
   return (
     <>
       <PageNav variant="blue" />
-      <main className="bg-[var(--color-business-blue)] min-h-screen">
+      <main id="main" tabIndex={-1} className="bg-[var(--color-business-blue)] min-h-screen">
         <section style={{ padding: "160px 60px 80px" }}>
           <div style={{ maxWidth: "812px", margin: "0 auto" }}>
             <h1

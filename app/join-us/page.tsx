@@ -26,7 +26,7 @@ export default function JoinUsPage() {
   return (
     <>
       <PageNav variant="blue" />
-      <main>
+      <main id="main" tabIndex={-1}>
 
         {/* ── HERO ───────────────────────────────── */}
         <section className="cursor-white bg-[var(--color-business-blue)] px-6 md:px-12 py-20 md:py-32 text-center">

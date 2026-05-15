@@ -11,7 +11,7 @@ import { Marquee } from "@/components/Marquee";
 export default function Home() {
   return (
     <>
-      <main>
+      <main id="main" tabIndex={-1}>
         <Hero />
         <Tagline />
         <Mission />

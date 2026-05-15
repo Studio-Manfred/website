@@ -10,7 +10,7 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <PageNav />
-      <main>
+      <main id="main" tabIndex={-1}>
         <section className="bg-white px-6 md:px-12 py-20 md:py-32">
           <div className="mx-auto" style={{ maxWidth: "760px" }}>
 
