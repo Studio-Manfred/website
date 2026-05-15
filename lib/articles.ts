@@ -14,7 +14,7 @@ export type Article = {
   author: string;
 };
 
-function cleanContent(html: string): string {
+export function cleanContent(html: string): string {
   return html
     .replace(/\[caption[^\]]*\]/g, '<figure>')
     .replace(/\[\/caption\]/g, '</figure>')
@@ -55,6 +55,6 @@ export async function getArticle(slug: string): Promise<Article | null> {
   };
 }
 
-function stripHtml(html: string): string {
+export function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, "").trim();
 }
