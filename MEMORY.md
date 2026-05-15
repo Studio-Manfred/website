@@ -1,0 +1,95 @@
+# MEMORY.md — Studio Manfred website
+
+Quick-start notes for future sessions. Audit this before editing — recent changes may have invalidated parts of it.
+
+## Stack
+- **Next.js 16.2.4** App Router on **React 19.2.4**, **TypeScript 5**, **Tailwind v4** (PostCSS plugin, no `tailwind.config` — tokens live in the design system CSS).
+- `@studio-manfred/manfred-design-system@^0.10.1` pulled from **GitHub Packages** (see [.npmrc](.npmrc), [.github/dependabot.yml](.github/dependabot.yml) auto-bumps it weekly).
+- Data layer: **Supabase** (`@supabase/supabase-js`) — only `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`. The CMS itself lives in a separate "intranet" project (commit `19642c4`).
+- No tests, no Playwright, no `vercel.json` / `vercel.ts`. Scripts: `dev / build / start / lint`. ESLint flat config extends `next/core-web-vitals` + `next/typescript`. tsconfig path alias `@/*` → repo root.
+- `package.json` name is still `studio-manfred-scaffold` (predates the rename).
+- **AGENTS.md warning**: "This is NOT the Next.js you know." Consult `node_modules/next/dist/docs/` before writing App Router / framework code — don't trust training-data memory.
+
+## Routes ([app/](app/))
+- `/` — single-page composition in [app/page.tsx](app/page.tsx): `Hero → Tagline → Mission → Services → Marquee → Team → WhatElse → JoinUs → Footer`.
+- `/training-and-courses` — accordion landing ([page.tsx](app/training-and-courses/page.tsx)) + 7 course sub-pages (business-design, customer-journey-mapping, cx-management, design-leadership, design-thinking-for-hr, designops, product-discovery). Each sub-page renders a shared [CourseDetail](components/CourseDetail.tsx) from `courses.find(...)`.
+- `/writing` and `/writing/[slug]` — Supabase-backed blog ([lib/articles.ts](lib/articles.ts) reads `blog_posts` + `profiles`, strips WP shortcodes via `cleanContent`).
+- `/news` — pure `redirect("/writing")` ([app/news/page.tsx](app/news/page.tsx)).
+- `/join-us`, `/privacy-policy` — static content pages.
+
+## Components ([components/](components/))
+- [ds.tsx](components/ds.tsx) — single `"use client"` re-export of `Button`, `Logo`, `Typography` from the DS. Required because Radix needs Client Components. **Always import DS primitives via `@/components/ds`, never directly from the package.**
+- [NavBar.tsx](components/NavBar.tsx) — minimal sticky bar, only a "Get in touch" mailto button.
+- [PageNav.tsx](components/PageNav.tsx) — alternative nav with `variant="blue"` used on sub-pages.
+- [Footer.tsx](components/Footer.tsx) — large blue footer block; mentions Mather Studio network.
+- [CursorBlob.tsx](components/CursorBlob.tsx) — global cursor-follower mounted in `RootLayout`.
+- [Marquee.tsx](components/Marquee.tsx) — canvas-based wave marquee. Commit `e1ed5dc` enforced consistent SSR/client canvas height to fix hydration errors — be careful when touching it.
+- [FadeIn.tsx](components/FadeIn.tsx), [LoopingPhoto.tsx](components/LoopingPhoto.tsx), [VibesGrid.tsx](components/VibesGrid.tsx), [VibesMarquee.tsx](components/VibesMarquee.tsx) — visual flourishes.
+- [sections/](components/sections/) — one file per home-page section; mostly inline-styled, heavy use of `clamp()` for responsive type.
+
+## Data ([lib/](lib/))
+- [lib/supabase.ts](lib/supabase.ts) — single browser client from public env keys.
+- [lib/articles.ts](lib/articles.ts) — `Article` type, `getArticles()` / `getArticle(slug)`, HTML stripping + WP shortcode cleanup.
+- [lib/courses.ts](lib/courses.ts) — `Course[]` with discriminated `ContentBlock` union (`text | list | testimonial | alumni | fine-print`). Courses are static, not in Supabase.
+
+## Styling conventions
+- Tailwind v4 directive-import only (`@import "tailwindcss";` in [app/globals.css](app/globals.css)). Design tokens come from `@studio-manfred/manfred-design-system/styles` imported in [layout.tsx](app/layout.tsx).
+- Heavy reliance on CSS variables from the DS: `var(--color-business-blue)`, `var(--size-container-2xl)`, `var(--letter-spacing-tight)`, `var(--line-height-tight)`, `var(--color-interactive-brand-bg)`.
+- `html` is locked to `lang="en"` + `className="h-full light"` — no dark-mode toggle yet.
+- Custom cursor system: `/m-cursor.svg` default, `/m-cursor-white.svg` on blue sections via `.cursor-white` (auto-applies on brand-bg buttons via attribute selector).
+- Scroll reveal uses `.fade-up` + `.in-view` toggled by IntersectionObserver, with `fade-up-delay-1..3` for staggering.
+- `.article-body` class styles WordPress-imported HTML (figures, iframes, captions) — used by the writing slug page.
+
+## Things to watch
+- The "Next.js you know" caveat in AGENTS.md is load-bearing — don't assume App Router APIs from memory.
+- Dependabot only auto-PRs the design system; everything else (Next, React, Supabase) is manual.
+- `.npmrc` is gitignored locally but a committed version drives Vercel installs (commits `bcc5f03`, `f5180b0`).
+- No test infrastructure — verification has to be manual / via dev server.
+- Inline-style + Tailwind mix is intentional (clamp-based fluid type); don't refactor to pure Tailwind without checking the design intent.
+
+## Recent direction (May 2026)
+Last commits focused on polish: team segment update, responsiveness on course sub-pages, hero title & blog page padding, Vercel deploy fix via `.npmrc`. No active feature branch — `main` is clean. Next likely areas: more content in `/writing` (Supabase-driven), continued responsive polish on training pages.
+
+---
+
+## A11y QA audit (2026-05-15, static scan)
+
+Mode: static (source review against WCAG 2.2 AA). No dev server / axe-core runtime run — automated rules catch ~30–40% of issues; runtime axe pass + screen-reader sweep still pending.
+
+### Passes (no action)
+- `<html lang="en">` set in [app/layout.tsx](app/layout.tsx).
+- All `<img>` / `<Image>` tags carry an `alt` attribute (8 instances across [Mission](components/sections/Mission.tsx), [Team](components/sections/Team.tsx), [CourseDetail](components/CourseDetail.tsx), [LoopingPhoto](components/LoopingPhoto.tsx), [VibesGrid](components/VibesGrid.tsx), [VibesMarquee](components/VibesMarquee.tsx), [join-us](app/join-us/page.tsx), [writing/[slug]](app/writing/[slug]/page.tsx)). Alt-text quality (meaningful vs decorative `alt=""`) not yet reviewed.
+- All external links (`target="_blank"`) include `rel="noopener noreferrer"`.
+- Canvas-based marquee correctly exposes a text alternative: `role="img"` + `aria-label="Boka Direkt, Mentimeter, …"` ([Marquee.tsx:169-170](components/Marquee.tsx#L169-L170)).
+- Decorative cursor blob marked `aria-hidden` ([CursorBlob.tsx:44](components/CursorBlob.tsx#L44)).
+- Semantic landmarks present: `<main>`, `<section>`, `<header>`, `<footer>` on every page.
+- No `onClick` handlers found on non-interactive elements (`div`, `span`, etc.).
+- No form elements (no input/textarea/select/label) so no label-association risks today.
+- Each route has exactly one `<h1>`; subsequent sections start at `<h2>` and step to `<h3>/<h4>` without skipping levels.
+
+### Findings
+
+**Serious**
+1. **Training accordion buttons lack `aria-expanded` / `aria-controls`** — [app/training-and-courses/page.tsx:48](app/training-and-courses/page.tsx#L48). Native `<button>` is used (good), but screen-reader users can't tell whether a course panel is open. Add `aria-expanded={isOpen}`, give each panel an `id`, and reference it via `aria-controls`. WCAG 4.1.2.
+2. **No visible focus styles in app CSS** — [app/globals.css](app/globals.css) has no `:focus` / `:focus-visible` rule. Custom cursor system (`*` selector at line 5) doesn't kill focus rings, but the burden is fully on the DS to provide them. Verify each DS `Button`/link has a visible focus indicator with ≥3:1 contrast; add a baseline `:focus-visible { outline: 2px solid …; outline-offset: 2px }` for plain `<a>` tags inside the footer, training list, and writing list. WCAG 2.4.7.
+3. **Low-contrast text on the blue background** — multiple places use white at 50–70% opacity on `var(--color-business-blue)`:
+   - `rgba(255,255,255,0.5)` for article figcaption ([globals.css:94](app/globals.css#L94)) and writing-page dates/meta ([writing/page.tsx:38,61](app/writing/page.tsx#L38), [writing/[slug]/page.tsx:45](app/writing/[slug]/page.tsx#L45)).
+   - `text-white/70`, `text-white/80`, `text-white/90` in [Footer.tsx:14,43](components/Footer.tsx#L14) and others.
+   At 50% opacity on a saturated brand blue, body-size text almost certainly fails the 4.5:1 ratio. Verify with a contrast checker; for non-decorative text, lift to ≥80% opacity or use a token. WCAG 1.4.3.
+
+**Moderate**
+4. **No `prefers-reduced-motion` handling** — fade-up reveal, marquee scroll keyframes ([globals.css:39](app/globals.css#L39)), accordion height transitions, and the cursor blob all animate unconditionally. Add `@media (prefers-reduced-motion: reduce) { .fade-up, .fade-up.in-view { transition: none; transform: none; opacity: 1 } @keyframes marquee-scroll { … paused state … } }` and gate `CursorBlob` activation on `matchMedia("(prefers-reduced-motion: reduce)")`. WCAG 2.3.3 / 2.2.2.
+5. **Custom cursor overrides default for all elements** — `*, *::before, *::after { cursor: url('/m-cursor.svg') 22 22, auto }` ([globals.css:3-5](app/globals.css#L3-L5)). Side effects: (a) users who rely on OS cursor scaling / high-contrast cursors lose them; (b) browsers that fail to load the SVG fall back to `auto`, so links don't get `cursor: pointer`; (c) `[WhatElse]` sets `cursor: none` on photos, hiding the pointer entirely (the blob substitutes, but it's `aria-hidden`, so AT/keyboard users have no equivalent). Consider: scoping `.cursor-white` only to sections that need it, restoring `cursor: pointer` on `a`, `button`, `[role="button"]`, and disabling the system under `prefers-reduced-motion`.
+6. **No skip link** — sticky [NavBar](components/NavBar.tsx) + 8 home sections force keyboard users to tab through everything to reach content. Add `<a href="#main" className="sr-only focus:not-sr-only …">Skip to content</a>` in `RootLayout` and give the page `<main id="main" tabIndex={-1}>`. WCAG 2.4.1.
+
+**Minor / Manual review needed**
+7. **Image alt-text quality** — script confirmed every `<img>`/`<Image>` has *an* alt, but I didn't read each value. Photos in [Team.tsx](components/sections/Team.tsx), [LoopingPhoto.tsx](components/LoopingPhoto.tsx), [VibesGrid.tsx](components/VibesGrid.tsx), [VibesMarquee.tsx](components/VibesMarquee.tsx) and join-us are likely decorative — they should use `alt=""`, not file-name-derived strings. The blog hero uses `alt={article.title}` which is fine.
+8. **Native `<img>` (not `next/image`) on the writing slug page** — [writing/[slug]/page.tsx:65](app/writing/[slug]/page.tsx#L65) with an inline lint-disable. Performance/CLS concern, not a11y blocker, but worth migrating.
+9. **DS button + anchor pattern** — `<Button asChild><a href="mailto:…">Get in touch</a></Button>` is used everywhere. Confirm the DS preserves focus styles and exposes an accessible name when wrapped this way (Radix `Slot` semantics depend on the DS implementation).
+
+### Not yet covered (manual checklist owed)
+- Runtime axe-core scan against `next dev` (the skill recommends this as the default mode; needs browser automation).
+- Keyboard-only walk-through of every page (tab order, accordion open/close, link reachability).
+- Screen-reader pass (VoiceOver on macOS; verify Marquee `aria-label` reads correctly and CursorBlob stays silent).
+- 400% zoom + 320 px viewport reflow check.
+- Touch-target audit (≥24×24 px, ideally ≥44×44 px) — particularly the accordion header chevrons and footer mailto links.
