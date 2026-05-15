@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* Pre-checked muted white for body text on --color-business-blue. 80% opacity
+   keeps body text above WCAG 4.5:1 on the brand-blue background; lower values
+   fail (STU-289). */
+:root {
+  --color-text-on-brand-muted: rgba(255, 255, 255, 0.8);
+}
+
+/* ─── Focus indicator (WCAG 2.4.7) ──────────────────────────────────────────── */
+/* currentColor inherits the foreground of the focused element, which by
+   definition has 4.5:1 with its background — so the ring stays visible on
+   white, cream, and brand-blue alike (STU-288). */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* ─── Skip link ─────────────────────────────────────────────────────────────── */
 .skip-link {
   position: absolute;
@@ -119,7 +142,7 @@ main:focus {
 
 .article-body figcaption {
   font-size: 14px;
-  color: rgba(255,255,255,0.5);
+  color: var(--color-text-on-brand-muted);
   margin-top: 8px;
 }
 

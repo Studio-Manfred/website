@@ -37,7 +37,7 @@ export default async function WritingPage() {
                     <p
                       style={{
                         fontSize: "14px",
-                        color: "rgba(255,255,255,0.5)",
+                        color: "var(--color-text-on-brand-muted)",
                         fontWeight: 300,
                         marginBottom: "12px",
                       }}
@@ -60,7 +60,7 @@ export default async function WritingPage() {
                     <p
                       style={{
                         fontSize: "18px",
-                        color: "rgba(255,255,255,0.7)",
+                        color: "var(--color-text-on-brand-muted)",
                         fontWeight: 300,
                       }}
                     >

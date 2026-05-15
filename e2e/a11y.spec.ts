@@ -27,11 +27,11 @@ const WCAG_TAGS = [
   "wcag22aa",
 ];
 
-// Rollout: WARN-ONLY through 2026-05-29 while STU-288 (focus styles) and
-// STU-289 (low-contrast text) land. After that date, flip
-// `AXE_ENFORCE` (or remove the conditional below) so serious/critical
-// violations hard-fail the build.
-const AXE_ENFORCE = process.env.AXE_ENFORCE === "1";
+// STU-288 (focus styles) and STU-289 (low-contrast text) landed
+// 2026-05-15 — serious/critical violations now hard-fail the build.
+// `AXE_ENFORCE=0` flips back to warn-only if a temporary regression
+// needs to ship.
+const AXE_ENFORCE = process.env.AXE_ENFORCE !== "0";
 
 for (const route of ROUTES) {
   test(`a11y: ${route}`, async ({ page }, testInfo) => {

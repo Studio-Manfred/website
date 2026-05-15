@@ -40,7 +40,7 @@ export default async function ArticlePage({
             <p
               style={{
                 fontSize: "14px",
-                color: "rgba(255,255,255,0.5)",
+                color: "var(--color-text-on-brand-muted)",
                 fontWeight: 300,
                 marginBottom: "24px",
               }}
