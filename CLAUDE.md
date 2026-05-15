@@ -75,7 +75,9 @@ Test infrastructure landed via epic [STU-297](https://linear.app/studio-manfred/
 - **Unit / component**: Vitest + React Testing Library + `@testing-library/jest-dom` + `@testing-library/user-event`. Setup file is [test/setup.ts](test/setup.ts); shims live there.
 - **HTTP mocking in unit tests**: MSW with handlers at [test/msw/handlers.ts](test/msw/handlers.ts) and fixture at [test/fixtures/blog-posts.json](test/fixtures/blog-posts.json).
 - **E2E**: Playwright (chromium-desktop + chromium-mobile) at [playwright.config.ts](playwright.config.ts), spawning `e2e/mock-supabase.mjs` alongside `next start` so the writing routes don't need real Supabase keys.
-- **Runtime a11y**: `@axe-core/playwright` in [e2e/a11y.spec.ts](e2e/a11y.spec.ts). **Currently warn-only through 2026-05-29** — set `AXE_ENFORCE=1` after STU-288 and STU-289 close.
+- **Runtime a11y**: `@axe-core/playwright` in [e2e/a11y.spec.ts](e2e/a11y.spec.ts). Serious/critical violations **hard-fail** the build (enforcement on since 2026-05-15 after STU-288 + STU-289 closed). Set `AXE_ENFORCE=0` to temporarily revert to warn-only.
+- **Focus indicator**: a `:focus-visible` rule in [app/globals.css](app/globals.css) draws a 2px `currentColor` outline on every interactive element. currentColor inherits the foreground colour, which by definition has 4.5:1 with its background, so the ring stays ≥3:1 on white, cream, and brand-blue alike. [e2e/focus-visible.spec.ts](e2e/focus-visible.spec.ts) guards against accidental removal.
+- **White-on-brand text**: use `var(--color-text-on-brand-muted)` (defined in [app/globals.css](app/globals.css)) — never inline `rgba(255,255,255,…)` below 0.8 opacity on `--color-business-blue`; lower values fail WCAG body-text contrast.
 - **Coverage ratchet**: [scripts/coverage-ratchet.mjs](scripts/coverage-ratchet.mjs) reads `coverage/coverage-summary.json`, compares to [.coverage-baseline.json](.coverage-baseline.json), fails if any of statements / branches / functions / lines drops > 0.5%. Auto-bump on `main` is currently a manual step (see STU-310).
 
 Scripts:
