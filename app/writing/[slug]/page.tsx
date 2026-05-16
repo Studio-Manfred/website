@@ -36,8 +36,8 @@ export default async function ArticlePage({
       <PageNav variant="blue" />
       <main id="main" tabIndex={-1} className="bg-[var(--color-business-blue)] min-h-screen">
         {/* Hero */}
-        <section style={{ padding: "clamp(100px, 15vw, 160px) clamp(20px, 5vw, 60px) 80px" }}>
-          <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+        <section className="px-6 md:px-12 pt-24 md:pt-40 pb-16 md:pb-24">
+          <div className="mx-auto" style={{ maxWidth: "960px" }}>
             <p
               style={{
                 fontSize: "14px",
@@ -75,11 +75,11 @@ export default async function ArticlePage({
         </section>
 
         {/* Body */}
-        <section style={{ padding: "0 clamp(20px, 5vw, 60px) 120px" }}>
+        <section className="px-6 md:px-12 pb-24 md:pb-40">
           <div
+            className="mx-auto"
             style={{
-              maxWidth: "1000px",
-              margin: "0 auto",
+              maxWidth: "720px",
               color: "white",
               fontWeight: 300,
             }}

@@ -12,8 +12,8 @@ export default async function WritingPage() {
     <>
       <PageNav variant="blue" />
       <main id="main" tabIndex={-1} className="bg-[var(--color-business-blue)] min-h-screen">
-        <section style={{ padding: "160px 60px 80px" }}>
-          <div style={{ maxWidth: "812px", margin: "0 auto" }}>
+        <section className="px-6 md:px-12 pt-24 md:pt-40 pb-16 md:pb-24">
+          <div className="mx-auto" style={{ maxWidth: "720px" }}>
             <h1
               className="font-extrabold text-white tracking-[var(--letter-spacing-tight)]"
               style={{
