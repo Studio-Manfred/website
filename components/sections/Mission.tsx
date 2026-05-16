@@ -33,13 +33,20 @@ export function Mission() {
             </h2>
           </FadeIn>
           <FadeIn delay={1}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/manfred-magic.gif"
-              alt=""
+            <video
+              width={313}
+              height={557}
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-hidden
               className="rounded-[var(--radius-sm)]"
-              style={{ width: "313px", height: "auto" }}
-            />
+              style={{ width: "313px", height: "auto", display: "block" }}
+            >
+              <source src="/manfred-magic.webm" type="video/webm" />
+              <source src="/manfred-magic.mp4" type="video/mp4" />
+            </video>
           </FadeIn>
         </div>
       </section>
