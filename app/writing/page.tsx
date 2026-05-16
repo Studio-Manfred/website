@@ -48,7 +48,7 @@ export default async function WritingPage() {
                       {" · "} {article.author}
                     </p>
                     <h2
-                      className="font-light text-white"
+                      className="font-extrabold text-white"
                       style={{
                         fontSize: "clamp(28px, 5vw, 48px)",
                         lineHeight: 1.05,

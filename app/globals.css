@@ -116,7 +116,7 @@ a, button, [role="button"], [role="link"], summary, label[for] {
 .article-body h2 {
   font-size: 48px;
   line-height: 1.1;
-  font-weight: 300;
+  font-weight: 800;
   margin-top: 64px;
   margin-bottom: 24px;
 }
@@ -124,9 +124,25 @@ a, button, [role="button"], [role="link"], summary, label[for] {
 .article-body h3 {
   font-size: 36px;
   line-height: 1.1;
-  font-weight: 300;
+  font-weight: 800;
   margin-top: 48px;
   margin-bottom: 20px;
+}
+
+.article-body h4 {
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 800;
+  margin-top: 40px;
+  margin-bottom: 16px;
+}
+
+.article-body h5 {
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 800;
+  margin-top: 32px;
+  margin-bottom: 12px;
 }
 
 .article-body img {
