@@ -50,12 +50,12 @@ export default async function ArticlePage({
               {" · "} {article.author}
             </p>
             <h1
-              className="font-light text-white tracking-[var(--letter-spacing-tight)]"
+              className="font-extrabold text-white tracking-[var(--letter-spacing-tight)]"
               style={{
-  fontSize: "clamp(48px, 10vw, 86px)",
-  lineHeight: 1.05,
-  marginBottom: "16px",
-}}
+                fontSize: "clamp(48px, 10vw, 86px)",
+                lineHeight: 1.05,
+                marginBottom: "16px",
+              }}
             >
               {article.title}
             </h1>

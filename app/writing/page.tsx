@@ -15,7 +15,7 @@ export default async function WritingPage() {
         <section style={{ padding: "160px 60px 80px" }}>
           <div style={{ maxWidth: "812px", margin: "0 auto" }}>
             <h1
-              className="font-light text-white tracking-[var(--letter-spacing-tight)]"
+              className="font-extrabold text-white tracking-[var(--letter-spacing-tight)]"
               style={{
                 fontSize: "clamp(48px, 10vw, 86px)",
                 lineHeight: 1.0,
@@ -72,6 +72,8 @@ export default async function WritingPage() {
                         color: "#efd6d3",
                         marginTop: "12px",
                         fontWeight: 300,
+                        textDecoration: "underline",
+                        textUnderlineOffset: "4px",
                       }}
                     >
                       Read more →
