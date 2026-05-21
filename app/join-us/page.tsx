@@ -4,6 +4,7 @@ import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
 import { FadeIn } from "@/components/FadeIn";
 import { Button } from "@/components/ds";
+import { GetInTouchLink } from "@/components/GetInTouchLink";
 import { LoopingPhoto } from "@/components/LoopingPhoto";
 import { VibesMarquee } from "@/components/VibesMarquee";
 
@@ -499,7 +500,7 @@ export default function JoinUsPage() {
                 We&apos;d love to hear from you. Drop us a line and let&apos;s talk.
               </p>
               <Button variant="brand" size="lg" asChild>
-                <a href="mailto:hello@studiomanfred.com">Get in touch</a>
+                <GetInTouchLink location="join-us-cta" />
               </Button>
             </div>
           </section>

@@ -1,5 +1,6 @@
 import { Button, Logo } from "@/components/ds";
 import { FadeIn } from "@/components/FadeIn";
+import { GetInTouchLink } from "@/components/GetInTouchLink";
 
 export function Hero() {
   return (
@@ -20,7 +21,7 @@ export function Hero() {
         </FadeIn>
         <FadeIn delay={2}>
           <Button variant="inverse" size="lg" asChild>
-            <a href="mailto:hello@studiomanfred.com">Get in touch</a>
+            <GetInTouchLink location="hero" />
           </Button>
         </FadeIn>
       </div>
