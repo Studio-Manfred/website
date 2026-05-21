@@ -1,4 +1,5 @@
 import { Button } from "@/components/ds";
+import { GetInTouchLink } from "@/components/GetInTouchLink";
 
 export function NavBar() {
   return (
@@ -8,7 +9,7 @@ export function NavBar() {
         style={{ maxWidth: "var(--size-container-2xl)" }}
       >
         <Button variant="inverse" size="sm" asChild>
-          <a href="mailto:hello@studiomanfred.com">Get in touch</a>
+          <GetInTouchLink location="nav" />
         </Button>
       </div>
     </header>

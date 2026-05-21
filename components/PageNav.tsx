@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo, Button } from "@/components/ds";
+import { GetInTouchLink } from "@/components/GetInTouchLink";
 
 interface PageNavProps {
   variant?: "white" | "blue";
@@ -21,11 +22,11 @@ export function PageNav({ variant = "white" }: PageNavProps) {
         </Link>
         {isBlue ? (
           <Button variant="inverse" size="sm" asChild>
-            <a href="mailto:hello@studiomanfred.com">Get in touch</a>
+            <GetInTouchLink location="nav" />
           </Button>
         ) : (
           <Button variant="brand" size="sm" asChild>
-            <a href="mailto:hello@studiomanfred.com">Get in touch</a>
+            <GetInTouchLink location="nav" />
           </Button>
         )}
       </div>

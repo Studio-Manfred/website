@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
+import { GetInTouchLink } from "@/components/GetInTouchLink";
 
 export function WhatElse() {
   return (
@@ -33,13 +34,13 @@ export function WhatElse() {
             <br /><br />
             Want to make your org feel smarter and more human?{" "}
             <strong className="font-extrabold">
-              <a
-                href="mailto:hello@studiomanfred.com"
+              <GetInTouchLink
+                location="what-else"
                 className="underline underline-offset-2"
                 data-cursor="view"
               >
                 Get in touch.
-              </a>
+              </GetInTouchLink>
             </strong>
             <br /><br />
             Sometimes we{" "}
