@@ -142,3 +142,21 @@ node scripts/coverage-ratchet.mjs --update  # bump baseline locally if it rose
 ```
 
 The Playwright `webServer` pipes `NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321` into `next start`. If `.next/` is stale from earlier dev runs, `next start` can fall back into dev-mode runtime — `rm -rf .next && npm run build` clears that.
+
+---
+
+## Analytics CTA tracking (2026-05-21, STU-364)
+
+Manfred Analytics tracker is loaded via `<script defer>` in [app/layout.tsx](app/layout.tsx) (`fdda68d`). On top of pageviews, "Get in touch" CTA clicks now fire a custom event:
+
+```ts
+window.manfred?.("Get in touch", { props: { location, page: window.location.pathname } });
+```
+
+- Single client component owns the call: [components/GetInTouchLink.tsx](components/GetInTouchLink.tsx). Mailto href is hard-coded inside it.
+- `Window.manfred` typed in [app/manfred.d.ts](app/manfred.d.ts).
+- Six placements, four `location` values: `nav` ([NavBar.tsx](components/NavBar.tsx) + both [PageNav.tsx](components/PageNav.tsx) variants), `hero` ([sections/Hero.tsx](components/sections/Hero.tsx)), `home-join-us` ([sections/JoinUs.tsx](components/sections/JoinUs.tsx)), `what-else` ([sections/WhatElse.tsx](components/sections/WhatElse.tsx)), `join-us-cta` ([app/join-us/page.tsx](app/join-us/page.tsx)). Both navs share `nav`; the `page` prop disambiguates home vs subpages in the dashboard.
+- 4 unit tests in [components/GetInTouchLink.test.tsx](components/GetInTouchLink.test.tsx) cover render, tracker call shape, no-throw on missing tracker, and `className` / children passthrough.
+- Out of scope (not "Get in touch" CTAs): the Footer email link (renders the address itself), `CourseDetail` "Register interest", training page "Ping us", privacy-policy inline email mentions. They get their own ticket if we want them tracked.
+
+**Open follow-up:** in an incognito window after deploy lands, click each placement and verify the `Get in touch` event appears in the [Custom events](https://manfred-analytics.vercel.app/sites/studiomanfred.com) accordion within minutes — first real conversion signal we get from the site.
