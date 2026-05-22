@@ -153,6 +153,13 @@ The PR template (`.github/pull_request_template.md`) makes the rule explicit at 
 - For a quick local install when `NPM_RC_TOKEN` isn't exported,
   `NPM_RC_TOKEN="$(gh auth token)" npm install` works as long as your `gh` token
   has `read:packages` scope.
+- Workflows beyond CI:
+  - **[`.github/workflows/site-audit.yml`](.github/workflows/site-audit.yml)** —
+    monthly Playwright crawl of the live site (1st of each month, 08:00 UTC) +
+    Slack alert via the **`SLACK_WEBHOOK_URL`** repo secret when broken URLs are
+    found. Sources: [scripts/audit-404.mjs](scripts/audit-404.mjs) +
+    [scripts/audit-404-notify.mjs](scripts/audit-404-notify.mjs). Manual run via
+    Actions → "Monthly site audit" → Run workflow.
 
 ## Vercel
 

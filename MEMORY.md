@@ -181,3 +181,20 @@ Notes worth remembering:
 - **CLI 50.38.2 quirk**: `vercel env add NAME preview --value X --yes` loops with `git_branch_required` even though `--yes` should accept the "all branches" default. Workaround: pass an explicit empty positional — `vercel env add NAME preview "" --value X --yes`. Likely fixed in 54.x; the session hook is nagging to upgrade.
 - `supabase-js` accepts both `eyJ…` (legacy JWT) and `sb_publishable_…` formats transparently — no code change required, just the env-var value.
 - Supabase is mid-deprecation on legacy keys; expect the same `"Legacy A…"` error on any other project still using JWT-format anon/service keys. The Studio toggle for "Disable legacy API keys" is the quick rollback if needed.
+
+---
+
+## Monthly site audit (2026-05-22)
+
+Headless Playwright crawl runs on the **1st of each month at 08:00 UTC** via [.github/workflows/site-audit.yml](.github/workflows/site-audit.yml). Source: [scripts/audit-404.mjs](scripts/audit-404.mjs) (the crawler) + [scripts/audit-404-notify.mjs](scripts/audit-404-notify.mjs) (the Slack poster). Both are unit-tested ([scripts/audit-404.test.mjs](scripts/audit-404.test.mjs), [scripts/audit-404-notify.test.mjs](scripts/audit-404-notify.test.mjs)) — 14 cases covering URL normalization, finding classification, and Slack-message shape.
+
+Behaviour:
+- BFS-walks every page reachable from `https://studiomanfred.com/`, capped at 200 pages.
+- For external links, does a `HEAD` (falls back to `GET` on 405/403) with a 12s timeout.
+- Reports as **broken** = HTTP 404 _or_ fetch-error (status 0 / DNS / abort). 403 is treated as bot filtering and ignored.
+- Posts a Slack message to the channel bound to **`SLACK_WEBHOOK_URL`** (repo secret) only when at least one broken URL is found. Clean runs are silent.
+- Always uploads `audit-report.json` as a 90-day artifact, so historical state is reviewable from the Actions tab.
+
+Manual trigger: Actions → **Monthly site audit** → Run workflow. Useful right after fixes (e.g. STU-366) to verify 0 findings.
+
+Required secret: `SLACK_WEBHOOK_URL` — a Slack incoming webhook bound to the alert channel. Workflow skips the notify step with an explicit error if findings exist and the secret is missing.
