@@ -160,3 +160,24 @@ window.manfred?.("Get in touch", { props: { location, page: window.location.path
 - Out of scope (not "Get in touch" CTAs): the Footer email link (renders the address itself), `CourseDetail` "Register interest", training page "Ping us", privacy-policy inline email mentions. They get their own ticket if we want them tracked.
 
 **Open follow-up:** in an incognito window after deploy lands, click each placement and verify the `Get in touch` event appears in the [Custom events](https://manfred-analytics.vercel.app/sites/studiomanfred.com) accordion within minutes — first real conversion signal we get from the site.
+
+---
+
+## Supabase anon key rotation (2026-05-22, STU-365)
+
+`/writing` was 500-ing for ≥3 days (earliest log 2026-05-18 23:02 UTC) because Supabase had stopped accepting the legacy JWT-format anon key — error JSON started with `{"message":"Legacy A…`. Bug pre-dated STU-364 entirely; ruled out via log timestamps.
+
+Fix: generated a new publishable key in Supabase Studio (`sb_publishable_…`), then via Vercel CLI:
+
+```bash
+vercel env rm NEXT_PUBLIC_SUPABASE_ANON_KEY production --yes
+vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production --value '<new>' --yes
+vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY preview "" --value '<new>' --yes
+vercel redeploy https://manfred-website-git-main-studio-manfred.vercel.app --target production
+```
+
+Notes worth remembering:
+- **One delete cleared both environments** when the var was registered as a single `Preview, Production` entry. After re-adding, it shows as two separate rows (same value) — cosmetic.
+- **CLI 50.38.2 quirk**: `vercel env add NAME preview --value X --yes` loops with `git_branch_required` even though `--yes` should accept the "all branches" default. Workaround: pass an explicit empty positional — `vercel env add NAME preview "" --value X --yes`. Likely fixed in 54.x; the session hook is nagging to upgrade.
+- `supabase-js` accepts both `eyJ…` (legacy JWT) and `sb_publishable_…` formats transparently — no code change required, just the env-var value.
+- Supabase is mid-deprecation on legacy keys; expect the same `"Legacy A…"` error on any other project still using JWT-format anon/service keys. The Studio toggle for "Disable legacy API keys" is the quick rollback if needed.
