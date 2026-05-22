@@ -198,3 +198,7 @@ Behaviour:
 Manual trigger: Actions → **Monthly site audit** → Run workflow. Useful right after fixes (e.g. STU-366) to verify 0 findings.
 
 Required secret: `SLACK_WEBHOOK_URL` — a Slack incoming webhook bound to the alert channel. Workflow skips the notify step with an explicit error if findings exist and the secret is missing.
+
+**End-to-end verified 2026-05-22** ([STU-367](https://linear.app/studio-manfred/issue/STU-367), Done). Secret set + workflow manually dispatched ([run 26271002393](https://github.com/Studio-Manfred/website/actions/runs/26271002393)) → crawler found the 9 known `/news/<slug>` 404s from STU-366 → Slack notify posted (`Posted Slack alert: 9 broken URLs.`) → message landed in channel. GitHub masked the webhook value as `***` in run logs as expected.
+
+**Security follow-up**: the webhook URL was pasted in chat during setup, so it lives in conversation logs. Rotating it in Slack and re-running `gh secret set SLACK_WEBHOOK_URL --repo Studio-Manfred/website --body "<new>"` is the clean move.
