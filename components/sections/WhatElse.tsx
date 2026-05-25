@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FadeIn } from "@/components/FadeIn";
 import { GetInTouchLink } from "@/components/GetInTouchLink";
+import { fontSize } from "@/lib/typography";
 
 export function WhatElse() {
   return (
@@ -17,7 +18,7 @@ export function WhatElse() {
         <FadeIn delay={1}>
           <p
             className="font-light leading-relaxed text-[var(--color-text-primary)] mx-auto text-center"
-            style={{ fontSize: "clamp(1.25rem, 2.5vw, 2rem)", maxWidth: "70ch" }}
+            style={{ fontSize: fontSize.bodyLarge, maxWidth: "70ch" }}
           >
             We mainly do consulting.{" "}
             <strong className="font-extrabold">But also{" "}
