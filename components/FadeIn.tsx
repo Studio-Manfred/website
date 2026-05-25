@@ -23,6 +23,13 @@ export function FadeIn({ children, className = "", delay = 0 }: FadeInProps) {
       return;
     }
 
+    // threshold MUST stay 0 (not e.g. 0.06): when the wrapped element is
+    // taller than 1/threshold × viewport, intersectionRatio can never reach
+    // threshold and the observer never fires. STU-313 wrapped the entire
+    // article body in a single FadeIn — those bodies routinely sit around
+    // 14k px on an 800 px viewport (≈ 5–7 %) and used to stay at opacity 0
+    // forever. The -40px bottom rootMargin still gives the "must enter the
+    // viewport by at least 40 px before firing" delay we want.
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -30,7 +37,7 @@ export function FadeIn({ children, className = "", delay = 0 }: FadeInProps) {
           observer.unobserve(el);
         }
       },
-      { threshold: 0.06, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0, rootMargin: "0px 0px -40px 0px" }
     );
 
     observer.observe(el);
