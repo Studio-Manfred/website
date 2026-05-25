@@ -42,14 +42,20 @@ afterEach(() => {
 });
 
 describe("FadeIn", () => {
-  it("constructs an IntersectionObserver with threshold around 0.06", () => {
+  it("constructs an IntersectionObserver with threshold 0 so tall wrappers can fire", () => {
+    // STU-313 regression: a non-zero threshold (was 0.06) means the observer
+    // never fires for wrappers taller than 1/threshold times the viewport
+    // — e.g. long /writing/<slug> bodies stayed at opacity 0 forever. With
+    // threshold 0 + the existing -40px bottom rootMargin, the observer fires
+    // once any pixel of the element is past the rootMargin boundary, which
+    // is the right "any portion visible" semantic.
     render(
       <FadeIn>
         <span>content</span>
       </FadeIn>,
     );
     expect(lastObserver).not.toBeNull();
-    expect(lastObserver!.options?.threshold).toBeCloseTo(0.06, 5);
+    expect(lastObserver!.options?.threshold).toBe(0);
   });
 
   it("adds the in-view class when the observer reports isIntersecting", () => {
