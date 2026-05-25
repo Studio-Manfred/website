@@ -8,7 +8,7 @@ export function Footer() {
         background="blue"
         align="center"
         padding="none"
-        className="text-white pt-20 pb-14 md:pt-32 md:pb-20"
+        className="manfred-prose manfred-prose--on-brand text-white pt-20 pb-14 md:pt-32 md:pb-20"
       >
         <h2
           className="font-extrabold text-white mb-8"
@@ -24,12 +24,7 @@ export function Footer() {
           <br />
           079 — 336 29 10
           <br />
-          <a
-            href="mailto:hello@studiomanfred.com"
-            className="underline underline-offset-2 text-[#efd6d3] hover:text-white transition-colors"
-          >
-            hello@studiomanfred.com
-          </a>
+          <a href="mailto:hello@studiomanfred.com">hello@studiomanfred.com</a>
           <br />
           Organisational number: 559419-6171
         </p>
@@ -40,7 +35,7 @@ export function Footer() {
         background="blue"
         align="center"
         padding="none"
-        className="text-white pb-20 md:pb-32"
+        className="manfred-prose manfred-prose--on-brand text-white pb-20 md:pb-32"
       >
         <h2
           className="font-extrabold text-white mb-8"
@@ -55,7 +50,7 @@ export function Footer() {
           We are part of the SeventyOne Group. Our fellow companies include{" "}
           <a
             href="https://seventyoneconsulting.se/"
-            className="font-semibold underline underline-offset-2 text-[#efd6d3] hover:text-white transition-colors"
+            className="font-semibold"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -64,20 +59,20 @@ export function Footer() {
           , experts in leadership, product, design and change, and{" "}
           <a
             href="https://www.matherstudio.se/about-us"
-            className="font-semibold underline underline-offset-2 text-[#efd6d3] hover:text-white transition-colors"
+            className="font-semibold"
             target="_blank"
             rel="noopener noreferrer"
           >
             Mather Studio
           </a>
           , a curated network of top-tier independent contractors. Hello there{" "}
-          <a href="https://www.seventyoneconsulting.se/kontakt/hakan-appelgren" className="underline underline-offset-2 text-[#efd6d3] hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@håkan</a>,{" "}
-          <a href="https://www.seventyoneconsulting.se/kontakt/david-cederblad" className="underline underline-offset-2 text-[#efd6d3] hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@david</a> and{" "}
-          <a href="https://www.matherstudio.se/contact" className="underline underline-offset-2 text-[#efd6d3] hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">@moa</a> 👋🏽
+          <a href="https://www.seventyoneconsulting.se/kontakt/hakan-appelgren" target="_blank" rel="noopener noreferrer">@håkan</a>,{" "}
+          <a href="https://www.seventyoneconsulting.se/kontakt/david-cederblad" target="_blank" rel="noopener noreferrer">@david</a> and{" "}
+          <a href="https://www.matherstudio.se/contact" target="_blank" rel="noopener noreferrer">@moa</a> 👋🏽
         </p>
         <a
           href="/privacy-policy"
-          className="font-light underline underline-offset-2 text-[#efd6d3] hover:text-white transition-colors"
+          className="font-light"
           style={{ fontSize: "clamp(1rem, 1.75vw, 1.4rem)" }}
         >
           Privacy Policy

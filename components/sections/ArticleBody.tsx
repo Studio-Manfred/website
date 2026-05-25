@@ -25,7 +25,10 @@ export function ArticleBody({ article }: ArticleBodyProps) {
     >
       <FadeIn>
         {articleHtml ? (
-          <div className="article-body" {...articleHtml} />
+          <div
+            className="article-body manfred-prose manfred-prose--on-brand"
+            {...articleHtml}
+          />
         ) : (
           <p style={{ fontSize: "24px", lineHeight: 1.6, marginBottom: "40px" }}>
             {article.excerpt}
@@ -45,7 +48,7 @@ export function ArticleBody({ article }: ArticleBodyProps) {
             className="font-light"
             style={{
               fontSize: "24px",
-              color: "#efd6d3",
+              color: "var(--color-text-link-on-brand)",
               textDecoration: "underline",
               textUnderlineOffset: "4px",
             }}
