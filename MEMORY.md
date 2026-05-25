@@ -202,3 +202,15 @@ Required secret: `SLACK_WEBHOOK_URL` — a Slack incoming webhook bound to the a
 **End-to-end verified 2026-05-22** ([STU-367](https://linear.app/studio-manfred/issue/STU-367), Done). Secret set + workflow manually dispatched ([run 26271002393](https://github.com/Studio-Manfred/website/actions/runs/26271002393)) → crawler found the 9 known `/news/<slug>` 404s from STU-366 → Slack notify posted (`Posted Slack alert: 9 broken URLs.`) → message landed in channel. GitHub masked the webhook value as `***` in run logs as expected.
 
 **Security follow-up**: the webhook URL was pasted in chat during setup, so it lives in conversation logs. Rotating it in Slack and re-running `gh secret set SLACK_WEBHOOK_URL --repo Studio-Manfred/website --body "<new>"` is the clean move.
+
+---
+
+## Legacy /news/<slug> redirects (2026-05-25, STU-366)
+
+WordPress migration left `/news/<slug>` cross-links inside imported article bodies; the new App Router only exposes `/writing/<slug>-<timestamp>` so all 9 were 404-ing. Fixed via Option A — a single dynamic route at [app/news/[slug]/page.tsx](app/news/[slug]/page.tsx) that does a Supabase prefix lookup (`ilike '<slug>-%'`, published, newest first, limit 1) and `redirect()`s to `/writing/<full-slug>`. Falls back to `notFound()` if nothing matches. LIKE wildcards (`%`, `_`, `\`) in the slug parameter are escaped before interpolation.
+
+5 unit tests in [app/news/[slug]/page.test.tsx](app/news/[slug]/page.test.tsx) cover happy path, Supabase query shape, both `notFound()` paths (no row + error), and the LIKE escape.
+
+The slug-less `/news` page ([app/news/page.tsx](app/news/page.tsx)) is unchanged — still `redirect("/writing")`.
+
+**End-to-end verified** (PR [#6](https://github.com/Studio-Manfred/website/pull/6) merged 2026-05-25): live curl confirmed `307` redirects for two known broken paths and `404` for a bogus slug; the monthly audit was re-dispatched ([run 26397806553](https://github.com/Studio-Manfred/website/actions/runs/26397806553)) and reported `Audit clean — no Slack message sent.`
