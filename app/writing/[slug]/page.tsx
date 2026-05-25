@@ -34,7 +34,7 @@ export default async function ArticlePage({
   return (
     <>
       <PageNav variant="blue" />
-      <main id="main" tabIndex={-1} className="bg-[var(--color-business-blue)] min-h-screen">
+      <main id="main" tabIndex={-1} className="cursor-white bg-[var(--color-business-blue)] min-h-screen">
         {/* Hero */}
         <section className="px-6 md:px-12 pt-24 md:pt-40 pb-16 md:pb-24">
           <div className="mx-auto" style={{ maxWidth: "960px" }}>
