@@ -41,10 +41,11 @@ describe("Section", () => {
     expect(container.querySelector("section")).toBeNull();
   });
 
-  it("maps width=narrow / default / wide to 720 / 960 / 1200 px maxWidth", () => {
+  it("maps width=narrow / default / xl / wide to 720 / 960 / 1100 / 1200 px maxWidth", () => {
     const cases = [
       ["narrow", "720px"],
       ["default", "960px"],
+      ["xl", "1100px"],
       ["wide", "1200px"],
     ] as const;
     for (const [width, expected] of cases) {
