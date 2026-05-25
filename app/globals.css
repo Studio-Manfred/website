@@ -113,6 +113,22 @@ a, button, [role="button"], [role="link"], summary, label[for] {
   margin-bottom: 28px;
 }
 
+/* Tailwind v4 Preflight strips the browser default underline from <a>;
+   imported WordPress markup carries no class on its anchors, so without
+   this rule article-body links are indistinguishable from surrounding
+   white body text on the brand-blue background. The peach (#efd6d3)
+   matches the "← All writing" / "Read more" treatment used on the
+   writing list and slug pages. */
+.article-body a {
+  color: #efd6d3;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.article-body a:hover {
+  color: white;
+}
+
 .article-body h2 {
   font-size: 48px;
   line-height: 1.1;

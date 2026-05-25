@@ -4,7 +4,7 @@
     "slug": "hello-world",
     "title": "Hello, world",
     "excerpt": "<p>A first &amp; gentle <em>intro</em> post.</p>",
-    "content": "<p>Welcome to the studio.</p>",
+    "content": "<p>Welcome to the studio. Read more about our <a href=\"/training-and-courses\">courses</a> if you want a deeper dive.</p>",
     "cover_image_url": "https://cdn.example.com/hello.jpg",
     "author_id": "aaaa1111-aaaa-1111-aaaa-111111111111",
     "published": true,
