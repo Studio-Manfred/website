@@ -8,6 +8,19 @@ vi.mock("@/components/ds", () => ({
   Logo: ({ color }: { color: string }) => <div data-testid="logo" data-color={color} />,
   Button: ({ children }: { children: React.ReactNode }) => <span data-testid="button">{children}</span>,
   Typography: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+  Container: ({
+    children,
+    className,
+    style,
+  }: {
+    children?: React.ReactNode;
+    className?: string;
+    style?: React.CSSProperties;
+  }) => (
+    <div data-testid="ds-container" className={className} style={style}>
+      {children}
+    </div>
+  ),
 }));
 
 vi.mock("@/components/PageNav", () => ({

@@ -6,7 +6,9 @@ import { FadeIn } from "@/components/FadeIn";
 import { Button } from "@/components/ds";
 import { GetInTouchLink } from "@/components/GetInTouchLink";
 import { LoopingPhoto } from "@/components/LoopingPhoto";
+import { Section } from "@/components/Section";
 import { VibesMarquee } from "@/components/VibesMarquee";
+import { fontSize } from "@/lib/typography";
 
 export const metadata: Metadata = {
   title: "Recruitment, salary and benefits — Studio Manfred",
@@ -30,30 +32,25 @@ export default function JoinUsPage() {
       <main id="main" tabIndex={-1}>
 
         {/* ── HERO ───────────────────────────────── */}
-        <section className="cursor-white bg-[var(--color-business-blue)] px-6 md:px-12 py-20 md:py-32 text-center">
-          <div className="mx-auto" style={{ maxWidth: "1100px" }}>
-            <h1
-              className="font-extrabold text-white leading-[0.9] tracking-[var(--letter-spacing-tight)] mb-10"
-              style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
-            >
-              Want to join us?
-            </h1>
-          </div>
-        </section>
+        <Section background="blue" width="xl" padding="tight" align="center">
+          <h1
+            className="font-extrabold text-white leading-[0.9] tracking-[var(--letter-spacing-tight)] mb-10"
+            style={{ fontSize: fontSize.sectionTitle }}
+          >
+            Want to join us?
+          </h1>
+        </Section>
 
         {/* ── WHO WE RECRUIT ─────────────────────── */}
         <FadeIn>
-          <section className="bg-white px-6 md:px-12 py-24 md:py-40">
-            <div className="mx-auto" style={{ maxWidth: "1100px" }}>
-
-              {/* Heading */}
-              <h2
-                className="font-extrabold text-[var(--color-text-primary)]"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.03em", marginBottom: "40px" }}
-              >
-                Who are we<br />
-                <span className="text-[var(--color-business-blue)]">recruiting?</span>
-              </h2>
+          <Section background="white" width="xl" padding="none" className="py-24 md:py-40">
+            <h2
+              className="font-extrabold text-[var(--color-text-primary)]"
+              style={{ fontSize: fontSize.sectionTitle, lineHeight: 1.0, letterSpacing: "-0.03em", marginBottom: "40px" }}
+            >
+              Who are we<br />
+              <span className="text-[var(--color-business-blue)]">recruiting?</span>
+            </h2>
 
               {/* Opening paragraph */}
               <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.75, maxWidth: "72ch", marginBottom: "64px" }}>
@@ -134,9 +131,7 @@ export default function JoinUsPage() {
                   </div>
                 </div>
               ))}
-
-            </div>
-          </section>
+          </Section>
         </FadeIn>
 
         {/* ── IMAGE STRIP ─────────────────────────── */}
@@ -146,48 +141,44 @@ export default function JoinUsPage() {
 
         {/* ── WHY JOIN ────────────────────────────── */}
         <FadeIn>
-          <section className="bg-white px-6 md:px-12 py-24 md:py-40">
-            <div className="mx-auto" style={{ maxWidth: "1100px" }}>
-              <h2
-                className="font-extrabold text-[var(--color-text-primary)]"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.03em", maxWidth: "12ch", marginBottom: "64px" }}
-              >
-                What can make people{" "}
-                <span className="text-[var(--color-business-blue)]">start and stay</span>{" "}
-                with us
-              </h2>
-              <div>
-                {reasons.map((text, i) => (
-                  <div
-                    key={i}
-                    style={{ display: "flex", alignItems: "center", borderTop: "1px solid var(--color-border-default)", padding: "22px 0", gap: "32px" }}
-                  >
-                    <span className="font-extrabold text-[var(--color-text-muted)]" style={{ width: "72px", flexShrink: 0, fontSize: "clamp(1.5rem, 2.2vw, 2rem)" }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <p className="font-light text-[var(--color-text-secondary)]" style={{ flex: 1, fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.6 }}>
-                      {text}
-                    </p>
-                  </div>
-                ))}
-                <div style={{ borderTop: "1px solid var(--color-border-default)" }} />
-              </div>
+          <Section background="white" width="xl" padding="none" className="py-24 md:py-40">
+            <h2
+              className="font-extrabold text-[var(--color-text-primary)]"
+              style={{ fontSize: fontSize.sectionTitle, lineHeight: 1.0, letterSpacing: "-0.03em", maxWidth: "12ch", marginBottom: "64px" }}
+            >
+              What can make people{" "}
+              <span className="text-[var(--color-business-blue)]">start and stay</span>{" "}
+              with us
+            </h2>
+            <div>
+              {reasons.map((text, i) => (
+                <div
+                  key={i}
+                  style={{ display: "flex", alignItems: "center", borderTop: "1px solid var(--color-border-default)", padding: "22px 0", gap: "32px" }}
+                >
+                  <span className="font-extrabold text-[var(--color-text-muted)]" style={{ width: "72px", flexShrink: 0, fontSize: "clamp(1.5rem, 2.2vw, 2rem)" }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <p className="font-light text-[var(--color-text-secondary)]" style={{ flex: 1, fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.6 }}>
+                    {text}
+                  </p>
+                </div>
+              ))}
+              <div style={{ borderTop: "1px solid var(--color-border-default)" }} />
             </div>
-          </section>
+          </Section>
         </FadeIn>
 
         {/* ── SALARY MODEL ────────────────────────── */}
         <FadeIn>
-          <section className="bg-white px-6 md:px-12 pt-24 md:pt-40 pb-24 md:pb-40">
-            <div className="mx-auto" style={{ maxWidth: "1100px" }}>
-
-              {/* Heading */}
-              <h2
-                className="font-extrabold text-[var(--color-text-primary)] text-center"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.03em", marginBottom: "20px" }}
-              >
-                Our salary <span className="text-[var(--color-business-blue)]">model</span>
-              </h2>
+          <Section background="white" width="xl" padding="none" className="py-24 md:py-40">
+            {/* Heading */}
+            <h2
+              className="font-extrabold text-[var(--color-text-primary)] text-center"
+              style={{ fontSize: fontSize.sectionTitle, lineHeight: 1.0, letterSpacing: "-0.03em", marginBottom: "20px" }}
+            >
+              Our salary <span className="text-[var(--color-business-blue)]">model</span>
+            </h2>
               <p className="font-light text-[var(--color-text-secondary)] mb-20 text-center mx-auto" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)", lineHeight: 1.75, maxWidth: "48ch" }}>
                 Our model is basic, but different compared to many other companies.
               </p>
@@ -331,10 +322,8 @@ export default function JoinUsPage() {
                     </div>
                   ))}
                 </div>
-              </div>
-
             </div>
-          </section>
+          </Section>
         </FadeIn>
 
         {/* ── IMAGE CLUSTER ───────────────────────── */}
@@ -365,17 +354,15 @@ export default function JoinUsPage() {
 
         {/* ── FINE DETAILS ────────────────────────── */}
         <FadeIn>
-          <section className="bg-white px-6 md:px-12 py-24 md:py-40">
-            <div className="mx-auto" style={{ maxWidth: "1100px" }}>
-
-              {/* Large centered super-heading */}
-              <h2
-                className="font-extrabold text-[var(--color-text-primary)] text-center"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)", lineHeight: 1.0, letterSpacing: "-0.03em", marginBottom: "80px" }}
-              >
-                Everything you<br />
-                <span className="text-[var(--color-business-blue)]">need to know</span>
-              </h2>
+          <Section background="white" width="xl" padding="none" className="py-24 md:py-40">
+            {/* Large centered super-heading */}
+            <h2
+              className="font-extrabold text-[var(--color-text-primary)] text-center"
+              style={{ fontSize: fontSize.sectionTitle, lineHeight: 1.0, letterSpacing: "-0.03em", marginBottom: "80px" }}
+            >
+              Everything you<br />
+              <span className="text-[var(--color-business-blue)]">need to know</span>
+            </h2>
 
               {/* Off-grid: narrow left gutter + right column with title + FAQ */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px", alignItems: "start" }}>
@@ -478,32 +465,29 @@ export default function JoinUsPage() {
                   })()}
 
                 </div>
-              </div>{/* end grid */}
-            </div>
-          </section>
+            </div>{/* end grid */}
+          </Section>
         </FadeIn>
 
         {/* ── CTA ─────────────────────────────────── */}
         <FadeIn>
-          <section className="bg-white px-6 md:px-12 py-24 md:py-40">
-            <div className="mx-auto text-center" style={{ maxWidth: "1100px" }}>
-              <h2
-                className="font-extrabold text-[var(--color-business-blue)] leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] mb-8"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
-              >
-                Sound like your kind of place?
-              </h2>
-              <p
-                className="font-light text-[var(--color-text-secondary)] mb-10 mx-auto"
-                style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)", lineHeight: 1.65, maxWidth: "40ch" }}
-              >
-                We&apos;d love to hear from you. Drop us a line and let&apos;s talk.
-              </p>
-              <Button variant="brand" size="lg" asChild>
-                <GetInTouchLink location="join-us-cta" />
-              </Button>
-            </div>
-          </section>
+          <Section background="white" width="xl" padding="none" align="center" className="py-24 md:py-40">
+            <h2
+              className="font-extrabold text-[var(--color-business-blue)] leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] mb-8"
+              style={{ fontSize: fontSize.sectionTitle }}
+            >
+              Sound like your kind of place?
+            </h2>
+            <p
+              className="font-light text-[var(--color-text-secondary)] mb-10 mx-auto"
+              style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)", lineHeight: 1.65, maxWidth: "40ch" }}
+            >
+              We&apos;d love to hear from you. Drop us a line and let&apos;s talk.
+            </p>
+            <Button variant="brand" size="lg" asChild>
+              <GetInTouchLink location="join-us-cta" />
+            </Button>
+          </Section>
         </FadeIn>
 
       </main>

@@ -14,6 +14,7 @@ import { Container } from "@/components/ds";
 const WIDTH_PX = {
   narrow: 720,
   default: 960,
+  xl: 1100,
   wide: 1200,
 } as const;
 
