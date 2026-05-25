@@ -1,28 +1,27 @@
 import { FadeIn } from "@/components/FadeIn";
+import { Section } from "@/components/Section";
 
 export function Mission() {
   return (
     <>
       {/* Part 1: mission statement */}
-      <section className="bg-white py-40 md:py-56 px-6 md:px-12">
-        <div className="mx-auto text-center" style={{ maxWidth: "960px" }}>
-          <FadeIn>
-            <h2
-              className="font-light leading-[var(--line-height-snug)] tracking-[var(--letter-spacing-tight)] text-[var(--color-text-primary)]"
-              style={{ fontSize: "clamp(2rem, 4.5vw, 3.25rem)" }}
-            >
-              Our mission is to make the product world{" "}
-              <span className="font-extrabold text-[var(--color-business-blue)]">
-                more customer driven
-              </span>
-            </h2>
-          </FadeIn>
-        </div>
-      </section>
+      <Section background="white" padding="roomy" align="center">
+        <FadeIn>
+          <h2
+            className="font-light leading-[var(--line-height-snug)] tracking-[var(--letter-spacing-tight)] text-[var(--color-text-primary)]"
+            style={{ fontSize: "clamp(2rem, 4.5vw, 3.25rem)" }}
+          >
+            Our mission is to make the product world{" "}
+            <span className="font-extrabold text-[var(--color-business-blue)]">
+              more customer driven
+            </span>
+          </h2>
+        </FadeIn>
+      </Section>
 
       {/* Part 2: Manfred Magic + image */}
-      <section className="bg-white pt-40 md:pt-56 pb-40 md:pb-56 px-6 md:px-12">
-        <div className="mx-auto text-center flex flex-col items-center gap-12" style={{ maxWidth: "960px" }}>
+      <Section background="white" padding="roomy" align="center">
+        <div className="flex flex-col items-center gap-12">
           <FadeIn>
             <h2
               className="leading-[var(--line-height-snug)] tracking-[var(--letter-spacing-tight)]"
@@ -49,7 +48,7 @@ export function Mission() {
             </video>
           </FadeIn>
         </div>
-      </section>
+      </Section>
     </>
   );
 }
