@@ -103,8 +103,10 @@ a, button, [role="button"], [role="link"], summary, label[for] {
 }
 
 /* ─── Article body ───────────────────────────────────────────────────────────── */
+/* Fluid sizing (STU-314): clamp() lets body + headings scale with viewport, so
+   a 412px phone no longer shows a 2.67× jump between 18px body and 48px h2. */
 .article-body {
-  font-size: 24px;
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
   line-height: 1.7;
   font-weight: 300;
 }
@@ -118,7 +120,7 @@ a, button, [role="button"], [role="link"], summary, label[for] {
    .article-body on the wrapper div. */
 
 .article-body h2 {
-  font-size: 48px;
+  font-size: clamp(2rem, 4vw, 3rem);
   line-height: 1.1;
   font-weight: 800;
   margin-top: 64px;
@@ -126,7 +128,7 @@ a, button, [role="button"], [role="link"], summary, label[for] {
 }
 
 .article-body h3 {
-  font-size: 36px;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
   line-height: 1.1;
   font-weight: 800;
   margin-top: 48px;
@@ -134,7 +136,7 @@ a, button, [role="button"], [role="link"], summary, label[for] {
 }
 
 .article-body h4 {
-  font-size: 28px;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   line-height: 1.2;
   font-weight: 800;
   margin-top: 40px;
@@ -142,7 +144,7 @@ a, button, [role="button"], [role="link"], summary, label[for] {
 }
 
 .article-body h5 {
-  font-size: 22px;
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
   line-height: 1.25;
   font-weight: 800;
   margin-top: 32px;
@@ -174,13 +176,6 @@ a, button, [role="button"], [role="link"], summary, label[for] {
   font-size: 14px;
   color: var(--color-text-on-brand-muted);
   margin-top: 8px;
-}
-
-/* ─── Responsive typography ─────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .article-body {
-    font-size: 18px;
-  }
 }
 
 /* ─── Course layout ──────────────────────────────────────────────────────────── */
