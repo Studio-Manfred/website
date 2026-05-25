@@ -19,8 +19,7 @@ Quick-start notes for future sessions. Audit this before editing — recent chan
 
 ## Components ([components/](components/))
 - [ds.tsx](components/ds.tsx) — single `"use client"` re-export of `Button`, `Logo`, `Typography` from the DS. Required because Radix needs Client Components. **Always import DS primitives via `@/components/ds`, never directly from the package.**
-- [NavBar.tsx](components/NavBar.tsx) — minimal sticky bar, only a "Get in touch" mailto button.
-- [PageNav.tsx](components/PageNav.tsx) — alternative nav with `variant="blue"` used on sub-pages.
+- [PageNav.tsx](components/PageNav.tsx) — the single nav primitive. `variant="blue"` on every sub-page, `variant="white"` on the course-detail surface. Home is intentionally nav-less — the Hero with its 100px wordmark IS the nav (STU-315, 2026-05-25).
 - [Footer.tsx](components/Footer.tsx) — large blue footer block; mentions Mather Studio network.
 - [CursorBlob.tsx](components/CursorBlob.tsx) — global cursor-follower mounted in `RootLayout`.
 - [Marquee.tsx](components/Marquee.tsx) — canvas-based wave marquee. Commit `e1ed5dc` enforced consistent SSR/client canvas height to fix hydration errors — be careful when touching it.
@@ -155,7 +154,7 @@ window.manfred?.("Get in touch", { props: { location, page: window.location.path
 
 - Single client component owns the call: [components/GetInTouchLink.tsx](components/GetInTouchLink.tsx). Mailto href is hard-coded inside it.
 - `Window.manfred` typed in [app/manfred.d.ts](app/manfred.d.ts).
-- Six placements, four `location` values: `nav` ([NavBar.tsx](components/NavBar.tsx) + both [PageNav.tsx](components/PageNav.tsx) variants), `hero` ([sections/Hero.tsx](components/sections/Hero.tsx)), `home-join-us` ([sections/JoinUs.tsx](components/sections/JoinUs.tsx)), `what-else` ([sections/WhatElse.tsx](components/sections/WhatElse.tsx)), `join-us-cta` ([app/join-us/page.tsx](app/join-us/page.tsx)). Both navs share `nav`; the `page` prop disambiguates home vs subpages in the dashboard.
+- Five placements, five `location` values: `nav` (both [PageNav.tsx](components/PageNav.tsx) variants on subpages — home has no nav per STU-315), `hero` ([sections/Hero.tsx](components/sections/Hero.tsx)), `home-join-us` ([sections/JoinUs.tsx](components/sections/JoinUs.tsx)), `what-else` ([sections/WhatElse.tsx](components/sections/WhatElse.tsx)), `join-us-cta` ([app/join-us/page.tsx](app/join-us/page.tsx)). The `page` prop disambiguates which subpage the `nav` placement fired from in the dashboard.
 - 4 unit tests in [components/GetInTouchLink.test.tsx](components/GetInTouchLink.test.tsx) cover render, tracker call shape, no-throw on missing tracker, and `className` / children passthrough.
 - Out of scope (not "Get in touch" CTAs): the Footer email link (renders the address itself), `CourseDetail` "Register interest", training page "Ping us", privacy-policy inline email mentions. They get their own ticket if we want them tracked.
 
