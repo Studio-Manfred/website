@@ -47,7 +47,7 @@ export function WritingListItem({ article }: WritingListItemProps) {
         <p
           style={{
             fontSize: "16px",
-            color: "#efd6d3",
+            color: "var(--color-text-link-on-brand)",
             marginTop: "12px",
             fontWeight: 300,
             textDecoration: "underline",
