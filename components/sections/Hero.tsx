@@ -1,11 +1,19 @@
 import { Button, Logo } from "@/components/ds";
 import { FadeIn } from "@/components/FadeIn";
 import { GetInTouchLink } from "@/components/GetInTouchLink";
+import { Section } from "@/components/Section";
+import { fontSize } from "@/lib/typography";
 
 export function Hero() {
   return (
-    <section className="cursor-white bg-[var(--color-business-blue)] min-h-screen flex items-center px-6 md:px-12 py-24">
-      <div className="mx-auto w-full text-center" style={{ maxWidth: "1200px" }}>
+    <Section
+      background="blue"
+      width="wide"
+      padding="none"
+      align="center"
+      className="min-h-screen flex items-center py-24"
+    >
+      <div className="w-full">
         <FadeIn>
           <div className="flex justify-center mb-24 md:mb-32">
             <Logo variant="wordmark" color="white" height={100} />
@@ -14,7 +22,7 @@ export function Hero() {
         <FadeIn delay={1}>
           <h1
             className="font-extrabold leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] text-white text-center mb-20"
-            style={{ fontSize: "clamp(2.5rem, 5.5vw, 5rem)" }}
+            style={{ fontSize: fontSize.heroDisplay }}
           >
             Building Better Product Companies
           </h1>
@@ -25,6 +33,6 @@ export function Hero() {
           </Button>
         </FadeIn>
       </div>
-    </section>
+    </Section>
   );
 }

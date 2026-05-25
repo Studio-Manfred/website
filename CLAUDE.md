@@ -59,6 +59,30 @@ carry them).
 - **`/` is intentionally nav-less.** The Hero's 100 px wordmark IS the nav — the dramatic full-viewport hero is part of the brand impression and a sticky bar would compete with it. Decision recorded under STU-315 (2026-05-25) after `NavBar.tsx` lived as dead code for several weeks. Don't reintroduce a top-bar on home without a separate decision.
 - **`<main>` requirements** (a11y baseline below): every route's `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link lands focus. Blue-background `<main>`s also need `cursor-white` (custom-cursor system).
 
+### Section primitive + typography tokens (STU-312, 2026-05-25)
+
+- **[components/Section.tsx](components/Section.tsx)** — the single page-level
+  layout primitive. Composes the DS `Container` (semantic max-width wrapper)
+  inside a `<section>` (or `<main>` / `<article>` via `as`). Props: `background`
+  (`transparent` / `white` / `blue` / `cream`), `width` (`narrow` 720 / `default`
+  960 / `wide` 1200 px), `padding` (`first` / `default` / `tight` / `roomy` /
+  `none`), `align`. `blue` background auto-includes `cursor-white`.
+- **DS `Container` size presets** (`sm` 640 / `md` 768 / `lg` 1024 / `xl` 1280 /
+  `2xl` 1536 px) don't align with our 720 / 960 / 1200 widths (chosen for
+  line-length, not container bands), so we use `Container` as the semantic
+  shell and override `maxWidth` via inline `style`.
+- **[lib/typography.ts](lib/typography.ts)** — `clamp()` font-size tokens for the
+  fluid hero scales the DS `Typography` variants don't ship. Reach for the DS
+  `Typography` component for everyday text (`body`, `bodySmall`, `large`,
+  `caption`); reach for these tokens when you need a `clamp()` size that stays
+  fluid across the breakpoint range. Don't introduce new inline `clamp()`
+  literals — add a new token, or pick an existing one.
+- **Local first, graduate later.** Section + size tokens live in this repo
+  on purpose. Once STU-313 / STU-314 / STU-316 have shaken the shape out
+  across three different page types, the stable parts may graduate to the
+  DS as a v0.11 surface. Do not pre-emptively move them — STU-312 is
+  deliberately local.
+
 ## Accessibility baseline
 
 - `<html lang="en">` in [app/layout.tsx](app/layout.tsx); skip-link is the first

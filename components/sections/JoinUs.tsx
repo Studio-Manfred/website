@@ -1,6 +1,7 @@
 import { Button } from "@/components/ds";
 import { FadeIn } from "@/components/FadeIn";
 import { GetInTouchLink } from "@/components/GetInTouchLink";
+import { fontSize } from "@/lib/typography";
 
 export function JoinUs() {
   return (
@@ -9,7 +10,7 @@ export function JoinUs() {
         <FadeIn>
           <h2
             className="font-extrabold leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] text-[var(--color-business-blue)] mb-6"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+            style={{ fontSize: fontSize.sectionTitle }}
           >
             Want to join us?
           </h2>
@@ -17,7 +18,7 @@ export function JoinUs() {
         <FadeIn delay={1}>
           <p
             className="font-light text-[var(--color-text-primary)] mx-auto mb-12"
-            style={{ fontSize: "clamp(1.125rem, 2vw, 1.75rem)", maxWidth: "52ch", lineHeight: 1.6 }}
+            style={{ fontSize: fontSize.lead, maxWidth: "52ch", lineHeight: 1.6 }}
           >
             We&apos;re on the lookout for product &amp; design peeps with great
             skills and big hearts. You like consulting? Cool. Been at a few
