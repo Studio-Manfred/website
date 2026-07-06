@@ -51,31 +51,18 @@ main:focus {
   outline: none;
 }
 
-/* ─── Custom cursor ─────────────────────────────────────────────────────────── */
+/* ─── Custom cursor (Option A experiment) ───────────────────────────────────── */
+/* The M shape is rendered by <CustomCursor> (client component) as a fixed
+   <div> with `mix-blend-mode: difference`, which XORs against the underlying
+   background so the M stays visible on white, cream, brand-blue, and every
+   intermediate hue. Hide the OS cursor so the two don't stack.
+   Reduced-motion + forced-colors below restore the OS cursor. */
 *, *::before, *::after {
-  cursor: url('/m-cursor.svg') 22 22, auto;
+  cursor: none;
 }
 
-/* Interactive elements keep the custom cursor but fall back to `pointer`, not
-   `auto` — preserves the click affordance lost in STU-291. */
-a, button, [role="button"], [role="link"], summary, label[for] {
-  cursor: url('/m-cursor.svg') 22 22, pointer;
-}
-
-/* White cursor on blue sections */
-.cursor-white, .cursor-white *, .cursor-white *::before, .cursor-white *::after {
-  cursor: url('/m-cursor-white.svg') 22 22, auto;
-}
-
-.cursor-white a, .cursor-white button, .cursor-white [role="button"], .cursor-white [role="link"] {
-  cursor: url('/m-cursor-white.svg') 22 22, pointer;
-}
-
-/* White cursor on brand (blue) buttons */
-.bg-\[var\(--color-interactive-brand-bg\)\],
-.bg-\[var\(--color-interactive-brand-bg\)\] * {
-  cursor: url('/m-cursor-white.svg') 22 22, auto;
-}
+/* .cursor-white and brand-blue button classes are kept as no-ops so consumer
+   markup doesn't need to change while we A/B this. */
 
 /* ─── Scroll reveal: fade + scale ───────────────────────────────────────────── */
 .fade-up {

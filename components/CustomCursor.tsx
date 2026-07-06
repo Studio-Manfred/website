@@ -1,0 +1,78 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
+
+// Faux cursor experiment — renders a white M sized 44×44 as a fixed <div>
+// with `mix-blend-mode: difference`, tracking the pointer 1:1. The blend
+// mode XORs the M against whatever's underneath so it stays visible on
+// white, cream, brand-blue, and every intermediate hue. Replaces the
+// url()-based cursor variants (white / blue) in globals.css.
+//
+// Skipped on:
+//   - reduced-motion (OS cursor restores)
+//   - forced-colors  (OS cursor restores)
+//   - coarse pointers / touch devices (no cursor to show)
+export function CustomCursor() {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(forced-colors: active)").matches) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    let raf = 0;
+    let tx = -100;
+    let ty = -100;
+
+    function onMove(e: MouseEvent) {
+      tx = e.clientX;
+      ty = e.clientY;
+    }
+
+    function loop() {
+      if (ref.current) {
+        // Center the 44px M on the pointer tip (22px offset).
+        ref.current.style.transform = `translate3d(${tx - 22}px, ${ty - 22}px, 0)`;
+      }
+      raf = requestAnimationFrame(loop);
+    }
+
+    window.addEventListener("mousemove", onMove);
+    raf = requestAnimationFrame(loop);
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      aria-hidden
+      className="pointer-events-none fixed top-0 left-0 z-[10000]"
+      style={{
+        width: 44,
+        height: 44,
+        mixBlendMode: "difference",
+        transform: "translate3d(-100px, -100px, 0)",
+        willChange: "transform",
+      }}
+    >
+      <svg
+        width="44"
+        height="44"
+        viewBox="0 0 240 240"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M143.647 169.762C140.502 169.762 138.031 168.125 136.234 164.852C134.501 161.643 133.635 157.599 133.635 152.722C133.635 148.165 134.148 143.351 135.175 138.281C136.266 133.147 137.486 128.333 138.834 123.84C140.181 119.348 141.369 115.625 142.396 112.673L135.753 121.241C133.378 124.386 131.004 127.788 128.629 131.446C126.318 135.04 124.136 137.832 122.082 139.821C120.029 141.811 117.494 142.806 114.477 142.806C112.231 142.806 110.69 142.26 109.856 141.169C109.022 140.014 108.54 138.313 108.412 136.067C108.412 133.949 108.797 131.157 109.567 127.691C110.402 124.161 111.493 119.925 112.84 114.984L108.412 121.819C106.166 125.22 102.892 130.291 98.5924 137.03C95.255 142.421 92.3027 146.978 89.7355 150.7C87.1683 154.487 84.7615 157.343 82.5152 159.268C80.3331 161.258 78.0226 162.252 75.5837 162.252C74.2359 162.252 73.0165 161.514 71.9254 160.038C70.7702 158.626 70.1284 156.797 70 154.551C70 149.801 71.2194 143.64 73.6583 136.067C76.033 128.494 78.7927 120.92 81.9376 113.347C85.0824 105.709 87.9384 99.1952 90.5057 93.804C93.0729 88.4128 94.6132 85.3001 95.1266 84.4657C96.2177 82.7971 97.6618 81.9627 99.4588 81.9627C100.036 81.9627 100.518 82.0269 100.903 82.1552L101.481 82.3478L102.443 82.6366C103.021 82.8933 103.695 83.3105 104.465 83.8881C105.299 84.4657 106.037 85.3643 106.679 86.5837C107.321 87.7389 107.642 89.183 107.642 90.9159C107.642 92.7129 107.225 94.7346 106.39 96.9809C104.465 101.923 102.7 106.897 101.095 111.903L104.465 106.897C106.711 103.495 108.797 100.543 110.722 98.0399C112.712 95.5369 114.734 93.6115 116.788 92.2637C118.906 90.8517 121.312 90.1457 124.008 90.1457C126.832 90.1457 128.95 91.1726 130.362 93.2264C131.774 95.2802 132.48 97.719 132.48 100.543C132.48 102.918 132.223 105.164 131.71 107.282L131.613 107.86C136.363 101.377 141.337 95.2481 146.535 89.4718C151.862 83.8239 156.644 81 160.88 81C163.575 81 165.757 81.8985 167.426 83.6956C169.159 85.4285 170.025 87.6106 170.025 90.242C170.025 92.6167 169.512 95.1518 168.485 97.8474C167.522 100.543 166.399 103.142 165.115 105.645C163.832 108.148 161.81 112.481 159.05 118.642C156.291 124.739 153.659 131.414 151.156 138.666C148.717 145.919 147.498 152.144 147.498 157.343C147.498 159.653 147.851 161.611 148.557 163.215C148.814 163.857 148.942 164.531 148.942 165.237C148.942 166.456 148.429 167.515 147.402 168.414C146.439 169.312 145.187 169.762 143.647 169.762Z"
+          fill="white"
+        />
+      </svg>
+    </div>
+  );
+}
