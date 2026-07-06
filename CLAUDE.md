@@ -8,16 +8,18 @@ start.
 
 ## Stack
 
-- Next.js **16.2.4** (App Router, Turbopack) on React **19.2.4**, TypeScript 5.
+- Next.js **16.2.6** (App Router, Turbopack) on React **19.2.4**, TypeScript 5.
 - Tailwind **v4** via `@tailwindcss/postcss` — no `tailwind.config.*`. Tokens
   come from `@studio-manfred/manfred-design-system/styles` imported in
   [app/layout.tsx](app/layout.tsx).
-- Design system: `@studio-manfred/manfred-design-system` from **GitHub
-  Packages**.
+- Design system: `@studio-manfred/manfred-design-system` **v0.33.0** from
+  **GitHub Packages** — Dependabot auto-bumps weekly (see
+  [`.github/dependabot.yml`](.github/dependabot.yml)).
 - Data: `@supabase/supabase-js` reading the `blog_posts` table from the intranet
   Supabase project.
-- No test framework. No `vercel.json` / `vercel.ts` — Vercel picks up
-  `next build` automatically.
+- No `vercel.json` / `vercel.ts` — Vercel picks up `next build` automatically.
+  URL rewrites live in [`next.config.ts`](next.config.ts) (see "Analytics
+  own-domain proxy" below).
 
 ## Commands
 
@@ -83,6 +85,37 @@ carry them).
   DS as a v0.11 surface. Do not pre-emptively move them — STU-312 is
   deliberately local.
 
+### DS re-export chokepoint (STU-448, 2026-05-25)
+
+An audit ([`design-system-audits/website-2026-05-25.md`](design-system-audits/website-2026-05-25.md))
+found the site consumes **3 of ~99 DS components** in JSX (Button,
+Container, Logo) and **0 of the layout primitives** (Stack / HStack /
+VStack / Grid). Root cause: [`components/ds.tsx`](components/ds.tsx)
+re-exports only 4 components, so per the "import DS primitives via
+`@/components/ds`" rule everything else is structurally unreachable.
+
+Widening the re-export (add Typography variants, layout primitives,
+Accordion family) unblocks Typography adoption and lets the training-page
+accordion migrate to DS Accordion. See STU-448 for the umbrella + child
+tickets. Do not add a wider workaround; take the widen-re-export path.
+
+### Analytics own-domain proxy (2026-07-06)
+
+The Manfred Analytics tracker script and event beacon are both proxied
+through studiomanfred.com so ad-blockers can't catch them by hostname.
+Two rewrites live in [`next.config.ts`](next.config.ts):
+
+| Public path | Destination |
+| --- | --- |
+| `/js/t.js` | `https://manfred-analytics.vercel.app/t.js` |
+| `/api/event` | `https://manfred-analytics.vercel.app/api/event` |
+
+The tracker computes its POST endpoint from
+`new URL(scriptSrc).origin + "/api/event"`, so serving the script from
+own domain automatically routes events to own domain. **Don't** hardcode
+`manfred-analytics.vercel.app` into the layout script tag again — it will
+work but restore the ad-blocker-catches-us problem.
+
 ## Accessibility baseline
 
 - `<html lang="en">` in [app/layout.tsx](app/layout.tsx); skip-link is the first
@@ -108,7 +141,7 @@ Test infrastructure landed via epic [STU-297](https://linear.app/studio-manfred/
 - **Runtime a11y**: `@axe-core/playwright` in [e2e/a11y.spec.ts](e2e/a11y.spec.ts). Serious/critical violations **hard-fail** the build (enforcement on since 2026-05-15 after STU-288 + STU-289 closed). Set `AXE_ENFORCE=0` to temporarily revert to warn-only.
 - **Focus indicator**: a `:focus-visible` rule in [app/globals.css](app/globals.css) draws a 2px `currentColor` outline on every interactive element. currentColor inherits the foreground colour, which by definition has 4.5:1 with its background, so the ring stays ≥3:1 on white, cream, and brand-blue alike. [e2e/focus-visible.spec.ts](e2e/focus-visible.spec.ts) guards against accidental removal.
 - **White-on-brand text**: use `var(--color-text-on-brand-muted)` (defined in [app/globals.css](app/globals.css)) — never inline `rgba(255,255,255,…)` below 0.8 opacity on `--color-business-blue`; lower values fail WCAG body-text contrast.
-- **Coverage ratchet**: [scripts/coverage-ratchet.mjs](scripts/coverage-ratchet.mjs) reads `coverage/coverage-summary.json`, compares to [.coverage-baseline.json](.coverage-baseline.json), fails if any of statements / branches / functions / lines drops > 0.5%. Auto-bump on `main` is currently a manual step (see STU-310).
+- **Coverage ratchet**: [scripts/coverage-ratchet.mjs](scripts/coverage-ratchet.mjs) reads `coverage/coverage-summary.json`, compares to [.coverage-baseline.json](.coverage-baseline.json), fails if any of statements / branches / functions / lines drops > 0.5%. Auto-bump on `main` runs after every merge, but it **only bumps UP** — if you add an uncovered file, the baseline stays put and the next PR fails the ratchet. Either exclude the file in [`vitest.config.ts`](vitest.config.ts) (the pattern for Next's file-based conventions: `layout.tsx`, `page.tsx`, `opengraph-image.tsx`) or add a test.
 
 Scripts:
 
@@ -205,6 +238,17 @@ The PR template (`.github/pull_request_template.md`) makes the rule explicit at 
   a fresh checkout.
 - Build command and output are Next.js defaults. Don't add a `vercel.json`
   unless we need rewrites/redirects that can't be expressed in the App Router.
+- **Env vars** (Preview + Production):
+  - `NPM_RC_TOKEN` — classic PAT with `read:packages` for GitHub Packages.
+    Same PAT is also in the repo's Actions secrets. **When rotating**, check
+    both stores plus any other Vercel projects that install `@studio-manfred/*`;
+    `gh secret list` and `vercel env ls` are independent grep targets.
+    Grepping `.github/workflows/**` alone misses env-var-only consumers and
+    can lead to "orphan-looking" tokens that are actually load-bearing (this
+    happened once — Vercel production silently stayed stuck at a 40-day-old
+    build until the missing env var got noticed).
+  - `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase
+    intranet project; only writing routes need them.
 
 ## Known fragile areas
 
