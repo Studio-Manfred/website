@@ -19,7 +19,7 @@ export default function RootLayout({
       <head>
         <script
           defer
-          src="https://manfred-analytics.vercel.app/t.js"
+          src="/js/t.js"
           data-site="studiomanfred.com"
         />
       </head>
