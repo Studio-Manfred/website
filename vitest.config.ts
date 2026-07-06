@@ -25,6 +25,7 @@ export default defineConfig({
         "**/*.d.ts",
         "app/**/layout.tsx",
         "app/**/page.tsx",
+        "app/**/opengraph-image.tsx",
       ],
     },
   },
