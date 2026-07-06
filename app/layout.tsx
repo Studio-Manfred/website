@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "@studio-manfred/manfred-design-system/styles";
 import { CursorBlob } from "@/components/CursorBlob";
+import { CustomCursor } from "@/components/CustomCursor";
 
 export const metadata: Metadata = {
   title: "Studio Manfred — Building Better Product Companies",
@@ -28,6 +29,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <CursorBlob />
+        <CustomCursor />
         {children}
       </body>
     </html>
