@@ -3,10 +3,11 @@
 Quick-start notes for future sessions. Audit this before editing — recent changes may have invalidated parts of it.
 
 ## Stack
-- **Next.js 16.2.4** App Router on **React 19.2.4**, **TypeScript 5**, **Tailwind v4** (PostCSS plugin, no `tailwind.config` — tokens live in the design system CSS).
-- `@studio-manfred/manfred-design-system@^0.10.1` pulled from **GitHub Packages** (see [.npmrc](.npmrc), [.github/dependabot.yml](.github/dependabot.yml) auto-bumps it weekly).
+- **Next.js 16.2.6** App Router on **React 19.2.4**, **TypeScript 5**, **Tailwind v4** (PostCSS plugin, no `tailwind.config` — tokens live in the design system CSS).
+- `@studio-manfred/manfred-design-system@^0.33.0` pulled from **GitHub Packages** (see [.npmrc](.npmrc), [.github/dependabot.yml](.github/dependabot.yml) auto-bumps it weekly).
 - Data layer: **Supabase** (`@supabase/supabase-js`) — only `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`. The CMS itself lives in a separate "intranet" project (commit `19642c4`).
-- No tests, no Playwright, no `vercel.json` / `vercel.ts`. Scripts: `dev / build / start / lint`. ESLint flat config extends `next/core-web-vitals` + `next/typescript`. tsconfig path alias `@/*` → repo root.
+- Test suite: Vitest + RTL + jest-dom (100+ unit tests, `npm test`), Playwright + `@axe-core/playwright` (E2E + runtime a11y, `npm run e2e`). Coverage ratchet at [scripts/coverage-ratchet.mjs](scripts/coverage-ratchet.mjs). No `vercel.json` / `vercel.ts`.
+- Scripts: `dev / build / start / lint / test / test:watch / test:coverage / e2e / e2e:ui`. ESLint flat config extends `next/core-web-vitals` + `next/typescript`. tsconfig path alias `@/*` → repo root.
 - `package.json` name is still `studio-manfred-scaffold` (predates the rename).
 - **AGENTS.md warning**: "This is NOT the Next.js you know." Consult `node_modules/next/dist/docs/` before writing App Router / framework code — don't trust training-data memory.
 
@@ -211,5 +212,30 @@ WordPress migration left `/news/<slug>` cross-links inside imported article bodi
 5 unit tests in [app/news/[slug]/page.test.tsx](app/news/[slug]/page.test.tsx) cover happy path, Supabase query shape, both `notFound()` paths (no row + error), and the LIKE escape.
 
 The slug-less `/news` page ([app/news/page.tsx](app/news/page.tsx)) is unchanged — still `redirect("/writing")`.
+
+---
+
+## Session hand-off 2026-07-06
+
+**Shipped in this session (3 PRs)**:
+
+- **[#25] DS 0.22.0 → 0.33.0** (Dependabot bump). No breaking changes to our consumed surface (Button/Container/Logo/Typography — the audit confirms we consume only 3 of ~99). PR had failed CI earlier when `NPM_RC_TOKEN` was invalidated; rebased once the token was rotated and the coverage baseline was fixed.
+- **[#26] Own-domain analytics proxy** ([next.config.ts](next.config.ts) rewrites + [app/layout.tsx](app/layout.tsx) script src). Ad-blockers previously caught `manfred-analytics.vercel.app/api/event` by hostname. Now serves the tracker from `/js/t.js` on our own origin; the tracker derives its POST endpoint from `new URL(scriptSrc).origin + "/api/event"` so events auto-route to `/api/event`, which forwards to the analytics service. See [CLAUDE.md § Analytics own-domain proxy](CLAUDE.md).
+- **[#26 co-fix] Exclude `app/opengraph-image.tsx` from coverage**. STU-470 (opengraph-image) had been silently dropping the coverage aggregate below baseline for weeks; the auto-bump job only bumps UP so the baseline never adjusted. Same rationale as the existing `layout.tsx`/`page.tsx` exclusions.
+
+**Ops**:
+
+- **`NPM_RC_TOKEN` rotated** in Vercel. Deleting an "orphan-looking" fine-grained PAT (`bump job`) broke Vercel builds; production had been silently stuck at a 40-day-old build because Preview builds were reusing cached `node_modules`. Lesson: check `vercel env ls` and external integrations, not just `.github/workflows/` grep, when auditing whether a token is orphan. New classic PAT scoped to `read:packages` installed.
+- **DS over-override audit filed as [STU-448](https://linear.app/studio-manfred/issue/STU-448)** ([full report](design-system-audits/website-2026-05-25.md)). Root cause is [`components/ds.tsx`](components/ds.tsx) re-exporting only 4 components. Three concrete child fixes recommended: widen the re-export, migrate headings to `<Typography>`, migrate training accordion to DS Accordion.
+- **CHANGELOG.md created** (was missing per CLAUDE.md's own requirement). README.md rewritten from the create-next-app template.
+- **GitHub labels `dependencies` + `design-system` created** to unblock Dependabot's PR-labelling.
+
+**Next up** (Web backlog, all assigned to Jens):
+
+- [STU-448](https://linear.app/studio-manfred/issue/STU-448) — DS over-override umbrella (Medium).
+- DS project: [STU-444](https://linear.app/studio-manfred/issue/STU-444) border-on-brand-soft token, [STU-445](https://linear.app/studio-manfred/issue/STU-445) `.manfred-prose a` transition, [STU-169](https://linear.app/studio-manfred/issue/STU-169) DS "use client" for RSC.
+- Intranet project: [STU-372](https://linear.app/studio-manfred/issue/STU-372) audit umbrella, [STU-402](https://linear.app/studio-manfred/issue/STU-402) `vercel.ts` migration.
+
+Production at `40aca69` (main HEAD). All health checks green.
 
 **End-to-end verified** (PR [#6](https://github.com/Studio-Manfred/website/pull/6) merged 2026-05-25): live curl confirmed `307` redirects for two known broken paths and `404` for a bogus slug; the monthly audit was re-dispatched ([run 26397806553](https://github.com/Studio-Manfred/website/actions/runs/26397806553)) and reported `Audit clean — no Slack message sent.`
