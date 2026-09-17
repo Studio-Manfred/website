@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICP Deep Dive — The Work-Life Balanced</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a2535; color: white; padding: 0; }
+  .header { padding: 32px 36px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .header p { font-size: 14px; color: rgba(255,255,255,0.55); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: rgba(255,255,255,0.06); }
+  .card { background: #22334a; padding: 24px 28px; }
+  .card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .card p { font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.82); }
+  .card strong { color: white; font-weight: 600; }
+  .stat-row { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .stat { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; font-size: 13px; }
+  .stat-key { color: rgba(255,255,255,0.55); }
+  .stat-val { font-weight: 600; color: white; }
+  .tag { display: inline-block; background: rgba(255,255,255,0.1); border-radius: 3px; padding: 3px 9px; font-size: 12px; margin: 2px 3px 2px 0; color: rgba(255,255,255,0.75); }
+  canvas { margin-top: 16px; max-height: 160px; }
+  blockquote { border-left: 3px solid #3a7a6a; padding-left: 14px; margin-top: 12px; font-size: 13px; font-style: italic; color: rgba(255,255,255,0.7); line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>The Work-Life Balanced</h1>
+  <p>ICP deep dive — challenges, drivers, business opportunity &amp; system preferences</p>
+</div>
+<div class="grid">
+  <div class="card">
+    <div class="card-label">😤 Challenges</div>
+    <p>The primary challenge for this segment is <strong>financial security within the industry</strong>. This is closely followed by difficulty finding time for marketing to attract new clients, and balancing work with personal life.</p>
+    <p style="margin-top:10px;">These challenges are interconnected — insufficient time for customer acquisition directly contributes to financial insecurity and hinders work-life balance.</p>
+    <canvas id="challengeChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-label">📈 Drivers</div>
+    <p>This group is primarily motivated by <strong>work-life balance, with a sense of flexibility and control</strong>. This is closely followed by helping other people and high customer satisfaction.</p>
+    <p style="margin-top:10px;">Achieving work-life balance is challenging given the time required for high customer satisfaction and marketing — both identified as major pain points.</p>
+    <canvas id="driversChart"></canvas>
+  </div>
+  <div class="card">
+    <div class="card-label">💰 Business &amp; Opportunity</div>
+    <div class="stat-row">
+      <div class="stat"><span class="stat-key">Segment share</span><span class="stat-val">16.5%</span></div>
+      <div class="stat"><span class="stat-key">GMV / month</span><span class="stat-val">30–100k</span></div>
+      <div class="stat"><span class="stat-key">Churn risk</span><span class="stat-val">High</span></div>
+      <div class="stat"><span class="stat-key">Digital maturity</span><span class="stat-val">Moderate</span></div>
+      <div class="stat"><span class="stat-key">Business potential</span><span class="stat-val">Low–Medium</span></div>
+    </div>
+    <blockquote style="margin-top:16px;">"The solution needed to help work-life balance should not cost more than it generates."</blockquote>
+  </div>
+  <div class="card">
+    <div class="card-label">📱 Operational &amp; System</div>
+    <p><strong>Booking system priorities:</strong></p>
+    <div style="margin-top:10px;">
+      <span class="tag">Easy to use</span>
+      <span class="tag">Saves time</span>
+      <span class="tag">Reasonably priced</span>
+      <span class="tag">Good support</span>
+      <span class="tag">Helps find clients</span>
+    </div>
+    <p style="margin-top:14px;"><strong>Required integrations:</strong></p>
+    <div style="margin-top:8px;">
+      <span class="tag">POS / payment terminal</span>
+      <span class="tag">Accounting (e.g. Fortnox)</span>
+      <span class="tag">Journal system</span>
+      <span class="tag">Marketing tools</span>
+    </div>
+    <p style="margin-top:14px; font-size:13px; color:rgba(255,255,255,0.6);">Performance metrics tracked: financial stability &amp; profitability, sales of treatments &amp; products, number of loyal returning customers.</p>
+  </div>
+</div>
+<script>
+  new Chart(document.getElementById('challengeChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Financial security','Time for marketing','Work-life balance','Customer retention','Pricing pressure'],
+      datasets: [{ data: [3.8, 3.2, 2.9, 2.1, 1.8], backgroundColor: '#3a5068', borderRadius: 3 }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: 'rgba(255,255,255,0.45)', font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: 'rgba(255,255,255,0.45)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.07)' }, min: 0, max: 4 } } }
+  });
+  new Chart(document.getElementById('driversChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Work-life balance','Helping others','Customer satisfaction','Team culture','Personal growth'],
+      datasets: [{ data: [19.2, 14.5, 12.8, 8.1, 6.4], backgroundColor: '#3a7a6a', borderRadius: 3 }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: 'rgba(255,255,255,0.45)', font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: 'rgba(255,255,255,0.45)', font: { size: 10 }, callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.07)' }, min: 0, max: 22 } } }
+  });
+</script>
+</body>
+</html>

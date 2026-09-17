@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segment Distribution — Bokadirekt</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f4f0; padding: 40px 24px; }
+  h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+  p.sub { font-size: 14px; color: #666; margin-bottom: 32px; line-height: 1.5; max-width: 560px; }
+  .layout { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+  .bars { flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 10px; }
+  .bar-row { display: flex; flex-direction: column; gap: 4px; }
+  .bar-label { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+  .bar-track { background: #e8e6e0; border-radius: 3px; height: 32px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 12px; }
+  .bar-pct { font-size: 12px; font-weight: 700; color: white; }
+  .chart-wrap { width: 280px; flex-shrink: 0; }
+  canvas { width: 100% !important; }
+  .chart-title { font-size: 12px; color: #888; margin-bottom: 12px; font-weight: 500; }
+</style>
+</head>
+<body>
+<h1>The five most dominant segment characteristics</h1>
+<p class="sub">These are the five most common characteristics our merchants identify themselves and their business with.</p>
+<div class="layout">
+  <div class="bars">
+    <div class="bar-row">
+      <div class="bar-label">1. The Customer &amp; Experience-Focused</div>
+      <div class="bar-track"><div class="bar-fill" style="width:33.4%;background:#1e2d4a;"><span class="bar-pct">33.4%</span></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">2. The Work-Life Balanced</div>
+      <div class="bar-track"><div class="bar-fill" style="width:16.5%;background:#3a5068;"><span class="bar-pct">16.5%</span></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">3. The Traditional / Established</div>
+      <div class="bar-track"><div class="bar-fill" style="width:14.6%;background:#aaaaaa;"><span class="bar-pct">14.6%</span></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">4. The New Entrepreneur / Start-up</div>
+      <div class="bar-track"><div class="bar-fill" style="width:14.4%;background:#3a7a6a;"><span class="bar-pct">14.4%</span></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">5. The Specialist / Niche</div>
+      <div class="bar-track"><div class="bar-fill" style="width:12.7%;background:#1e4a3a;"><span class="bar-pct">12.7%</span></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="color:#999;">Other segments</div>
+      <div class="bar-track"><div class="bar-fill" style="width:8.4%;background:#cccccc;"><span class="bar-pct" style="color:#666;">8.4%</span></div></div>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Segment distribution</div>
+    <canvas id="donut"></canvas>
+  </div>
+</div>
+<script>
+  new Chart(document.getElementById('donut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Customer & Experience-Focused','Work-Life Balanced','Traditional / Established','New Entrepreneur','Specialist / Niche','Other'],
+      datasets: [{
+        data: [33.4, 16.5, 14.6, 14.4, 12.7, 8.4],
+        backgroundColor: ['#1e2d4a','#3a5068','#aaaaaa','#3a7a6a','#1e4a3a','#d8d5cc'],
+        borderWidth: 2,
+        borderColor: '#f5f4f0'
+      }]
+    },
+    options: {
+      cutout: '52%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
