@@ -115,14 +115,23 @@ export default function BokadirektCase() {
                       <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">B2B Segment Matrix</p>
                       <iframe src="/cases/bokadirekt/bokadirekt-matrix.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "420px" }} title="Persona Matrix" />
                     </div>
+                    <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
+  No real numbers or data — the visualisations are examples with sample data only.
+</p>
                     <div>
                       <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">Segment Distribution</p>
                       <iframe src="/cases/bokadirekt/bokadirekt-distribution.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "360px" }} title="Segment Distribution" />
                     </div>
+                    <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
+  No real numbers or data — the visualisations are examples with sample data only.
+</p>
                     <div>
                       <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">ICP Deep Dive — Example</p>
                       <iframe src="/cases/bokadirekt/bokadirekt-icp-example.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "600px" }} title="ICP Deep Dive" />
                     </div>
+                    <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
+  No real numbers or data — the visualisations are examples with sample data only.
+</p>
                   </div>
                 </div>
 

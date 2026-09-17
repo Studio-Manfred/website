@@ -120,6 +120,9 @@ export default function FishbrainCase() {
                       title="Fishbrain Service Blueprint"
                     />
                   </div>
+                  <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
+  No real numbers or data — the visualisations are examples with sample data only.
+</p>
                 </div>
 
                 <div>
