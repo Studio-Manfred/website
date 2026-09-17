@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fishbrain — User Journey & Service Blueprint</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1f2d; color: white; padding: 32px 28px; }
+
+  .title { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+  h1 { font-size: 20px; font-weight: 700; margin-bottom: 28px; }
+
+  .blueprint { display: flex; flex-direction: column; gap: 2px; }
+
+  /* Row labels */
+  .row { display: grid; grid-template-columns: 140px repeat(5, 1fr); gap: 2px; }
+  .row-label { display: flex; align-items: center; padding: 14px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+
+  /* Section headers */
+  .section-header { display: grid; grid-template-columns: 140px repeat(5, 1fr); gap: 2px; margin-bottom: 2px; }
+  .section-header .empty { background: transparent; }
+  .phase { background: rgba(255,255,255,0.06); padding: 10px 14px; text-align: center; font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); border-radius: 3px; }
+
+  /* Cells */
+  .cell { padding: 14px 14px; border-radius: 3px; font-size: 12px; line-height: 1.55; }
+  .cell-leisure { background: #1a3a4a; }
+  .cell-goal { background: #1e2f1a; }
+  .cell-touchpoint { background: #1a1a3a; }
+  .cell-opportunity { background: #2a2010; }
+  .cell-label { background: transparent; }
+
+  .persona-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; margin-bottom: 8px; }
+  .tag-leisure { background: #2a7a9a; color: white; }
+  .tag-goal { background: #3a6a2a; color: white; }
+  .tag-touchpoint { background: #3a3a8a; color: white; }
+  .tag-opportunity { background: #7a5a1a; color: white; }
+
+  .cell p { color: rgba(255,255,255,0.78); }
+  .cell .pain { color: #ff8080; font-size: 11px; margin-top: 6px; }
+  .cell .motivation { color: #80d4a0; font-size: 11px; margin-top: 4px; }
+  .cell .touchpoint-item { color: rgba(255,255,255,0.65); font-size: 11px; margin-top: 4px; display: flex; align-items: flex-start; gap: 5px; }
+  .cell .touchpoint-item::before { content: "→"; color: rgba(255,255,255,0.3); flex-shrink: 0; }
+  .cell .opp { color: #f0c060; font-size: 11px; margin-top: 4px; display: flex; align-items: flex-start; gap: 5px; }
+  .cell .opp::before { content: "★"; color: #f0c060; flex-shrink: 0; font-size: 9px; margin-top: 1px; }
+
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 10px 0; grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+<div class="title">Fishbrain — Service Blueprint</div>
+<h1>User Journey & Opportunities</h1>
+
+<div class="blueprint">
+
+  <!-- Phase headers -->
+  <div class="section-header">
+    <div class="empty"></div>
+    <div class="phase">Discovery</div>
+    <div class="phase">Planning</div>
+    <div class="phase">On the water</div>
+    <div class="phase">Post-trip</div>
+    <div class="phase">Community</div>
+  </div>
+
+  <!-- Leisure Angler -->
+  <div class="row">
+    <div class="row-label">Leisure Angler</div>
+    <div class="cell cell-leisure">
+      <span class="persona-tag tag-leisure">Motivation</span>
+      <p>Looking for easy, fun spots nearby — minimal planning, family-friendly</p>
+      <div class="pain">😟 Overwhelmed by too much technical info</div>
+    </div>
+    <div class="cell cell-leisure">
+      <p>Wants simple recommendations — "where should I go this weekend?"</p>
+      <div class="motivation">😊 Excited by social proof & local catches</div>
+      <div class="pain">😟 Gear & license complexity creates friction</div>
+    </div>
+    <div class="cell cell-leisure">
+      <p>Casual logging — wants quick, easy catch registration</p>
+      <div class="motivation">😊 Loves sharing moments with family</div>
+      <div class="pain">😟 Too many steps to log a catch</div>
+    </div>
+    <div class="cell cell-leisure">
+      <p>Shares photos socially — not focused on detailed stats</p>
+      <div class="motivation">😊 Positive reactions motivate return trips</div>
+      <div class="pain">😟 Rarely revisits the app after the trip</div>
+    </div>
+    <div class="cell cell-leisure">
+      <p>Passive community member — browses but rarely posts</p>
+      <div class="motivation">😊 Inspired by others' catches & spots</div>
+      <div class="pain">😟 Doesn't feel "expert enough" to contribute</div>
+    </div>
+  </div>
+
+  <!-- Goal-Oriented Angler -->
+  <div class="row">
+    <div class="row-label">Goal-Oriented Angler</div>
+    <div class="cell cell-goal">
+      <span class="persona-tag tag-goal">Motivation</span>
+      <p>Deep research — water temp, species behavior, season, tides</p>
+      <div class="motivation">🎯 Driven to beat personal records & peers</div>
+    </div>
+    <div class="cell cell-goal">
+      <p>Plans meticulously — gear selection, technique, scouting spots on the map</p>
+      <div class="motivation">🎯 Values detailed historical catch data</div>
+      <div class="pain">😟 Frustrated by lack of data depth in free tier</div>
+    </div>
+    <div class="cell cell-goal">
+      <p>Detailed logging — species, weight, lure, conditions, coordinates</p>
+      <div class="motivation">🎯 Wants to track patterns over time</div>
+      <div class="pain">😟 Data export & analysis tools are limited</div>
+    </div>
+    <div class="cell cell-goal">
+      <p>Deep stats review — what worked, what didn't, pattern building</p>
+      <div class="motivation">🎯 Personal bests & leaderboards are core drivers</div>
+      <div class="pain">😟 Comparative tools against peers are limited</div>
+    </div>
+    <div class="cell cell-goal">
+      <p>Active contributor — posts catches, tips, spot reviews</p>
+      <div class="motivation">🎯 Reputation & status in the community matters</div>
+      <div class="pain">😟 Wants deeper Pro-only community features</div>
+    </div>
+  </div>
+
+  <!-- App Touchpoints -->
+  <div class="row">
+    <div class="row-label">App Touchpoints</div>
+    <div class="cell cell-touchpoint">
+      <span class="persona-tag tag-touchpoint">In-app</span>
+      <div class="touchpoint-item">Map with nearby catches</div>
+      <div class="touchpoint-item">Species & spot guides</div>
+      <div class="touchpoint-item">Onboarding flow</div>
+    </div>
+    <div class="cell cell-touchpoint">
+      <div class="touchpoint-item">Forecast & conditions feed</div>
+      <div class="touchpoint-item">Gear recommendations</div>
+      <div class="touchpoint-item">Saved spots & trip planner</div>
+    </div>
+    <div class="cell cell-touchpoint">
+      <div class="touchpoint-item">Quick catch log</div>
+      <div class="touchpoint-item">Photo upload & tagging</div>
+      <div class="touchpoint-item">Live conditions widget</div>
+    </div>
+    <div class="cell cell-touchpoint">
+      <div class="touchpoint-item">Personal stats dashboard</div>
+      <div class="touchpoint-item">Trip summary</div>
+      <div class="touchpoint-item">Social share</div>
+    </div>
+    <div class="cell cell-touchpoint">
+      <div class="touchpoint-item">Feed & catch wall</div>
+      <div class="touchpoint-item">Comments & reactions</div>
+      <div class="touchpoint-item">Leaderboards</div>
+    </div>
+  </div>
+
+  <!-- Opportunities -->
+  <div class="row">
+    <div class="row-label">Opportunities</div>
+    <div class="cell cell-opportunity">
+      <span class="persona-tag tag-opportunity">Product</span>
+      <div class="opp">Simplified "family trip" mode — curated beginner experience</div>
+      <div class="opp">Pro upsell: advanced spot intel & species heatmaps</div>
+    </div>
+    <div class="cell cell-opportunity">
+      <div class="opp">AI-powered trip recommendations for leisure users</div>
+      <div class="opp">Pro: detailed historical data & condition overlays</div>
+    </div>
+    <div class="cell cell-opportunity">
+      <div class="opp">One-tap catch logging to reduce friction for casual users</div>
+      <div class="opp">Pro: structured data entry + auto-pattern detection</div>
+    </div>
+    <div class="cell cell-opportunity">
+      <div class="opp">Automated trip recap — shareable memory card</div>
+      <div class="opp">Pro: advanced analytics & export for serious anglers</div>
+    </div>
+    <div class="cell cell-opportunity">
+      <div class="opp">Encourage leisure users with beginner badges & prompts</div>
+      <div class="opp">Pro-only groups, challenges & expert recognition</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

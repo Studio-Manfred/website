@@ -2,7 +2,7 @@ import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
 import Link from "next/link";
 
-export default function BokadirektCase() {
+export default function FishbrainCase() {
   return (
     <>
       <PageNav variant="white" />
@@ -19,19 +19,19 @@ export default function BokadirektCase() {
 
             <div className="mb-20">
               <p className="text-sm font-light text-[var(--color-text-muted)] mb-4">
-                B2B SaaS · User Research · Service Design
+                Consumer App · UX Research · Service Design
               </p>
               <h1
                 className="font-extrabold text-[var(--color-business-blue)] leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] mb-8"
                 style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
               >
-                Bokadirekt
+                Fishbrain
               </h1>
               <p
                 className="font-light text-[var(--color-text-primary)] max-w-3xl"
                 style={{ fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)", lineHeight: 1.7 }}
               >
-                Establishing a scalable UX research practice and mapping the full B2B customer landscape — connecting qualitative depth with quantitative business metrics to drive product prioritization and reduce churn.
+                Establishing a customer-centric, data-driven product culture — mapping user segments, uncovering conversion drivers, and aligning the entire organization around a shared understanding of their anglers.
               </p>
             </div>
 
@@ -44,13 +44,13 @@ export default function BokadirektCase() {
                     Brief
                   </h2>
                   <p className="font-light text-[var(--color-text-primary)] mb-4" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
-                    Bokadirekt needed to better understand their B2B merchant base — who they were, what drove them, and where the product was falling short. The task was threefold:
+                    Fishbrain needed to shift from a feature-driven to a user-centric product approach. The objectives were threefold:
                   </p>
                   <ul className="flex flex-col gap-3" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
                     {[
-                      "Establish a streamlined, scalable UX research process for designers and PMs.",
-                      "Map Bokadirekt's B2B customer base by analysing segment-specific pains, gains, and Jobs-to-be-Done to prioritize SaaS product development.",
-                      "Collaborate closely with Marketing to build a business-focused framework for mapping strategic target segments and Ideal Customer Profiles (ICPs).",
+                      "Establish a customer-centric, data-driven mindset and framework across internal product teams.",
+                      "Deepen the understanding of existing user groups to drive app adoption and retention.",
+                      "Provide data-backed recommendations to guide product prioritization and business decisions.",
                     ].map((item) => (
                       <li key={item} className="flex gap-4 items-start">
                         <span className="mt-[0.6em] flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[var(--color-business-blue)]" />
@@ -65,14 +65,13 @@ export default function BokadirektCase() {
                     Process
                   </h2>
                   <p className="font-light text-[var(--color-text-secondary)] mb-6" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
-                    The project followed a mixed-methods approach designed to capture both deep qualitative insight and broad quantitative validation.
+                    A mixed-methods approach combining deep qualitative discovery with large-scale quantitative validation across Fishbrain's core markets in Sweden and the US.
                   </p>
                   {[
-                    { heading: "Qualitative research", text: "Designed and executed frameworks for ~30 interviews and observational studies with B2B clients, alongside interviews with end-consumers." },
-                    { heading: "Continuous feedback loop", text: "Established a long-term user panel to create an efficient, ongoing feedback mechanism for future product iterations." },
-                    { heading: "AI & operational efficiency", text: "Explored long-term AI capabilities to streamline internal customer-facing operations and workflows." },
-                    { heading: "Quantitative survey", text: "Distributed a broad survey combining qualitative and quantitative questions to validate findings across all B2B customer segments." },
-                    { heading: "Synthesis & business mapping", text: "Analysed and merged all data streams to identify future product needs across segments, aligning user pains with business potential to drive prioritization." },
+                    { heading: "Qualitative discovery", text: "Conducted in-depth interviews and user observation sessions with both Pro (paid) and non-Pro (free) members in Sweden and the US, analysing real-time app interactions to surface friction points and motivators." },
+                    { heading: "Quantitative validation", text: "Distributed and analysed a large-scale survey to validate behavioral trends across the broader international user base." },
+                    { heading: "Data synthesis", text: "Cross-analysed qualitative and quantitative findings with historical product data to map user behavior comprehensively across segments." },
+                    { heading: "Cross-functional collaboration", text: "Partnered closely with the CPO, CTO, Data Science, Product Designers, PMs, and Marketing to align business goals with user insights throughout the process." },
                   ].map((item) => (
                     <div key={item.heading} className="border-t border-[var(--color-border-default)] py-5">
                       <p className="font-extrabold text-[var(--color-text-primary)] mb-2" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)" }}>{item.heading}</p>
@@ -84,7 +83,7 @@ export default function BokadirektCase() {
                       Stakeholder collaboration
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {["Product Managers", "UX Designers", "Chief Product Officer", "Head of Data Science", "Marketing"].map((s) => (
+                      {["CPO", "CTO", "Product Managers", "Product Designers", "Data Science", "Marketing"].map((s) => (
                         <span key={s} className="font-light text-[var(--color-business-blue)] border border-[var(--color-business-blue)] rounded-full px-4 py-1" style={{ fontSize: "13px" }}>
                           {s}
                         </span>
@@ -99,10 +98,10 @@ export default function BokadirektCase() {
                   </h2>
                   <ul className="flex flex-col gap-3 mb-10" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
                     {[
-                      "Tech team roadmaps & prioritization backlogs covering critical fixes, long-term feature enhancements, and estimated retention impact per segment.",
-                      "Consumer journey map & feature wishlist across existing B2C services.",
-                      "Comprehensive ICP & segment analysis framework — categorizing segments by drivers, challenges, digital maturity, GMV, NPS, and churn risk.",
-                      "Research operations toolkit — standardized templates and guidelines enabling product teams to run research independently.",
+                      "Segmented user journey map visualizing key friction points and conversion drivers to optimize the funnel from free users to Pro subscribers.",
+                      "Executive & Board presentation delivering strategic insights connecting user needs with revenue potential directly to C-level executives and the Board of Directors.",
+                      "Product & research roadmap prioritizing feature concepts designed to increase long-term retention for Pro members.",
+                      "Continuous research toolbox — standardized templates and guidelines for internal teams to maintain research practices independently.",
                     ].map((item) => (
                       <li key={item} className="flex gap-4 items-start">
                         <span className="mt-[0.6em] flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[var(--color-business-blue)]" />
@@ -110,19 +109,16 @@ export default function BokadirektCase() {
                       </li>
                     ))}
                   </ul>
-                  <div className="flex flex-col gap-8">
-                    <div>
-                      <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">B2B Segment Matrix</p>
-                      <iframe src="/cases/bokadirekt/bokadirekt-matrix.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "420px" }} title="Persona Matrix" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">Segment Distribution</p>
-                      <iframe src="/cases/bokadirekt/bokadirekt-distribution.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "360px" }} title="Segment Distribution" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">ICP Deep Dive — Example</p>
-                      <iframe src="/cases/bokadirekt/bokadirekt-icp-example.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "600px" }} title="ICP Deep Dive" />
-                    </div>
+                  <div>
+                    <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">
+                      User Journey & Service Blueprint
+                    </p>
+                    <iframe
+                      src="/cases/fishbrain/fishbrain-blueprint.html"
+                      className="w-full border border-[var(--color-border-default)] rounded"
+                      style={{ height: "620px" }}
+                      title="Fishbrain Service Blueprint"
+                    />
                   </div>
                 </div>
 
@@ -131,10 +127,9 @@ export default function BokadirektCase() {
                     Outcomes
                   </h2>
                   {[
-                    { heading: "Increased B2B retention", text: "Directly boosted retention within key, high-priority B2B customer segments by acting on critical product improvements." },
-                    { heading: "Proactive churn reduction", text: "Identified key churn indicators and underlying drivers, equipping the business with actionable insights to reduce churn in critical segments." },
-                    { heading: "Unified customer knowledge", text: "Democratized qualitative and quantitative customer insights across all departments — aligning tech, product, marketing, and leadership around shared user understanding." },
-                    { heading: "Elevated research practice", text: "Raised the overall standard and frequency of continuous product research and user discovery across product teams." },
+                    { heading: "Increased Pro subscriptions", text: "Uncovered key triggers that directly drove higher conversion rates from free users to Pro members." },
+                    { heading: "Higher organisational maturity", text: "Significantly improved internal understanding and adoption of customer-driven product development methodologies across all teams." },
+                    { heading: "Long-term retention strategy", text: "Established a clearer product direction focused on mitigating churn among paying members." },
                   ].map((item) => (
                     <div key={item.heading} className="border-t border-[var(--color-border-default)] py-5">
                       <p className="font-extrabold text-[var(--color-text-primary)] mb-2" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)" }}>{item.heading}</p>
@@ -156,34 +151,34 @@ export default function BokadirektCase() {
                       </div>
                       <div>
                         <p className="font-extrabold text-[var(--color-text-primary)] text-sm">Moa Bogren</p>
-                        <p className="font-light text-[var(--color-text-secondary)] text-sm">Senior User Researcher / Service Designer</p>
+                        <p className="font-light text-[var(--color-text-secondary)] text-sm">UX Lead / Researcher & Service Designer</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="border-t-4 border-[var(--color-business-blue)] pt-5">
                     <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">Client</p>
-                    <p className="font-light text-[var(--color-text-primary)] text-sm">Bokadirekt</p>
+                    <p className="font-light text-[var(--color-text-primary)] text-sm">Fishbrain</p>
                   </div>
 
                   <div className="border-t-4 border-[var(--color-business-blue)] pt-5">
                     <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">Role</p>
-                    <p className="font-light text-[var(--color-text-primary)] text-sm">Senior User Researcher & Service Designer</p>
+                    <p className="font-light text-[var(--color-text-primary)] text-sm">UX Lead / Researcher & Service Designer</p>
                   </div>
 
                   <div className="border-t-4 border-[var(--color-business-blue)] pt-5">
                     <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">Methods</p>
                     <div className="flex flex-col gap-1 text-sm font-light text-[var(--color-text-primary)]">
-                      {["User interviews", "Observational studies", "Survey research", "Persona & ICP mapping", "Jobs-to-be-Done", "Research operations"].map((m) => (
+                      {["User interviews", "Observational studies", "Large-scale survey", "User journey mapping", "Service blueprint", "Research operations"].map((m) => (
                         <p key={m}>{m}</p>
                       ))}
                     </div>
                   </div>
 
                   <div className="border-t-4 border-[var(--color-business-blue)] pt-5">
-                    <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">Collaboration</p>
+                    <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">Markets</p>
                     <div className="flex flex-col gap-1 text-sm font-light text-[var(--color-text-primary)]">
-                      {["Product", "UX Design", "Marketing", "Data Science", "Leadership"].map((m) => (
+                      {["Sweden", "United States"].map((m) => (
                         <p key={m}>{m}</p>
                       ))}
                     </div>
