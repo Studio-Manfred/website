@@ -33,7 +33,7 @@ export default function BokadirektCase() {
                 className="font-light text-[var(--color-text-primary)] max-w-3xl"
                 style={{ fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)", lineHeight: 1.7 }}
               >
-                Establishing a scalable UX research practice and mapping the full B2B customer landscape — connecting qualitative depth with quantitative business metrics to drive product prioritization and reduce churn.
+                Establishing a scalable UX research practice and mapping the full B2B customer landscape - connecting qualitative depth with quantitative business metrics to drive product prioritization and reduce churn.
               </p>
             </div>
 
