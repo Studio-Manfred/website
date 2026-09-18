@@ -1,5 +1,7 @@
+import { ProcessTimeline } from "@/components/ProcessTimeline";
 import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
+import { CaseLightbox } from "@/components/CaseLightbox";
 import Link from "next/link";
 
 export default function FishbrainCase() {
@@ -14,7 +16,7 @@ export default function FishbrainCase() {
               href="/cases"
               className="inline-block font-light text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors mb-6 text-sm tracking-wide uppercase"
             >
-              ← Cases
+              Cases
             </Link>
 
             <div className="mb-20">
@@ -43,7 +45,7 @@ export default function FishbrainCase() {
                   <h2 className="font-extrabold text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1.3rem, 2vw, 1.75rem)" }}>
                     Brief
                   </h2>
-                  <p className="font-light text-[var(--color-text-primary)] mb-4" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
+                  <p className="font-light text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
                     Fishbrain needed to shift from a feature-driven to a user-centric product approach. The objectives were threefold:
                   </p>
                   <ul className="flex flex-col gap-3" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
@@ -60,37 +62,35 @@ export default function FishbrainCase() {
                   </ul>
                 </div>
 
-                <div>
-                  <h2 className="font-extrabold text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1.3rem, 2vw, 1.75rem)" }}>
-                    Process
-                  </h2>
-                  <p className="font-light text-[var(--color-text-secondary)] mb-6" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
-                    A mixed-methods approach combining deep qualitative discovery with large-scale quantitative validation across Fishbrain's core markets in Sweden and the US.
-                  </p>
-                  {[
-                    { heading: "Qualitative discovery", text: "Conducted in-depth interviews and user observation sessions with both Pro (paid) and non-Pro (free) members in Sweden and the US, analysing real-time app interactions to surface friction points and motivators." },
-                    { heading: "Quantitative validation", text: "Distributed and analysed a large-scale survey to validate behavioral trends across the broader international user base." },
-                    { heading: "Data synthesis", text: "Cross-analysed qualitative and quantitative findings with historical product data to map user behavior comprehensively across segments." },
-                    { heading: "Cross-functional collaboration", text: "Partnered closely with the CPO, CTO, Data Science, Product Designers, PMs, and Marketing to align business goals with user insights throughout the process." },
-                  ].map((item) => (
-                    <div key={item.heading} className="border-t border-[var(--color-border-default)] py-5">
-                      <p className="font-extrabold text-[var(--color-text-primary)] mb-2" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)" }}>{item.heading}</p>
-                      <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)", lineHeight: 1.7 }}>{item.text}</p>
-                    </div>
-                  ))}
-                  <div className="mt-10">
-                    <p className="font-extrabold text-[var(--color-text-primary)] mb-4" style={{ fontSize: "clamp(1rem, 1.4vw, 1.1rem)" }}>
-                      Stakeholder collaboration
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {["CPO", "CTO", "Product Managers", "Product Designers", "Data Science", "Marketing"].map((s) => (
-                        <span key={s} className="font-light text-[var(--color-business-blue)] border border-[var(--color-business-blue)] rounded-full px-4 py-1" style={{ fontSize: "13px" }}>
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <ProcessTimeline
+                  steps={[
+  {
+    id: 1,
+    title: "Qualitative Discovery",
+    methods: ["In-depth interviews", "User observation sessions", "Pro & non-Pro members", "Sweden & US markets"],
+    description: "Conducted in-depth interviews and user observation sessions with both Pro (paid) and non-Pro (free) members in Sweden and the US — Fishbrain's core market — to analyze real-time app interactions and surface friction points and motivators.",
+  },
+  {
+    id: 2,
+    title: "Quantitative Validation",
+    methods: ["Large-scale survey", "Behavioral trend analysis", "International user base"],
+    description: "Distributed and analyzed a large-scale survey to validate behavioral trends across the broader international user base, stress-testing hypotheses from the qualitative phase.",
+  },
+  {
+    id: 3,
+    title: "Data Synthesis",
+    methods: ["Qualitative & quant triangulation", "Historical product data", "Behavioral mapping"],
+    description: "Cross-analyzed qualitative and quantitative findings with historical product data to map user behavior comprehensively across segments and identify key conversion and retention drivers.",
+  },
+  {
+    id: 4,
+    title: "Cross-Functional Collaboration",
+    methods: ["CPO & CTO alignment", "PM & designer workshops", "Data Science", "Marketing integration"],
+    description: "Partnered closely with the CPO, CTO, Data Science, Product Designers, PMs, and Marketing to align business goals with user insights throughout the process — ensuring findings translated directly into product decisions.",
+  },
+]} stakeholders={["CPO", "CTO", "Product Managers", "Product Designers", "Data Science", "Marketing"]}
+/>
+            
 
                 <div>
                   <h2 className="font-extrabold text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1.3rem, 2vw, 1.75rem)" }}>
@@ -109,20 +109,11 @@ export default function FishbrainCase() {
                       </li>
                     ))}
                   </ul>
-                  <div>
-                    <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">
-                      User Journey & Service Blueprint
-                    </p>
-                    <iframe
-                      src="/cases/fishbrain/fishbrain-blueprint.html"
-                      className="w-full border border-[var(--color-border-default)] rounded"
-                      style={{ height: "620px" }}
-                      title="Fishbrain Service Blueprint"
-                    />
-                  </div>
-                  <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
-  No real numbers or data — the visualisations are examples with sample data only.
-</p>
+                  <CaseLightbox
+                    src="/cases/fishbrain/fishbrain-blueprint.png"
+                    alt="User Journey & Service Blueprint"
+                    label="User Journey & Service Blueprint"
+                  />
                 </div>
 
                 <div>

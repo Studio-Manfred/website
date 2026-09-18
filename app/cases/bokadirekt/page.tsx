@@ -1,3 +1,5 @@
+import { ProcessTimeline } from "@/components/ProcessTimeline";
+import { CaseLightbox } from "@/components/CaseLightbox";
 import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
 import Link from "next/link";
@@ -14,7 +16,7 @@ export default function BokadirektCase() {
               href="/cases"
               className="inline-block font-light text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors mb-6 text-sm tracking-wide uppercase"
             >
-              ← Cases
+              Cases
             </Link>
 
             <div className="mb-20">
@@ -38,100 +40,92 @@ export default function BokadirektCase() {
             <div className="course-layout" style={{ display: "flex", gap: "5rem", alignItems: "flex-start" }}>
 
               <div className="flex-1 min-w-0 flex flex-col gap-16">
+<div>
+  <h2 className="font-extrabold text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1.3rem, 2vw, 1.75rem)" }}>
+    Brief
+  </h2>
+  <p className="font-light text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
+    Bokadirekt needed to better understand their B2B merchant base — who they were, what drove them, and where the product was falling short.
+  </p>
+  <ul className="flex flex-col gap-3" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
+    {[
+      "Establish a streamlined, scalable UX research process for designers and PMs.",
+      "Map Bokadirekt's B2B customer base by analysing segment-specific pains, gains, and Jobs-to-be-Done to prioritize SaaS product development.",
+      "Collaborate closely with Marketing to build a business-focused framework for mapping strategic target segments and Ideal Customer Profiles (ICPs).",
+    ].map((item) => (
+      <li key={item} className="flex gap-4 items-start">
+        <span className="mt-[0.6em] flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[var(--color-business-blue)]" />
+        <span className="font-light text-[var(--color-text-secondary)]">{item}</span>
+      </li>
+    ))}
+  </ul>
+</div>
 
-                <div>
-                  <h2 className="font-extrabold text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1.3rem, 2vw, 1.75rem)" }}>
-                    Brief
-                  </h2>
-                  <p className="font-light text-[var(--color-text-primary)] mb-4" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
-                    Bokadirekt needed to better understand their B2B merchant base — who they were, what drove them, and where the product was falling short. The task was threefold:
-                  </p>
-                  <ul className="flex flex-col gap-3" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
-                    {[
-                      "Establish a streamlined, scalable UX research process for designers and PMs.",
-                      "Map Bokadirekt's B2B customer base by analysing segment-specific pains, gains, and Jobs-to-be-Done to prioritize SaaS product development.",
-                      "Collaborate closely with Marketing to build a business-focused framework for mapping strategic target segments and Ideal Customer Profiles (ICPs).",
-                    ].map((item) => (
-                      <li key={item} className="flex gap-4 items-start">
-                        <span className="mt-[0.6em] flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[var(--color-business-blue)]" />
-                        <span className="font-light text-[var(--color-text-secondary)]">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h2 className="font-extrabold text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1.3rem, 2vw, 1.75rem)" }}>
-                    Process
-                  </h2>
-                  <p className="font-light text-[var(--color-text-secondary)] mb-6" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
-                    The project followed a mixed-methods approach designed to capture both deep qualitative insight and broad quantitative validation.
-                  </p>
-                  {[
-                    { heading: "Qualitative research", text: "Designed and executed frameworks for ~30 interviews and observational studies with B2B clients, alongside interviews with end-consumers." },
-                    { heading: "Continuous feedback loop", text: "Established a long-term user panel to create an efficient, ongoing feedback mechanism for future product iterations." },
-                    { heading: "AI & operational efficiency", text: "Explored long-term AI capabilities to streamline internal customer-facing operations and workflows." },
-                    { heading: "Quantitative survey", text: "Distributed a broad survey combining qualitative and quantitative questions to validate findings across all B2B customer segments." },
-                    { heading: "Synthesis & business mapping", text: "Analysed and merged all data streams to identify future product needs across segments, aligning user pains with business potential to drive prioritization." },
-                  ].map((item) => (
-                    <div key={item.heading} className="border-t border-[var(--color-border-default)] py-5">
-                      <p className="font-extrabold text-[var(--color-text-primary)] mb-2" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)" }}>{item.heading}</p>
-                      <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)", lineHeight: 1.7 }}>{item.text}</p>
-                    </div>
-                  ))}
-                  <div className="mt-10">
-                    <p className="font-extrabold text-[var(--color-text-primary)] mb-4" style={{ fontSize: "clamp(1rem, 1.4vw, 1.1rem)" }}>
-                      Stakeholder collaboration
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {["Product Managers", "UX Designers", "Chief Product Officer", "Head of Data Science", "Marketing"].map((s) => (
-                        <span key={s} className="font-light text-[var(--color-business-blue)] border border-[var(--color-business-blue)] rounded-full px-4 py-1" style={{ fontSize: "13px" }}>
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <ProcessTimeline
+  steps={[
+    {
+      id: 1,
+      title: "Qualitative Research",
+      methods: ["Stakeholder workshops", "User interviews", "Observation sessions", "AI-assisted analysis"],
+      description: "Designed and executed a qualitative research framework built around close collaboration with internal stakeholders. Ran workshops to align on research questions and business priorities, followed by in-depth interviews and observation sessions with B2B clients. AI tools were used to support thematic analysis and pattern recognition across large volumes of qualitative data.",
+    },
+    {
+      id: 2,
+      title: "Customer Panel",
+      methods: ["Recruited long-term panel", "Ongoing check-ins", "Iterative feedback loops"],
+      description: "Established a long-term user panel to create an efficient, ongoing feedback mechanism for future product iterations. The panel enabled the team to validate hypotheses quickly and maintain a continuous pulse on merchant needs without running full research cycles each time.",
+    },
+    {
+      id: 3,
+      title: "Quantitative Survey",
+      methods: ["Survey design", "Broad distribution", "Statistical analysis", "Segment validation"],
+      description: "Distributed a large-scale survey combining qualitative and quantitative questions to validate findings across all B2B customer segments. The survey was designed to stress-test hypotheses from the qualitative phase and surface patterns across the broader merchant base.",
+    },
+    {
+      id: 4,
+      title: "Synthesis & Business Mapping",
+      methods: ["Data triangulation", "ICP framework", "Business metric mapping", "Segment prioritization"],
+      description: "Analysed and merged all data streams — qualitative findings, survey results, and historical product data — to build a comprehensive picture of the B2B customer landscape. User pains and needs were mapped against business metrics including GMV, NPS, and churn risk to enable data-driven prioritization and strategic decision-making.",
+    },
+  ]}
+  stakeholders={["Product Managers", "UX Designers", "Chief Product Officer", "Head of Data Science", "Marketing"]}
+/>
 
                 <div>
                   <h2 className="font-extrabold text-[var(--color-text-primary)] mb-6" style={{ fontSize: "clamp(1.3rem, 2vw, 1.75rem)" }}>
                     Deliverables
                   </h2>
-                  <ul className="flex flex-col gap-3 mb-10" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)" }}>
-                    {[
-                      "Tech team roadmaps & prioritization backlogs covering critical fixes, long-term feature enhancements, and estimated retention impact per segment.",
-                      "Consumer journey map & feature wishlist across existing B2C services.",
-                      "Comprehensive ICP & segment analysis framework — categorizing segments by drivers, challenges, digital maturity, GMV, NPS, and churn risk.",
-                      "Research operations toolkit — standardized templates and guidelines enabling product teams to run research independently.",
-                    ].map((item) => (
-                      <li key={item} className="flex gap-4 items-start">
-                        <span className="mt-[0.6em] flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[var(--color-business-blue)]" />
-                        <span className="font-light text-[var(--color-text-secondary)]">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <p className="font-light text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1rem, 1.5vw, 1.2rem)", lineHeight: 1.75 }}>
+  Tech team roadmaps & prioritization backlogs covering critical fixes, long-term feature enhancements, and estimated retention impact per segment.
+  <br /><br />
+  Consumer journey map & feature wishlist across existing B2C services.
+  <br /><br />
+  Comprehensive ICP & segment analysis framework — categorizing segments by drivers, challenges, digital maturity, GMV, NPS, and churn risk..
+<br /><br />
+Research operations toolkit — standardized templates and guidelines enabling product teams to run research independently.
+<br /><br />
+</p>
+
                   <div className="flex flex-col gap-8">
+
                     <div>
-                      <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">B2B Segment Matrix</p>
-                      <iframe src="/cases/bokadirekt/bokadirekt-matrix.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "420px" }} title="Persona Matrix" />
+
+                      <div style={{ position: "relative" }}>
+                        <CaseLightbox src="/cases/bokadirekt/bokadirekt-matrix.png" alt="B2B Segment Matrix" label="B2B Segment Matrix" />
+                        
+                        
+                      </div>
+                
                     </div>
-                    <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
-  No real numbers or data — the visualisations are examples with sample data only.
-</p>
+
                     <div>
-                      <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">Segment Distribution</p>
-                      <iframe src="/cases/bokadirekt/bokadirekt-distribution.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "360px" }} title="Segment Distribution" />
+                      <CaseLightbox src="/cases/bokadirekt/bokadirekt-distribution.png" alt="Segment Distribution" label="Segment Distribution" />
                     </div>
-                    <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
-  No real numbers or data — the visualisations are examples with sample data only.
-</p>
+
                     <div>
-                      <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">ICP Deep Dive — Example</p>
-                      <iframe src="/cases/bokadirekt/bokadirekt-icp-example.html" className="w-full border border-[var(--color-border-default)] rounded" style={{ height: "600px" }} title="ICP Deep Dive" />
+                      <CaseLightbox src="/cases/bokadirekt/bokadirekt-icp-example.png" alt="ICP Deep Dive" label="ICP Deep Dive — Example" />
                     </div>
-                    <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
-  No real numbers or data — the visualisations are examples with sample data only.
-</p>
+
                   </div>
                 </div>
 

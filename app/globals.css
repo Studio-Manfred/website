@@ -211,3 +211,9 @@ main:focus {
     cursor: pointer;
   }
 }
+
+/* ─── Skip to content ───────────────────────────────────────────────────────── */
+a[href="#main-content"]:not(:focus) {
+  position: absolute;
+  left: -9999px;
+}
