@@ -6,6 +6,10 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ## [Unreleased]
 
+### Changed
+
+- **Design system 0.33 → 0.36** (STU-944). The site's Tailwind entry now imports the DS `tokens.css` (so token utilities like `bg-muted` work in the site's own code) and has an `@source` for the DS `dist`, which keeps DS-only responsive classes in production builds. Added with `manfred-ds-cli doctor --fix`, which now reports 8/8 checks green. The custom cursor is unaffected: its unlayered `cursor: none` still beats the DS base-layer `cursor: pointer`.
+
 ## [2026-07-06]
 
 ### Added
