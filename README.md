@@ -11,7 +11,7 @@ Supabase.
   come from `@studio-manfred/manfred-design-system/styles` imported in
   [app/layout.tsx](app/layout.tsx).
 - **Design system**: [`@studio-manfred/manfred-design-system`](https://github.com/Studio-Manfred/manfred-design-system)
-  from **GitHub Packages** (currently v0.33.0). Auto-bumped weekly by
+  from **GitHub Packages** (currently v0.36.0). Auto-bumped weekly by
   Dependabot; other deps are manual.
 - **Data**: `@supabase/supabase-js` reading the `blog_posts` table from the
   intranet Supabase project (writing pages only).
