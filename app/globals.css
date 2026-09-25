@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@studio-manfred/manfred-design-system/tokens.css";
+@source "../node_modules/@studio-manfred/manfred-design-system/dist";
 
 /* Pre-checked muted white for body text on --color-business-blue. 80% opacity
    keeps body text above WCAG 4.5:1 on the brand-blue background; lower values
