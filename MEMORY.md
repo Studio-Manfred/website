@@ -4,7 +4,7 @@ Quick-start notes for future sessions. Audit this before editing — recent chan
 
 ## Stack
 - **Next.js 16.2.6** App Router on **React 19.2.4**, **TypeScript 5**, **Tailwind v4** (PostCSS plugin, no `tailwind.config` — tokens live in the design system CSS).
-- `@studio-manfred/manfred-design-system@^0.36.0` pulled from **GitHub Packages** (see [.npmrc](.npmrc), [.github/dependabot.yml](.github/dependabot.yml) auto-bumps it weekly).
+- `@studio-manfred/manfred-design-system@^0.37.1` pulled from **GitHub Packages** (see [.npmrc](.npmrc), [.github/dependabot.yml](.github/dependabot.yml) auto-bumps it weekly).
 - Data layer: **Supabase** (`@supabase/supabase-js`) — only `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`. The CMS itself lives in a separate "intranet" project (commit `19642c4`).
 - Test suite: Vitest + RTL + jest-dom (100+ unit tests, `npm test`), Playwright + `@axe-core/playwright` (E2E + runtime a11y, `npm run e2e`). Coverage ratchet at [scripts/coverage-ratchet.mjs](scripts/coverage-ratchet.mjs). No `vercel.json` / `vercel.ts`.
 - Scripts: `dev / build / start / lint / test / test:watch / test:coverage / e2e / e2e:ui`. ESLint flat config extends `next/core-web-vitals` + `next/typescript`. tsconfig path alias `@/*` → repo root.
