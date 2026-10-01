@@ -23,6 +23,8 @@ Supabase.
 
 ## Local setup
 
+New to the repo? Start with [ONBOARDING.md](ONBOARDING.md), the short path from clone to production.
+
 **Node**: 20.x (matches CI).
 
 **GitHub Packages auth** — required to install the DS.
@@ -198,6 +200,7 @@ referenced by one and missed by a workflow grep.
 
 ## Where to look for more
 
+- [`ONBOARDING.md`](ONBOARDING.md) — first-day guide for new team members.
 - [`CLAUDE.md`](CLAUDE.md) — instructions for AI collaborators; captures the
   finer-grained architectural conventions and current in-flight decisions.
 - [`MEMORY.md`](MEMORY.md) — session hand-off notes.
