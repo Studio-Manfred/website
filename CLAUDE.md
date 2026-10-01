@@ -12,7 +12,7 @@ start.
 - Tailwind **v4** via `@tailwindcss/postcss` — no `tailwind.config.*`. Tokens
   come from `@studio-manfred/manfred-design-system/styles` imported in
   [app/layout.tsx](app/layout.tsx).
-- Design system: `@studio-manfred/manfred-design-system` **v0.33.0** from
+- Design system: `@studio-manfred/manfred-design-system` **v0.37.1** from
   **GitHub Packages** — Dependabot auto-bumps weekly (see
   [`.github/dependabot.yml`](.github/dependabot.yml)).
 - Data: `@supabase/supabase-js` reading the `blog_posts` table from the intranet
