@@ -4,7 +4,9 @@ import Image from "next/image";
 import { FadeIn } from "@/components/FadeIn";
 import { useState, useEffect, useRef } from "react";
 
-const team = [
+type TeamMember = { name: string; role: string; photo: string };
+
+const team: TeamMember[] = [
   { name: "Selma Hallqvist", role: "Senior Product Designer", photo: "/team/selma.jpg" },
   { name: "Axel Nathorst-Böös", role: "Design & Product Leadership", photo: "/team/axel.jpg" },
   { name: "Moa Bogren", role: "Senior User Research (UXR)", photo: "/team/moa.jpg" },
@@ -37,7 +39,7 @@ type Floater = {
   rotation: number;
 };
 
-export function Team() {
+export function Team({ members = team }: { members?: TeamMember[] }) {
   const [rave, setRave] = useState(false);
   const [floaters, setFloaters] = useState<Floater[]>([]);
   const [flash, setFlash] = useState(false);
@@ -171,77 +173,81 @@ export function Team() {
         </FadeIn>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-14">
-          {team.map((member, i) => (
-            <FadeIn key={member.name} delay={(i % 4) as 0 | 1 | 2 | 3}>
-              <div className="flex flex-col gap-4">
-                <div style={{ position: "relative" }}>
-                  {/* Outer spinning ring */}
-                  {rave && (
+          {members.map((member, i) => {
+            const frame = raveFrames[i % raveFrames.length];
+            const colors = raveColors[i % raveColors.length];
+            return (
+              <FadeIn key={member.name} delay={(i % 4) as 0 | 1 | 2 | 3}>
+                <div className="flex flex-col gap-4">
+                  <div style={{ position: "relative" }}>
+                    {/* Outer spinning ring */}
+                    {rave && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: "-8px",
+                          borderRadius: frame.borderRadius,
+                          border: `4px solid ${colors[0]}`,
+                          animation: frame.animation,
+                          boxShadow: `0 0 20px ${colors[0]}, 0 0 40px ${colors[0]}`,
+                          zIndex: 2,
+                        }}
+                      />
+                    )}
+                    {/* Inner spinning ring */}
+                    {rave && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: "-16px",
+                          borderRadius: frame.borderRadius,
+                          border: `2px dashed ${colors[1]}`,
+                          animation: `${frame.animation.replace("1.5s", "3s").replace("2s", "4s")} reverse`,
+                          boxShadow: `0 0 15px ${colors[1]}`,
+                          zIndex: 1,
+                        }}
+                      />
+                    )}
                     <div
+                      className="aspect-square w-full overflow-hidden relative"
                       style={{
-                        position: "absolute",
-                        inset: "-8px",
-                        borderRadius: raveFrames[i].borderRadius,
-                        border: `4px solid ${raveColors[i][0]}`,
-                        animation: raveFrames[i].animation,
-                        boxShadow: `0 0 20px ${raveColors[i][0]}, 0 0 40px ${raveColors[i][0]}`,
-                        zIndex: 2,
+                        borderRadius: rave ? frame.borderRadius : "0%",
+                        transition: "border-radius 0.5s ease",
                       }}
-                    />
-                  )}
-                  {/* Inner spinning ring */}
-                  {rave && (
-                    <div
+                    >
+                      <Image
+                        src={member.photo}
+                        alt={member.name}
+                        fill
+                        className="object-cover object-top"
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <p
+                      className="font-extrabold"
                       style={{
-                        position: "absolute",
-                        inset: "-16px",
-                        borderRadius: raveFrames[i].borderRadius,
-                        border: `2px dashed ${raveColors[i][1]}`,
-                        animation: `${raveFrames[i].animation.replace("1.5s", "3s").replace("2s", "4s")} reverse`,
-                        boxShadow: `0 0 15px ${raveColors[i][1]}`,
-                        zIndex: 1,
+                        fontSize: "clamp(1rem, 1.4vw, 1.4rem)",
+                        color: rave ? colors[0] : "var(--color-text-primary)",
                       }}
-                    />
-                  )}
-                  <div
-                    className="aspect-square w-full overflow-hidden relative"
-                    style={{
-                      borderRadius: rave ? raveFrames[i].borderRadius : "0%",
-                      transition: "border-radius 0.5s ease",
-                    }}
-                  >
-                    <Image
-                      src={member.photo}
-                      alt={member.name}
-                      fill
-                      className="object-cover object-top"
-                      sizes="(max-width: 768px) 50vw, 33vw"
-                    />
+                    >
+                      {member.name}
+                    </p>
+                    <p
+                      className="font-light mt-1"
+                      style={{
+                        fontSize: "clamp(0.875rem, 1.1vw, 1.1rem)",
+                        color: rave ? "rgba(255,255,255,0.6)" : "var(--color-text-primary)",
+                      }}
+                    >
+                      {member.role}
+                    </p>
                   </div>
                 </div>
-                <div>
-                  <p
-                    className="font-extrabold"
-                    style={{
-                      fontSize: "clamp(1rem, 1.4vw, 1.4rem)",
-                      color: rave ? raveColors[i][0] : "var(--color-text-primary)",
-                    }}
-                  >
-                    {member.name}
-                  </p>
-                  <p
-                    className="font-light mt-1"
-                    style={{
-                      fontSize: "clamp(0.875rem, 1.1vw, 1.1rem)",
-                      color: rave ? "rgba(255,255,255,0.6)" : "var(--color-text-primary)",
-                    }}
-                  >
-                    {member.role}
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
+              </FadeIn>
+            );
+          })}
         </div>
 
         <div className="flex justify-center mt-16">

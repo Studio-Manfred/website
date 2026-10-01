@@ -98,3 +98,25 @@ describe("Team", () => {
     clearSpy.mockRestore();
   });
 });
+
+describe("Team with more members than rave styles", () => {
+  const fiveMembers = [
+    { name: "A", role: "r", photo: "/team/a.jpg" },
+    { name: "B", role: "r", photo: "/team/b.jpg" },
+    { name: "C", role: "r", photo: "/team/c.jpg" },
+    { name: "D", role: "r", photo: "/team/d.jpg" },
+    { name: "E", role: "r", photo: "/team/e.jpg" },
+  ];
+
+  it("renders a fifth member and survives rave mode", () => {
+    render(<Team members={fiveMembers} />);
+    expect(screen.getAllByTestId("team-photo")).toHaveLength(5);
+
+    fireEvent.click(screen.getByRole("button", { name: /make it rave/i }));
+
+    expect(screen.getByText("E")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /stop the rave/i }),
+    ).toBeInTheDocument();
+  });
+});
