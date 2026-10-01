@@ -11,6 +11,7 @@ const team: TeamMember[] = [
   { name: "Axel Nathorst-Böös", role: "Design & Product Leadership", photo: "/team/axel.jpg" },
   { name: "Moa Bogren", role: "Senior User Research (UXR)", photo: "/team/moa.jpg" },
   { name: "Jens Wedin", role: "Design Director & Service Designer", photo: "/team/jens.jpg" },
+  { name: "Markus Dahlbom", role: "Product Designer", photo: "/team/markus.jpg" },
 ];
 
 const raveFrames = [
