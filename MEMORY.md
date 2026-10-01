@@ -239,3 +239,8 @@ The slug-less `/news` page ([app/news/page.tsx](app/news/page.tsx)) is unchanged
 Production at `40aca69` (main HEAD). All health checks green.
 
 **End-to-end verified** (PR [#6](https://github.com/Studio-Manfred/website/pull/6) merged 2026-05-25): live curl confirmed `307` redirects for two known broken paths and `404` for a bogus slug; the monthly audit was re-dispatched ([run 26397806553](https://github.com/Studio-Manfred/website/actions/runs/26397806553)) and reported `Audit clean — no Slack message sent.`
+
+## Session hand-off 2026-10-01
+- DS bumped 0.36 → 0.37.1 (#30) and deployed to production.
+- **CI is red on `main` since #29**: the coverage ratchet sits at ~61% vs a ~70% baseline (statements/branches/functions/lines all ~9–12 pp down). This is pre-existing and not caused by the DS bumps. Likely uncovered files from the case-studies commit `2667f25` (`app/cases/*`, `ProcessTimeline`, `CaseLightbox`). While it fails, Playwright E2E + axe are skipped. Fix: exclude or test those files.
+- Added [ONBOARDING.md](ONBOARDING.md) for new hire Markus. His first task is adding himself to `team` in [components/sections/Team.tsx](components/sections/Team.tsx). Team now accepts a `members` prop, and rave styles cycle with `i % length` (previously a 5th member crashed rave mode).
