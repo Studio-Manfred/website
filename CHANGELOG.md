@@ -10,6 +10,10 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 - **Team**: Markus Dahlbom joins the team section.
 
+### Removed
+
+- **Team**: Axel Nathorst-Böös has left Studio Manfred and is removed from the team section.
+
 ### Changed
 
 - **Design system 0.36 → 0.37.1.** Adds a `ColorPicker` component (not used on the site yet) and a packaging fix; no visible change.
