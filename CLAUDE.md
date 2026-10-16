@@ -116,6 +116,16 @@ own domain automatically routes events to own domain. **Don't** hardcode
 `manfred-analytics.vercel.app` into the layout script tag again — it will
 work but restore the ad-blocker-catches-us problem.
 
+### AI landing page under /ai
+
+`/ai` is served by a separate Next.js app (`web/` in
+`Studio-Manfred/manfred-ai-in-da-box`, `basePath: "/ai"`). Two rewrites in
+[`next.config.ts`](next.config.ts) forward `/ai` and `/ai/:path*` to
+`$AI_LANDING_ORIGIN`. The rewrites exist only when `AI_LANDING_ORIGIN` is set
+(for example `https://<project>.vercel.app`, no trailing slash needed). Without
+it, `/ai` is a 404 and nothing else changes. Set the variable in the Vercel
+project for each environment that should serve the page.
+
 ## Accessibility baseline
 
 - `<html lang="en">` in [app/layout.tsx](app/layout.tsx); skip-link is the first

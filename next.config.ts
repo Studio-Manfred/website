@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
 
+// Origin of the separate AI landing page app (manfred-ai-in-da-box/web).
+// Unset by default, so /ai stays a 404 until the app is deployed and the
+// variable is set in Vercel.
+const aiLandingOrigin = process.env.AI_LANDING_ORIGIN?.replace(/\/+$/, "");
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -22,6 +27,13 @@ const nextConfig: NextConfig = {
         source: "/api/event",
         destination: "https://manfred-analytics.vercel.app/api/event",
       },
+      // The app uses basePath "/ai", so pages and assets all live under /ai.
+      ...(aiLandingOrigin
+        ? [
+            { source: "/ai", destination: `${aiLandingOrigin}/ai` },
+            { source: "/ai/:path*", destination: `${aiLandingOrigin}/ai/:path*` },
+          ]
+        : []),
     ];
   },
 };
