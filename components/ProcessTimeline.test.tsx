@@ -56,4 +56,17 @@ describe("ProcessTimeline", () => {
     expect(screen.getByRole("heading", { name: /process & methods/i })).toBeInTheDocument();
     expect(screen.queryAllByRole("button")).toHaveLength(0);
   });
+
+  it("uses the heading it is given, and keeps the default without one (STU-1146)", () => {
+    const { unmount } = render(<ProcessTimeline steps={steps} stakeholders={[]} heading="How we worked" />);
+    expect(screen.getByRole("heading", { name: "How we worked" })).toBeInTheDocument();
+    unmount();
+    render(<ProcessTimeline steps={steps} stakeholders={[]} />);
+    expect(screen.getByRole("heading", { name: "Process & Methods" })).toBeInTheDocument();
+  });
+
+  it("shows no stakeholder section when there are none (STU-1146)", () => {
+    render(<ProcessTimeline steps={steps} stakeholders={[]} />);
+    expect(screen.queryByText("Stakeholder collaboration")).not.toBeInTheDocument();
+  });
 });

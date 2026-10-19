@@ -12,6 +12,7 @@ type Step = {
 type Props = {
   steps: Step[];
   stakeholders: string[];
+  heading?: string;
 };
 
 const BLUE_HEX = "#2a3fcc";
@@ -36,7 +37,7 @@ function buildCurve(fromY: number, toY: number) {
   return pts.join(" ");
 }
 
-export function ProcessTimeline({ steps, stakeholders }: Props) {
+export function ProcessTimeline({ steps, stakeholders, heading = "Process & Methods" }: Props) {
   const [active, setActive] = useState<number>(steps[0]?.id ?? 1);
   const current = steps.find((s) => s.id === active)!;
   const totalH = steps.length * STEP_HEIGHT;
@@ -48,7 +49,7 @@ export function ProcessTimeline({ steps, stakeholders }: Props) {
         className="font-extrabold text-[var(--color-text-primary)] mb-10"
         style={{ fontSize: "clamp(1.3rem, 2vw, 1.75rem)" }}
       >
-        Process & Methods
+        {heading}
       </h2>
 
       <div style={{ display: "flex", gap: "36px", alignItems: "flex-start" }}>
@@ -139,7 +140,9 @@ export function ProcessTimeline({ steps, stakeholders }: Props) {
                       style={{
                         fontSize: "clamp(0.85rem, 1.2vw, 1rem)",
                         fontWeight: isActive ? 800 : isPast ? 500 : 400,
-                        color: isActive ? BLUE_HEX : isPast ? `${BLUE_HEX}88` : "#ccc",
+                        // STU-1146: solid colours that pass WCAG AA text contrast on white
+                        // (the old #ccc / translucent blue were 1.6:1 and ~3:1).
+                        color: isActive || isPast ? BLUE_HEX : "var(--color-text-muted)",
                         transition: "all 0.2s ease",
                         whiteSpace: "nowrap",
                       }}
@@ -191,6 +194,7 @@ export function ProcessTimeline({ steps, stakeholders }: Props) {
 
       </div>
 
+      {stakeholders.length > 0 && (
       <div className="mt-10">
         <p
           className="font-extrabold text-[var(--color-text-primary)] mb-4"
@@ -210,6 +214,7 @@ export function ProcessTimeline({ steps, stakeholders }: Props) {
           ))}
         </div>
       </div>
+      )}
     </div>
   );
 }

@@ -15,7 +15,7 @@ start.
 - Design system: `@studio-manfred/manfred-design-system` **v0.37.1** from
   **GitHub Packages** — Dependabot auto-bumps weekly (see
   [`.github/dependabot.yml`](.github/dependabot.yml)).
-- Data: `@supabase/supabase-js` reading the `blog_posts` table from the intranet
+- Data: `@supabase/supabase-js` reading the `blog_posts` and (STU-1146) published `cases` tables from the intranet
   Supabase project.
 - No `vercel.json` / `vercel.ts` — Vercel picks up `next build` automatically.
   URL rewrites live in [`next.config.ts`](next.config.ts) (see "Analytics

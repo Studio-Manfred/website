@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 import fixture from "../fixtures/blog-posts.json";
+import caseFixture from "../fixtures/cases.json";
 
 type Post = (typeof fixture)[number];
 
@@ -60,5 +61,21 @@ export const handlers = [
     }
 
     return HttpResponse.json(listPublishedPosts(url));
+  }),
+  // STU-1146: case pages. Mirrors PostgREST + RLS: only published rows,
+  // filtered by slug (`eq.`), honouring `limit`.
+  http.get(`${SUPABASE_URL}/rest/v1/cases`, ({ request }) => {
+    const url = new URL(request.url);
+    const allowed = new Set(["select", "slug", "published", "limit"]);
+    for (const key of url.searchParams.keys()) {
+      if (!allowed.has(key)) {
+        return HttpResponse.json({ message: "msw handler: unexpected cases query", url: url.toString() }, { status: 500 });
+      }
+    }
+    let rows = caseFixture.filter((c) => c.published);
+    const slug = url.searchParams.get("slug");
+    if (slug?.startsWith("eq.")) rows = rows.filter((c) => c.slug === slug.slice(3));
+    const limit = Number(url.searchParams.get("limit") ?? rows.length);
+    return HttpResponse.json(rows.slice(0, limit));
   }),
 ];

@@ -15,6 +15,7 @@ Quick-start notes for future sessions. Audit this before editing — recent chan
 - `/` — single-page composition in [app/page.tsx](app/page.tsx): `Hero → Tagline → Mission → Services → Marquee → Team → WhatElse → JoinUs → Footer`.
 - `/training-and-courses` — accordion landing ([page.tsx](app/training-and-courses/page.tsx)) + 7 course sub-pages (business-design, customer-journey-mapping, cx-management, design-leadership, design-thinking-for-hr, designops, product-discovery). Each sub-page renders a shared [CourseDetail](components/CourseDetail.tsx) from `courses.find(...)`.
 - `/writing` and `/writing/[slug]` — Supabase-backed blog ([lib/articles.ts](lib/articles.ts) reads `blog_posts` + `profiles`, strips WP shortcodes via `cleanContent`).
+- `/cases/[slug]` — case pages from the intranet's **Case CMS** (STU-1143/1146): [lib/cases.ts](lib/cases.ts) reads one **published** `cases` row (RLS: anon sees published only), [components/CaseStudy.tsx](components/CaseStudy.tsx) renders the blocks (brief / process via `ProcessTimeline` / deliverables via `CaseLightbox` / outcomes) and the sidebar. `force-dynamic`, so publishing in the intranet shows at once. Unknown block types are skipped. `/cases/fishbrain` and `/cases/bokadirekt` are still static pages that win over `[slug]` until STU-1147 removes them. There is no `/cases` index yet.
 - `/news` — pure `redirect("/writing")` ([app/news/page.tsx](app/news/page.tsx)).
 - `/join-us`, `/privacy-policy` — static content pages.
 
@@ -30,6 +31,7 @@ Quick-start notes for future sessions. Audit this before editing — recent chan
 ## Data ([lib/](lib/))
 - [lib/supabase.ts](lib/supabase.ts) — single browser client from public env keys.
 - [lib/articles.ts](lib/articles.ts) — `Article` type, `getArticles()` / `getArticle(slug)`, HTML stripping + WP shortcode cleanup.
+- [lib/cases.ts](lib/cases.ts) — `CaseStudy` type, tolerant `parseCase`, `getCase(slug)`. Shapes mirror the intranet's `src/lib/case-model.ts`: change both repos together.
 - [lib/courses.ts](lib/courses.ts) — `Course[]` with discriminated `ContentBlock` union (`text | list | testimonial | alumni | fine-print`). Courses are static, not in Supabase.
 
 ## Styling conventions

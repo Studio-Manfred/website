@@ -9,6 +9,10 @@ const fixture = JSON.parse(
   readFileSync(join(here, "..", "test", "fixtures", "blog-posts.json"), "utf8"),
 );
 
+const caseFixture = JSON.parse(
+  readFileSync(join(here, "..", "test", "fixtures", "cases.json"), "utf8"),
+);
+
 const PORT = Number(process.env.MOCK_PORT ?? 54321);
 const ALLOWED_QUERY_KEYS = new Set(["select", "published", "order", "slug"]);
 
@@ -35,6 +39,16 @@ const server = createServer((req, res) => {
 
   if (url.pathname === "/health") {
     res.writeHead(200).end("ok");
+    return;
+  }
+
+  // STU-1146: case pages. Published rows only (RLS), by slug, with limit.
+  if (url.pathname === "/rest/v1/cases" && req.method === "GET") {
+    let rows = caseFixture.filter((c) => c.published);
+    const slug = url.searchParams.get("slug");
+    if (slug?.startsWith("eq.")) rows = rows.filter((c) => c.slug === slug.slice(3));
+    const limit = Number(url.searchParams.get("limit") ?? rows.length);
+    json(res, 200, rows.slice(0, limit));
     return;
   }
 

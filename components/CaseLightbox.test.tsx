@@ -33,4 +33,19 @@ describe("CaseLightbox", () => {
     fireEvent.click(enlarged.parentElement!.parentElement!);
     expect(screen.getAllByAltText("Segment matrix")).toHaveLength(1);
   });
+
+  it("shows the sample-data note by default, a given note, or none (STU-1146)", () => {
+    const { unmount, rerender } = render(<CaseLightbox {...props} />);
+    expect(screen.getByText(/No real numbers or data/)).toBeInTheDocument();
+    rerender(<CaseLightbox {...props} note="Illustration only." />);
+    expect(screen.getByText("Illustration only.")).toBeInTheDocument();
+    rerender(<CaseLightbox {...props} note={null} />);
+    expect(screen.queryByText(/No real numbers|Illustration/)).not.toBeInTheDocument();
+    unmount();
+  });
+
+  it("leaves out the label row when there is no label (STU-1146)", () => {
+    render(<CaseLightbox {...props} label="" />);
+    expect(screen.queryByText("B2B Segment Matrix")).not.toBeInTheDocument();
+  });
 });

@@ -8,7 +8,12 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Cases**: case pages at `/cases/<slug>` come from the intranet's Case CMS, live when published there (STU-1146).
 - **Team**: Markus Dahlbom joins the team section.
+
+### Fixed
+
+- **Cases**: the process timeline's step names now meet WCAG AA contrast (they were light grey, 1.6:1) (STU-1146).
 
 ### Removed
 
