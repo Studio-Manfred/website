@@ -12,6 +12,7 @@ const ROUTES = [
   "/training-and-courses/product-discovery",
   "/writing",
   "/writing/hello-world",
+  "/cases",
   "/cases/example-case",
   "/join-us",
   "/privacy-policy",

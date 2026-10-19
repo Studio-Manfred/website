@@ -94,3 +94,22 @@ export async function getCase(slug: string): Promise<CaseStudy | null> {
   if (error || !data?.length) return null;
   return parseCase(data[0]);
 }
+
+export type CaseSummary = Pick<CaseStudy, "slug" | "title" | "categoryLine"> & { consultants: Consultant[] };
+
+/** Published cases for the /cases overview, newest first (STU-1148). */
+export async function listCases(): Promise<CaseSummary[]> {
+  const { data, error } = await supabase
+    .from("cases")
+    .select("slug, title, category_line, sidebar")
+    .eq("published", true)
+    .order("published_at", { ascending: false });
+  if (error) {
+    console.error("listCases:", error.message);
+    return [];
+  }
+  return (data ?? []).map((row) => {
+    const c = parseCase(row);
+    return { slug: c.slug, title: c.title, categoryLine: c.categoryLine, consultants: c.sidebar.consultants };
+  });
+}
