@@ -2,20 +2,27 @@
 
 import { useState } from "react";
 
+// Default note for the original hardcoded cases; the Case CMS (STU-1146)
+// passes each image's own note, or null for none.
+const SAMPLE_DATA_NOTE = "No real numbers or data — the visualisations are examples with sample data only.";
+
 type Props = {
   src: string;
   alt: string;
   label: string;
+  note?: string | null;
 };
 
-export function CaseLightbox({ src, alt, label }: Props) {
+export function CaseLightbox({ src, alt, label, note = SAMPLE_DATA_NOTE }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
     <div>
-      <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">
-        {label}
-      </p>
+      {label && (
+        <p className="text-xs font-extrabold text-[var(--color-business-blue)] uppercase tracking-widest mb-3">
+          {label}
+        </p>
+      )}
       <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setOpen(true)}>
         <img
           src={src}
@@ -26,9 +33,11 @@ export function CaseLightbox({ src, alt, label }: Props) {
           Click to enlarge
         </div>
       </div>
-      <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
-        No real numbers or data — the visualisations are examples with sample data only.
-      </p>
+      {note && (
+        <p className="font-light text-[var(--color-text-muted)] mt-2" style={{ fontSize: "12px" }}>
+          {note}
+        </p>
+      )}
 
       {open && (
         <div

@@ -1,0 +1,36 @@
+[
+  {
+    "id": "c-example",
+    "slug": "example-case",
+    "title": "Example Client",
+    "category_line": "Consumer App · UX Research",
+    "intro": "How we helped an example client understand their users.",
+    "published": true,
+    "blocks": [
+      { "id": "b1", "type": "brief", "heading": "Brief", "text": "The client needed to understand their users.\n\nIt had three goals:", "bullets": ["Goal one", "Goal two"] },
+      { "id": "b2", "type": "process", "heading": "Process & Methods", "steps": [
+        { "title": "Discovery", "methods": ["Interviews"], "description": "We talked to users." },
+        { "title": "Validation", "methods": ["Survey"], "description": "We surveyed many users." }
+      ], "stakeholders": ["CPO", "Marketing"] },
+      { "id": "b3", "type": "deliverables", "heading": "Deliverables", "text": "", "bullets": ["A journey map"], "images": [
+        { "src": "/cases/example.png", "alt": "Journey map", "label": "Journey map", "note": "Sample data only.", "show_note": true }
+      ] },
+      { "id": "b4", "type": "video", "url": "https://example.com" },
+      { "id": "b5", "type": "outcomes", "heading": "Outcomes", "items": [{ "heading": "More users", "text": "Adoption went up." }] }
+    ],
+    "sidebar": {
+      "consultants": [{ "profile_id": "p1", "name": "Moa Bogren", "title": "UX Lead", "photo_url": "/team/moa.jpg" }],
+      "facts": [{ "label": "Client", "items": ["Example Client"] }, { "label": "Markets", "items": ["Sweden", "United States"] }]
+    }
+  },
+  {
+    "id": "c-draft",
+    "slug": "secret-draft",
+    "title": "Draft",
+    "category_line": "",
+    "intro": "",
+    "published": false,
+    "blocks": [],
+    "sidebar": { "consultants": [], "facts": [] }
+  }
+]
