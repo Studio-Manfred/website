@@ -17,6 +17,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Removed
 
+- **Cases**: the hardcoded Fishbrain and Bokadirekt pages; both are now edited in the intranet's Case CMS (STU-1147).
 - **Team**: Axel Nathorst-Böös has left Studio Manfred and is removed from the team section.
 
 ### Changed
