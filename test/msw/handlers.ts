@@ -66,7 +66,7 @@ export const handlers = [
   // filtered by slug (`eq.`), honouring `limit`.
   http.get(`${SUPABASE_URL}/rest/v1/cases`, ({ request }) => {
     const url = new URL(request.url);
-    const allowed = new Set(["select", "slug", "published", "limit"]);
+    const allowed = new Set(["select", "slug", "published", "limit", "order"]);
     for (const key of url.searchParams.keys()) {
       if (!allowed.has(key)) {
         return HttpResponse.json({ message: "msw handler: unexpected cases query", url: url.toString() }, { status: 500 });

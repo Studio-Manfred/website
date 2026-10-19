@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Cases**: `/cases` lists every published case with its title and consultant (STU-1148).
 - **Cases**: case pages at `/cases/<slug>` come from the intranet's Case CMS, live when published there (STU-1146).
 - **Team**: Markus Dahlbom joins the team section.
 

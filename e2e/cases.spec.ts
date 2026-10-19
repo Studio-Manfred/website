@@ -20,3 +20,12 @@ test("an unknown case is a 404", async ({ page }) => {
   const response = await page.goto("/cases/no-such-case");
   expect(response?.status()).toBe(404);
 });
+
+test("the /cases overview lists published cases and links to them (STU-1148)", async ({ page }) => {
+  await page.goto("/cases");
+  await expect(page.getByRole("heading", { level: 1, name: "Cases" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Secret|Draft/ })).toHaveCount(0);
+  await page.getByRole("link", { name: /Example Client/ }).click();
+  await expect(page).toHaveURL(/\/cases\/example-case$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Example Client" })).toBeVisible();
+});

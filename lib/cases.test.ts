@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import fixture from "@/test/fixtures/cases.json";
-import { getCase, parseCase } from "./cases";
+import { getCase, listCases, parseCase } from "./cases";
 
 describe("parseCase (STU-1146)", () => {
   it("keeps known blocks in order, drops unknown types, fills gaps", () => {
@@ -38,5 +38,19 @@ describe("getCase (STU-1146)", () => {
   it("returns null for a draft or an unknown slug", async () => {
     expect(await getCase("secret-draft")).toBeNull();
     expect(await getCase("no-such-case")).toBeNull();
+  });
+});
+
+describe("listCases (STU-1148)", () => {
+  it("lists published cases only: slug, title, category line and consultants", async () => {
+    const list = await listCases();
+    expect(list).toEqual([
+      {
+        slug: "example-case",
+        title: "Example Client",
+        categoryLine: "Consumer App · UX Research",
+        consultants: [{ name: "Moa Bogren", title: "UX Lead", photoUrl: "/team/moa.jpg" }],
+      },
+    ]);
   });
 });
