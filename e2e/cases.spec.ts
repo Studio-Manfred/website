@@ -29,3 +29,27 @@ test("the /cases overview lists published cases and links to them (STU-1148)", a
   await expect(page).toHaveURL(/\/cases\/example-case$/);
   await expect(page.getByRole("heading", { level: 1, name: "Example Client" })).toBeVisible();
 });
+
+test.describe("password-protected case (STU-1156)", () => {
+  test("is listed with a lock, asks for the password, rejects a wrong one, opens with the right one and stays open", async ({ page }) => {
+    await page.goto("/cases");
+    await expect(page.getByRole("link", { name: /Locked Client/ })).toContainText("Password protected");
+
+    await page.goto("/cases/locked-case");
+    await expect(page.getByRole("heading", { level: 1, name: "This case is password protected" })).toBeVisible();
+    await expect(page.getByText("The secret brief.")).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+
+    await page.getByLabel("Password").fill("wrong");
+    await page.getByRole("button", { name: "Open the case" }).click();
+    await expect(page.locator("#case-password-error")).toContainText("doesn’t open this case");
+
+    await page.getByLabel("Password").fill("open-sesame");
+    await page.getByRole("button", { name: "Open the case" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Locked Client" })).toBeVisible();
+    await expect(page.getByText("The secret brief.")).toBeVisible();
+
+    await page.reload();
+    await expect(page.getByRole("heading", { level: 1, name: "Locked Client" })).toBeVisible();
+  });
+});
