@@ -44,6 +44,17 @@ function Bullets({ items, className = "" }: { items: string[]; className?: strin
   );
 }
 
+// The big key figure of an outcome (STU-1153). A leading minus is read as "minus".
+function OutcomeFigure({ figure }: { figure: string }) {
+  const spoken = figure.replace(/^[-\u2212]/, "minus ");
+  return (
+    <p className="font-extrabold text-[var(--color-business-blue)] text-[32px] @md:text-4xl leading-[1.1] tabular-nums whitespace-nowrap mb-2 min-h-12 flex items-center">
+      <span aria-hidden={spoken !== figure || undefined}>{figure}</span>
+      {spoken !== figure && <span className="sr-only">{spoken}</span>}
+    </p>
+  );
+}
+
 function Block({ block }: { block: CaseBlock }) {
   switch (block.type) {
     case "brief":
@@ -75,22 +86,38 @@ function Block({ block }: { block: CaseBlock }) {
           </div>
         </div>
       );
-    case "outcomes":
+    case "outcomes": {
+      // Two columns once the block itself is wide enough (container query), because the
+      // sidebar sits beside it from 769 px and leaves a narrow column at first.
+      // Arbitrary values on purpose: the design system ships a full utility sheet (grid-cols-1,
+      // hidden, h-0, ...) that can land after the container rules and win over them.
+      const hasFigures = block.items.some((item) => item.figure?.trim());
       return (
-        <div>
+        <div className="@container">
           <BlockHeading>{block.heading}</BlockHeading>
-          {block.items.map((item, i) => (
-            <div key={i} className="border-t border-[var(--color-border-default)] py-5">
-              <p className="font-extrabold text-[var(--color-text-primary)] mb-2" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)" }}>
-                {item.heading}
-              </p>
-              <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)", lineHeight: 1.7 }}>
-                {item.text}
-              </p>
-            </div>
-          ))}
+          <ul className="grid grid-cols-[minmax(0,1fr)] @md:grid-cols-[repeat(2,minmax(0,1fr))] list-none p-0 m-0">
+            {block.items.map((item, i) => (
+              <li
+                key={i}
+                className="border-t border-[var(--color-border-default)] py-5 @md:odd:pr-6 @md:even:pl-6 @md:even:border-l @md:last:odd:col-span-2 @md:last:odd:pr-0"
+              >
+                {item.figure?.trim() ? (
+                  <OutcomeFigure figure={item.figure.trim()} />
+                ) : (
+                  hasFigures && <div data-testid="figure-gap" aria-hidden="true" className="h-[0px] @md:h-[48px] @md:mb-[8px]" />
+                )}
+                <p className="font-extrabold text-[var(--color-text-primary)] mb-2" style={{ fontSize: "clamp(0.95rem, 1.3vw, 1.05rem)" }}>
+                  {item.heading}
+                </p>
+                <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "15px", lineHeight: 1.6 }}>
+                  {item.text}
+                </p>
+              </li>
+            ))}
+          </ul>
         </div>
       );
+    }
   }
 }
 
@@ -115,6 +142,10 @@ export function CaseStudy({ study }: { study: Study }) {
             <p className="font-light text-[var(--color-text-primary)] max-w-3xl whitespace-pre-line" style={{ fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)", lineHeight: 1.7 }}>
               {study.intro}
             </p>
+          )}
+          {study.heroImage && (
+            // eslint-disable-next-line @next/next/no-img-element -- same plain <img> as the other case images
+            <img src={study.heroImage.src} alt={study.heroImage.alt} className="w-full aspect-[2/1] object-cover rounded block mt-8 sm:mt-10" />
           )}
         </div>
 

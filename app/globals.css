@@ -2,6 +2,17 @@
 @import "@studio-manfred/manfred-design-system/tokens.css";
 @source "../node_modules/@studio-manfred/manfred-design-system/dist";
 
+/* Case pages, Process steps: a slow, faint pulse on the ring of an open step (STU-1153).
+   Stopped under reduced motion and in print by the utility classes on the element. */
+@theme {
+  --animate-halo-pulse: halo-pulse 2.5s ease-in-out infinite;
+
+  @keyframes halo-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+  }
+}
+
 /* Pre-checked muted white for body text on --color-business-blue. 80% opacity
    keeps body text above WCAG 4.5:1 on the brand-blue background; lower values
    fail (STU-289). */

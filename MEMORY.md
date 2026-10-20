@@ -248,3 +248,9 @@ Production at `40aca69` (main HEAD). All health checks green.
 - DS bumped 0.36 → 0.37.1 (#30) and deployed to production.
 - CI was red on `main` from #29 until the coverage-ratchet fix PR. The ratchet failed because `ProcessTimeline` + `CaseLightbox` (case-studies commit `2667f25`) shipped untested; tests added, coverage back to ~74/72/79/76 vs baseline 70/66/74/72. The baseline only auto-bumps up and the auto-bump job is disabled, so untested new components will trip it again. To run E2E locally: start `node e2e/mock-supabase.mjs`, build with `NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321 NEXT_PUBLIC_SUPABASE_ANON_KEY=test-anon-key`, stop the mock, then `npm run e2e` (68 tests).
 - Added [ONBOARDING.md](ONBOARDING.md) for new hire Markus. His first task is adding himself to `team` in [components/sections/Team.tsx](components/sections/Team.tsx). Team now accepts a `members` prop, and rave styles cycle with `i % length` (previously a 5th member crashed rave mode).
+
+## 2026-10-20 — Case redesign (STU-1153, branch feat/stu-1153-case-process-hero-outcomes)
+- Mirrors the intranet PR of the same ticket: `ProcessTimeline` is now an accordion (copy of the intranet `case-process-timeline.tsx`, inline chevron instead of lucide), `CaseStudy` shows `heroImage` under the intro and outcomes with an optional `figure`, `lib/cases.ts` reads `hero_image` and `figure`. Keyframes `halo-pulse` in `app/globals.css`.
+- Outcomes use a container query (`@container` + `@md:`), not `sm:`: the sidebar sits beside the blocks from 769 px, so the column is narrow there. The intranet preview uses `sm:` because its sidebar only moves beside at `lg`.
+- Needs `cases.hero_image` (intranet migration `20261020_cases_hero_image.sql`); `select("*")` is fine before it is applied. Merge the intranet PR first, then this one, same day.
+- Local e2e needs `npx playwright install` (not installed on this Mac); CI runs it.

@@ -5,6 +5,10 @@
     "title": "Example Client",
     "category_line": "Consumer App · UX Research",
     "intro": "How we helped an example client understand their users.",
+    "hero_image": {
+      "src": "/cases/hero.png",
+      "alt": "A laptop on a desk"
+    },
     "published": true,
     "blocks": [
       {
@@ -72,7 +76,12 @@
         "items": [
           {
             "heading": "More users",
-            "text": "Adoption went up."
+            "text": "Adoption went up.",
+            "figure": "+28%"
+          },
+          {
+            "heading": "Calmer support",
+            "text": "Fewer tickets."
           }
         ]
       }

@@ -7,13 +7,16 @@ import { supabase } from "./supabase";
 // skipped, so an intranet that ships a new block first never breaks a page.
 
 export type ProcessStep = { title: string; methods: string[]; description: string };
+/** `figure` is the big key figure (STU-1153), e.g. "+28%"; left out when empty. */
+export type Outcome = { heading: string; text: string; figure?: string };
+export type HeroImage = { src: string; alt: string };
 export type CaseImage = { src: string; alt: string; label: string; note: string; showNote: boolean };
 
 export type CaseBlock =
   | { id: string; type: "brief"; heading: string; text: string; bullets: string[] }
   | { id: string; type: "process"; heading: string; steps: ProcessStep[]; stakeholders: string[] }
   | { id: string; type: "deliverables"; heading: string; text: string; bullets: string[]; images: CaseImage[] }
-  | { id: string; type: "outcomes"; heading: string; items: { heading: string; text: string }[] };
+  | { id: string; type: "outcomes"; heading: string; items: Outcome[] };
 
 export type Consultant = { name: string; title: string; photoUrl: string };
 export type FactBox = { label: string; items: string[] };
@@ -23,6 +26,7 @@ export type CaseStudy = {
   title: string;
   categoryLine: string;
   intro: string;
+  heroImage: HeroImage | null;
   blocks: CaseBlock[];
   sidebar: { consultants: Consultant[]; facts: FactBox[] };
 };
@@ -59,10 +63,21 @@ function parseBlock(r: Obj, index: number): CaseBlock | null {
           .filter((i) => i.src),
       };
     case "outcomes":
-      return { id, type: "outcomes", heading, items: objects(r.items).map((i) => ({ heading: str(i.heading), text: str(i.text) })) };
+      return {
+        id,
+        type: "outcomes",
+        heading,
+        items: objects(r.items).map((i) => ({ heading: str(i.heading), text: str(i.text), ...(str(i.figure) ? { figure: str(i.figure) } : {}) })),
+      };
     default:
       return null;
   }
+}
+
+/** A stored hero image; anything without a picture address is no image (STU-1153). */
+function parseHero(raw: unknown): HeroImage | null {
+  if (!isObj(raw) || !str(raw.src).trim()) return null;
+  return { src: str(raw.src), alt: str(raw.alt) };
 }
 
 export function parseCase(row: Obj): CaseStudy {
@@ -72,6 +87,7 @@ export function parseCase(row: Obj): CaseStudy {
     title: str(row.title),
     categoryLine: str(row.category_line),
     intro: str(row.intro),
+    heroImage: parseHero(row.hero_image),
     blocks: objects(row.blocks)
       .map(parseBlock)
       .filter((b): b is CaseBlock => b !== null),

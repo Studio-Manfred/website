@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { ProcessTimeline } from "./ProcessTimeline";
 
 const steps = [
@@ -10,38 +11,71 @@ const steps = [
 
 const stakeholders = ["Product", "Sales"];
 
-describe("ProcessTimeline", () => {
-  it("shows the first step's description and methods by default", () => {
+const stepButton = (name: string) => screen.getByRole("button", { name: new RegExp(name) });
+const panelOf = (button: HTMLElement) => document.getElementById(button.getAttribute("aria-controls") ?? "");
+
+// STU-1153: the Process block is an accordion (same design as the intranet preview,
+// src/components/cases/case-process-timeline.tsx there). Keep the two in step.
+describe("ProcessTimeline, as an accordion (STU-1153)", () => {
+  it("opens step 01 and closes the other steps", () => {
     render(<ProcessTimeline steps={steps} stakeholders={stakeholders} />);
-    expect(screen.getByText("Talk to users.")).toBeInTheDocument();
-    expect(screen.getByText("Interviews")).toBeInTheDocument();
-    expect(screen.queryByText("Ship it.")).not.toBeInTheDocument();
+    expect(stepButton("Discover")).toHaveAttribute("aria-expanded", "true");
+    expect(stepButton("Define")).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByText("Talk to users.")).toBeVisible();
+    expect(screen.getByText("Interviews")).toBeVisible();
   });
 
-  it("switches the detail panel when a step title is clicked", () => {
+  it("a click opens another step and the first step stays open", async () => {
+    const user = userEvent.setup();
     render(<ProcessTimeline steps={steps} stakeholders={stakeholders} />);
-    fireEvent.click(screen.getByRole("button", { name: "Define" }));
-    expect(screen.getByText("Frame the problem.")).toBeInTheDocument();
-    expect(screen.getByText("Personas")).toBeInTheDocument();
-    expect(screen.getByText("Journey map")).toBeInTheDocument();
-    expect(screen.queryByText("Talk to users.")).not.toBeInTheDocument();
+    await user.click(stepButton("Define"));
+    expect(stepButton("Define")).toHaveAttribute("aria-expanded", "true");
+    expect(stepButton("Discover")).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Frame the problem.")).toBeVisible();
+    expect(screen.getByText("Talk to users.")).toBeVisible();
   });
 
-  it("switches the detail panel when a timeline dot is clicked", () => {
-    const { container } = render(<ProcessTimeline steps={steps} stakeholders={stakeholders} />);
-    const hitTargets = container.querySelectorAll('circle[r="28"]');
-    expect(hitTargets).toHaveLength(steps.length);
-    fireEvent.click(hitTargets[2]);
-    expect(screen.getByText("Ship it.")).toBeInTheDocument();
+  it("a click on an open step closes it", async () => {
+    const user = userEvent.setup();
+    render(<ProcessTimeline steps={steps} stakeholders={stakeholders} />);
+    await user.click(stepButton("Discover"));
+    expect(stepButton("Discover")).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("fills the curve segments before the active step", () => {
-    const { container } = render(<ProcessTimeline steps={steps} stakeholders={stakeholders} />);
-    const strokes = () =>
-      Array.from(container.querySelectorAll("path")).map((p) => p.getAttribute("stroke"));
-    expect(strokes()).toEqual(["#ddd", "#ddd"]);
-    fireEvent.click(screen.getByRole("button", { name: "Deliver" }));
-    expect(strokes()).toEqual(["#2a3fcc", "#2a3fcc"]);
+  it("Enter and Space toggle a step from the keyboard", async () => {
+    const user = userEvent.setup();
+    render(<ProcessTimeline steps={steps} stakeholders={stakeholders} />);
+    stepButton("Define").focus();
+    await user.keyboard("{Enter}");
+    expect(stepButton("Define")).toHaveAttribute("aria-expanded", "true");
+    await user.keyboard(" ");
+    expect(stepButton("Define")).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("a closed step keeps its content in the DOM, inert, so print can show it", () => {
+    render(<ProcessTimeline steps={steps} stakeholders={stakeholders} />);
+    const panel = panelOf(stepButton("Deliver"));
+    expect(panel).toHaveAttribute("inert");
+    expect(within(panel as HTMLElement).getByText("Ship it.")).toBeInTheDocument();
+    expect(panelOf(stepButton("Discover"))).not.toHaveAttribute("inert");
+  });
+
+  it("every open step has a slowly pulsing ring that stops under reduced motion and print", async () => {
+    const user = userEvent.setup();
+    render(<ProcessTimeline steps={steps} stakeholders={stakeholders} />);
+    const rings = () => screen.queryAllByTestId("step-halo");
+    expect(rings()).toHaveLength(1);
+    expect(rings()[0].className).toContain("animate-halo-pulse");
+    expect(rings()[0].className).toContain("motion-reduce:animate-none");
+    expect(rings()[0].className).toContain("print:animate-none");
+    expect(rings()[0].children).toHaveLength(0);
+    await user.click(stepButton("Define"));
+    expect(rings()).toHaveLength(2);
+  });
+
+  it("names a step without a title \"Step N\"", () => {
+    render(<ProcessTimeline steps={[...steps, { id: 4, title: "", methods: [], description: "No title." }]} stakeholders={[]} />);
+    expect(stepButton("Step 4")).toBeInTheDocument();
   });
 
   it("lists the stakeholders", () => {
@@ -51,7 +85,7 @@ describe("ProcessTimeline", () => {
     expect(screen.getByText("Sales")).toBeInTheDocument();
   });
 
-  it("renders without a detail panel when there are no steps", () => {
+  it("renders without steps: the heading only", () => {
     render(<ProcessTimeline steps={[]} stakeholders={[]} />);
     expect(screen.getByRole("heading", { name: /process & methods/i })).toBeInTheDocument();
     expect(screen.queryAllByRole("button")).toHaveLength(0);
@@ -59,10 +93,10 @@ describe("ProcessTimeline", () => {
 
   it("uses the heading it is given, and keeps the default without one (STU-1146)", () => {
     const { unmount } = render(<ProcessTimeline steps={steps} stakeholders={[]} heading="How we worked" />);
-    expect(screen.getByRole("heading", { name: "How we worked" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "How we worked", level: 2 })).toBeInTheDocument();
     unmount();
     render(<ProcessTimeline steps={steps} stakeholders={[]} />);
-    expect(screen.getByRole("heading", { name: "Process & Methods" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Process & Methods", level: 2 })).toBeInTheDocument();
   });
 
   it("shows no stakeholder section when there are none (STU-1146)", () => {
