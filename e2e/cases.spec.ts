@@ -6,8 +6,14 @@ test("a published case renders its blocks and sidebar", async ({ page }) => {
   await page.goto("/cases/example-case");
   await expect(page.getByRole("heading", { level: 1, name: "Example Client" })).toBeVisible();
   await expect(page.getByRole("heading", { level: 2, name: "Process & Methods" })).toBeVisible();
+  // STU-1153: Process is an accordion; step 01 is open and several steps can be open together.
+  await expect(page.getByRole("button", { name: "Discovery" })).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByText("We talked to users.")).toBeVisible();
   await page.getByRole("button", { name: "Validation" }).click();
   await expect(page.getByText("We surveyed many users.")).toBeVisible();
+  await expect(page.getByText("We talked to users.")).toBeVisible();
+  await expect(page.getByAltText("A laptop on a desk")).toBeVisible();
+  await expect(page.getByText("+28%")).toBeVisible();
   await expect(page.getByRole("complementary").getByText("Moa Bogren")).toBeVisible();
 });
 

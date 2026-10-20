@@ -54,3 +54,29 @@ describe("listCases (STU-1148)", () => {
     ]);
   });
 });
+
+describe("hero image and key figures (STU-1153)", () => {
+  it("reads the hero image; no picture means none", () => {
+    expect(parseCase(fixture[0]).heroImage).toEqual({ src: "/cases/hero.png", alt: "A laptop on a desk" });
+    expect(parseCase({ slug: "x", title: "X", hero_image: { src: "  ", alt: "a" } }).heroImage).toBeNull();
+    expect(parseCase({ slug: "x", title: "X" }).heroImage).toBeNull();
+    expect(parseCase({ slug: "x", title: "X", hero_image: "nope" }).heroImage).toBeNull();
+    expect(parseCase({ slug: "x", title: "X", hero_image: { src: "a.png" } }).heroImage).toEqual({ src: "a.png", alt: "" });
+  });
+
+  it("keeps an outcome's key figure and leaves it out when empty or not text", () => {
+    const c = parseCase({
+      slug: "x", title: "X",
+      blocks: [{ type: "outcomes", items: [
+        { heading: "A", text: "a", figure: "+28%" },
+        { heading: "B", text: "b", figure: "" },
+        { heading: "C", text: "c", figure: 5 },
+        { heading: "D", text: "d" },
+      ] }],
+    });
+    const o = c.blocks[0];
+    const items = o.type === "outcomes" ? o.items : [];
+    expect(items[0]).toEqual({ heading: "A", text: "a", figure: "+28%" });
+    for (const i of items.slice(1)) expect("figure" in i).toBe(false);
+  });
+});

@@ -61,3 +61,51 @@ describe("CaseStudy (STU-1146)", () => {
     expect(screen.queryByRole("complementary")).not.toBeInTheDocument();
   });
 });
+
+describe("CaseStudy hero image and outcomes (STU-1153)", () => {
+  it("shows the hero image under the intro, 2:1, with its alt text; none without one", () => {
+    const { unmount } = render(<CaseStudy study={study} />);
+    const img = screen.getByAltText("A laptop on a desk");
+    expect(img).toHaveAttribute("src", "/cases/hero.png");
+    expect(img.className).toContain("aspect-[2/1]");
+    const intro = screen.getByText(/helped an example client/);
+    expect(intro.compareDocumentPosition(img) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    unmount();
+    render(<CaseStudy study={{ ...study, heroImage: null }} />);
+    expect(screen.queryByAltText("A laptop on a desk")).not.toBeInTheDocument();
+  });
+
+  it("Outcomes: the key figure is big and blue above its heading, in a list", () => {
+    render(<CaseStudy study={study} />);
+    expect(screen.getAllByRole("listitem").filter((li) => li.textContent?.includes("Adoption went up."))).toHaveLength(1);
+    const figure = screen.getByText("+28%").closest("p") as HTMLElement;
+    expect(figure.className).toContain("text-[var(--color-business-blue)]");
+    expect(figure.compareDocumentPosition(screen.getByText("More users")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("Outcomes: one column when narrow, two once the block is wide enough (container query), a lone last item spans both", () => {
+    render(<CaseStudy study={study} />);
+    const item = screen.getByText("Calmer support").closest("li") as HTMLElement;
+    const list = item.closest("ul") as HTMLElement;
+        expect(list.className).toContain("@md:grid-cols-[repeat(2,minmax(0,1fr))]");
+    expect(item.className).toContain("@md:last:odd:col-span-2");
+  });
+
+  it("Outcomes: an item without a figure keeps an empty figure row so labels line up; none when no item has a figure", () => {
+    render(<CaseStudy study={study} />);
+    expect(screen.getAllByTestId("figure-gap")).toHaveLength(1);
+  });
+
+  it("Outcomes: no figure row at all when no item has a figure", () => {
+    const plain = parseCase({ ...fixture[0], blocks: [{ type: "outcomes", heading: "Outcomes", items: [{ heading: "Plain", text: "No number." }] }] });
+    render(<CaseStudy study={plain} />);
+    expect(screen.queryAllByTestId("figure-gap")).toHaveLength(0);
+    expect(screen.getByText("Plain")).toBeInTheDocument();
+  });
+
+  it("Outcomes: a leading minus is read as \"minus\"", () => {
+    const minus = parseCase({ ...fixture[0], blocks: [{ type: "outcomes", heading: "Outcomes", items: [{ heading: "Churn", text: "Down.", figure: "-40%" }] }] });
+    render(<CaseStudy study={minus} />);
+    expect(screen.getByText("minus 40%")).toBeInTheDocument();
+  });
+});

@@ -5,6 +5,7 @@
     "title": "Example Client",
     "category_line": "Consumer App · UX Research",
     "intro": "How we helped an example client understand their users.",
+    "hero_image": { "src": "/cases/hero.png", "alt": "A laptop on a desk" },
     "published": true,
     "blocks": [
       { "id": "b1", "type": "brief", "heading": "Brief", "text": "The client needed to understand their users.\n\nIt had three goals:", "bullets": ["Goal one", "Goal two"] },
@@ -16,7 +17,7 @@
         { "src": "/cases/example.png", "alt": "Journey map", "label": "Journey map", "note": "Sample data only.", "show_note": true }
       ] },
       { "id": "b4", "type": "video", "url": "https://example.com" },
-      { "id": "b5", "type": "outcomes", "heading": "Outcomes", "items": [{ "heading": "More users", "text": "Adoption went up." }] }
+      { "id": "b5", "type": "outcomes", "heading": "Outcomes", "items": [{ "heading": "More users", "text": "Adoption went up.", "figure": "+28%" }, { "heading": "Calmer support", "text": "Fewer tickets." }] }
     ],
     "sidebar": {
       "consultants": [{ "profile_id": "p1", "name": "Moa Bogren", "title": "UX Lead", "photo_url": "/team/moa.jpg" }],
