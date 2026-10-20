@@ -13,6 +13,7 @@ const ROUTES = [
   "/writing",
   "/writing/hello-world",
   "/cases",
+  "/cv/testtokentesttokentesttokentesttokentesttok",
   "/cases/example-case",
   "/join-us",
   "/privacy-policy",

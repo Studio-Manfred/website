@@ -13,6 +13,10 @@ const caseFixture = JSON.parse(
   readFileSync(join(here, "..", "test", "fixtures", "cases.json"), "utf8"),
 );
 
+const sharedCv = JSON.parse(
+  readFileSync(join(here, "..", "test", "fixtures", "shared-cv.json"), "utf8"),
+);
+
 const PORT = Number(process.env.MOCK_PORT ?? 54321);
 const ALLOWED_QUERY_KEYS = new Set(["select", "published", "order", "slug"]);
 
@@ -39,6 +43,17 @@ const server = createServer((req, res) => {
 
   if (url.pathname === "/health") {
     res.writeHead(200).end("ok");
+    return;
+  }
+
+  // STU-1155: shared CVs via the get_shared_cv function; unknown token → null.
+  if (url.pathname === "/rest/v1/rpc/get_shared_cv" && req.method === "POST") {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      const token = (() => { try { return JSON.parse(body).p_token; } catch { return ""; } })();
+      json(res, 200, token === sharedCv.token ? sharedCv.cv : null);
+    });
     return;
   }
 
