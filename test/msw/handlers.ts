@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import fixture from "../fixtures/blog-posts.json";
 import caseFixture from "../fixtures/cases.json";
+import sharedCv from "../fixtures/shared-cv.json";
 
 type Post = (typeof fixture)[number];
 
@@ -77,5 +78,10 @@ export const handlers = [
     if (slug?.startsWith("eq.")) rows = rows.filter((c) => c.slug === slug.slice(3));
     const limit = Number(url.searchParams.get("limit") ?? rows.length);
     return HttpResponse.json(rows.slice(0, limit));
+  }),
+  // STU-1155: shared CVs. Like the real function, an unknown token → null.
+  http.post(`${SUPABASE_URL}/rest/v1/rpc/get_shared_cv`, async ({ request }) => {
+    const body = (await request.json()) as { p_token?: string };
+    return HttpResponse.json(body.p_token === sharedCv.token ? sharedCv.cv : null);
   }),
 ];

@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **CV**: CVs shared from the intranet open at `/cv/<link>` in the case-page style, with Download PDF (STU-1155).
 - **Cases**: `/cases` lists every published case with its title and consultant (STU-1148).
 - **Cases**: case pages at `/cases/<slug>` come from the intranet's Case CMS, live when published there (STU-1146).
 - **Team**: Markus Dahlbom joins the team section.
