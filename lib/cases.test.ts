@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import fixture from "@/test/fixtures/cases.json";
-import { getCase, listCases, parseCase } from "./cases";
+import { getCase, getLockedCase, isCaseLocked, listCases, parseCase } from "./cases";
 
 describe("parseCase (STU-1146)", () => {
   it("keeps known blocks in order, drops unknown types, fills gaps", () => {
@@ -41,17 +41,33 @@ describe("getCase (STU-1146)", () => {
   });
 });
 
-describe("listCases (STU-1148)", () => {
-  it("lists published cases only: slug, title, category line and consultants", async () => {
+describe("listCases (STU-1148, STU-1156)", () => {
+  it("lists published cases, locked ones flagged, with their consultants", async () => {
     const list = await listCases();
-    expect(list).toEqual([
-      {
-        slug: "example-case",
-        title: "Example Client",
-        categoryLine: "Consumer App · UX Research",
-        consultants: [{ name: "Moa Bogren", title: "UX Lead", photoUrl: "/team/moa.jpg" }],
-      },
-    ]);
+    expect(list.map((c) => [c.slug, c.locked])).toEqual([["example-case", false], ["locked-case", true]]);
+    expect(list[0]).toMatchObject({
+      title: "Example Client",
+      categoryLine: "Consumer App · UX Research",
+      consultants: [{ name: "Moa Bogren", title: "UX Lead", photoUrl: "/team/moa.jpg" }],
+    });
+  });
+});
+
+describe("locked cases (STU-1156)", () => {
+  it("getCase never returns a locked case", async () => {
+    expect(await getCase("locked-case")).toBeNull();
+  });
+
+  it("isCaseLocked tells a locked case from an unknown or open one", async () => {
+    expect(await isCaseLocked("locked-case")).toBe(true);
+    expect(await isCaseLocked("example-case")).toBe(false);
+    expect(await isCaseLocked("nope")).toBe(false);
+  });
+
+  it("getLockedCase returns the case only for the right password", async () => {
+    expect((await getLockedCase("locked-case", "open-sesame"))?.title).toBe("Locked Client");
+    expect(await getLockedCase("locked-case", "wrong")).toBeNull();
+    expect(await getLockedCase("locked-case", "")).toBeNull();
   });
 });
 

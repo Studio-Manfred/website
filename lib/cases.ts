@@ -111,21 +111,43 @@ export async function getCase(slug: string): Promise<CaseStudy | null> {
   return parseCase(data[0]);
 }
 
-export type CaseSummary = Pick<CaseStudy, "slug" | "title" | "categoryLine"> & { consultants: Consultant[] };
+export type CaseSummary = Pick<CaseStudy, "slug" | "title" | "categoryLine"> & {
+  consultants: Consultant[];
+  /** Password-protected (STU-1156): listed with a lock, opened with the password. */
+  locked: boolean;
+};
 
-/** Published cases for the /cases overview, newest first (STU-1148). */
+/**
+ * Published cases for the /cases overview, newest first. Through the
+ * list_case_summaries() function, because locked cases are not readable
+ * from the table (STU-1156) but are still listed.
+ */
 export async function listCases(): Promise<CaseSummary[]> {
-  const { data, error } = await supabase
-    .from("cases")
-    .select("slug, title, category_line, sidebar")
-    .eq("published", true)
-    .order("published_at", { ascending: false });
+  const { data, error } = await supabase.rpc("list_case_summaries");
   if (error) {
     console.error("listCases:", error.message);
     return [];
   }
-  return (data ?? []).map((row) => {
-    const c = parseCase(row);
-    return { slug: c.slug, title: c.title, categoryLine: c.categoryLine, consultants: c.sidebar.consultants };
-  });
+  return (Array.isArray(data) ? data : [])
+    .filter((r): r is Obj => isObj(r))
+    .map((r) => {
+      const c = parseCase({ ...r, sidebar: { consultants: r.consultants } });
+      return { slug: c.slug, title: c.title, categoryLine: c.categoryLine, consultants: c.sidebar.consultants, locked: r.locked === true };
+    });
+}
+
+/** Is there a published, password-protected case at this slug? (STU-1156) */
+export async function isCaseLocked(slug: string): Promise<boolean> {
+  const { data, error } = await supabase.rpc("case_is_locked", { p_slug: slug });
+  if (error) console.error("isCaseLocked:", error.message);
+  return data === true;
+}
+
+/** A locked case's content for the right password, else null (STU-1156). */
+export async function getLockedCase(slug: string, password: string): Promise<CaseStudy | null> {
+  if (!password) return null;
+  const { data, error } = await supabase.rpc("get_locked_case", { p_slug: slug, p_password: password });
+  if (error) console.error("getLockedCase:", error.message);
+  if (error || !isObj(data)) return null;
+  return parseCase(data);
 }

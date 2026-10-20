@@ -230,3 +230,73 @@ a[href="#main-content"]:not(:focus) {
   position: absolute;
   left: -9999px;
 }
+
+/* Shared CV page (STU-1155): the CV text from the intranet, in the case-page
+   type scale. Scoped to .cv-body so nothing else is affected. */
+.cv-body h1,
+.cv-body h2 {
+  font-weight: 800;
+  color: var(--color-text-primary);
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  margin: 2.25rem 0 0.75rem;
+}
+.cv-body h3,
+.cv-body h4 {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  margin: 1.5rem 0 0.5rem;
+}
+.cv-body > :first-child { margin-top: 0; }
+.cv-body p {
+  font-weight: 300;
+  color: var(--color-text-primary);
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+.cv-body ul,
+.cv-body ol {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cv-body li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
+  line-height: 1.7;
+}
+.cv-body li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-business-blue);
+}
+.cv-body strong,
+.cv-body b { font-weight: 700; }
+.cv-body a { color: var(--color-business-blue); text-decoration: underline; }
+
+/* Print / Download PDF: A4, just the CV (no nav, footer or buttons), colours kept. */
+@media print {
+  @page { size: A4; margin: 16mm 14mm; }
+  html, body { background: white !important; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 10.5pt; }
+  .print-hidden { display: none !important; }
+  .cv-page { padding: 0 !important; }
+  .cv-page h1.cv-name { font-size: 30pt !important; }
+  .cv-page .course-layout { flex-direction: row !important; gap: 28pt !important; }
+  .cv-page .course-sidebar { width: 150pt !important; }
+  .cv-body h1, .cv-body h2, .cv-body h3 { page-break-after: avoid; }
+  .cv-page .cv-box { page-break-inside: avoid; }
+  .cv-body p, .cv-body li { font-size: 10pt; }
+}

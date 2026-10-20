@@ -11,6 +11,8 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 - **Cases**: an optional hero image under the intro of a case page, full width at 2:1 (STU-1153).
 - **Cases**: outcomes can show a big key figure (for example +28%) in two columns, one column when narrow (STU-1153).
 - **Cases**: the Process section is an accordion: several steps open at once, step 01 open first, a slowly pulsing ring on open steps (STU-1153).
+- **Cases**: a case can be password protected; it's listed with a lock and opens with its password, remembered for 30 days (STU-1156).
+- **CV**: CVs shared from the intranet open at `/cv/<link>` in the case-page style, with Download PDF (STU-1155).
 - **Cases**: `/cases` lists every published case with its title and consultant (STU-1148).
 - **Cases**: case pages at `/cases/<slug>` come from the intranet's Case CMS, live when published there (STU-1146).
 - **Team**: Markus Dahlbom joins the team section.

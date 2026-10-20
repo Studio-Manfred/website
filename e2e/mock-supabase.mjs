@@ -13,6 +13,10 @@ const caseFixture = JSON.parse(
   readFileSync(join(here, "..", "test", "fixtures", "cases.json"), "utf8"),
 );
 
+const sharedCv = JSON.parse(
+  readFileSync(join(here, "..", "test", "fixtures", "shared-cv.json"), "utf8"),
+);
+
 const PORT = Number(process.env.MOCK_PORT ?? 54321);
 const ALLOWED_QUERY_KEYS = new Set(["select", "published", "order", "slug"]);
 
@@ -42,9 +46,35 @@ const server = createServer((req, res) => {
     return;
   }
 
+  // Supabase functions (POST /rest/v1/rpc/<name>): shared CVs (STU-1155) and
+  // locked cases (STU-1156). The case fixture keeps the plain `password`.
+  if (url.pathname.startsWith("/rest/v1/rpc/") && req.method === "POST") {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      const args = (() => { try { return JSON.parse(body || "{}"); } catch { return {}; } })();
+      const fn = url.pathname.slice("/rest/v1/rpc/".length);
+      const locked = (c) => c.published && "password" in c;
+      if (fn === "get_shared_cv") return json(res, 200, args.p_token === sharedCv.token ? sharedCv.cv : null);
+      if (fn === "case_is_locked") return json(res, 200, caseFixture.some((c) => c.slug === args.p_slug && locked(c)));
+      if (fn === "get_locked_case") {
+        const c = caseFixture.find((x) => x.slug === args.p_slug && locked(x) && x.password === args.p_password);
+        return json(res, 200, c ? { slug: c.slug, title: c.title, category_line: c.category_line, intro: c.intro, blocks: c.blocks, sidebar: c.sidebar } : null);
+      }
+      if (fn === "list_case_summaries") {
+        return json(res, 200, caseFixture.filter((c) => c.published).map((c) => ({
+          slug: c.slug, title: c.title, category_line: c.category_line, consultants: c.sidebar.consultants, locked: "password" in c,
+        })));
+      }
+      json(res, 404, { message: `mock-supabase: unknown function ${fn}` });
+    });
+    return;
+  }
+
   // STU-1146: case pages. Published rows only (RLS), by slug, with limit.
   if (url.pathname === "/rest/v1/cases" && req.method === "GET") {
-    let rows = caseFixture.filter((c) => c.published);
+    // RLS since STU-1156: published AND not password-protected.
+    let rows = caseFixture.filter((c) => c.published && !("password" in c));
     const slug = url.searchParams.get("slug");
     if (slug?.startsWith("eq.")) rows = rows.filter((c) => c.slug === slug.slice(3));
     const limit = Number(url.searchParams.get("limit") ?? rows.length);

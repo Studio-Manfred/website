@@ -35,6 +35,15 @@ export function CaseList({ cases }: { cases: CaseSummary[] }) {
                 >
                   {c.title}
                 </h2>
+                {c.locked && (
+                  <p className="flex items-center gap-2 text-sm font-light text-[var(--color-text-muted)] mb-4">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="4" y="11" width="16" height="10" rx="2" />
+                      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                    </svg>
+                    Password protected
+                  </p>
+                )}
                 {c.consultants.map((p, i) => (
                   <div key={i} className="flex items-center gap-3 mt-2">
                     {p.photoUrl && (
