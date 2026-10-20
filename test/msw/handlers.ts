@@ -73,7 +73,8 @@ export const handlers = [
         return HttpResponse.json({ message: "msw handler: unexpected cases query", url: url.toString() }, { status: 500 });
       }
     }
-    let rows = caseFixture.filter((c) => c.published);
+    // RLS since STU-1156: published AND not password-protected.
+    let rows = caseFixture.filter((c) => c.published && !("password" in c));
     const slug = url.searchParams.get("slug");
     if (slug?.startsWith("eq.")) rows = rows.filter((c) => c.slug === slug.slice(3));
     const limit = Number(url.searchParams.get("limit") ?? rows.length);
@@ -84,4 +85,22 @@ export const handlers = [
     const body = (await request.json()) as { p_token?: string };
     return HttpResponse.json(body.p_token === sharedCv.token ? sharedCv.cv : null);
   }),
+  // STU-1156: locked cases. The fixture keeps the plain password (`password`)
+  // where the database keeps a bcrypt hash.
+  http.post(`${SUPABASE_URL}/rest/v1/rpc/case_is_locked`, async ({ request }) => {
+    const { p_slug } = (await request.json()) as { p_slug?: string };
+    return HttpResponse.json(caseFixture.some((c) => c.slug === p_slug && c.published && "password" in c));
+  }),
+  http.post(`${SUPABASE_URL}/rest/v1/rpc/get_locked_case`, async ({ request }) => {
+    const { p_slug, p_password } = (await request.json()) as { p_slug?: string; p_password?: string };
+    const c = caseFixture.find((x) => x.slug === p_slug && x.published && "password" in x && (x as { password?: string }).password === p_password);
+    return HttpResponse.json(c ? { slug: c.slug, title: c.title, category_line: c.category_line, intro: c.intro, blocks: c.blocks, sidebar: c.sidebar } : null);
+  }),
+  http.post(`${SUPABASE_URL}/rest/v1/rpc/list_case_summaries`, () =>
+    HttpResponse.json(
+      caseFixture
+        .filter((c) => c.published)
+        .map((c) => ({ slug: c.slug, title: c.title, category_line: c.category_line, consultants: c.sidebar.consultants, locked: "password" in c })),
+    ),
+  ),
 ];

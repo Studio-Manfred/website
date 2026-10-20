@@ -3,26 +3,44 @@ import type { Metadata } from "next";
 import { PageNav } from "@/components/PageNav";
 import { Footer } from "@/components/Footer";
 import { CaseStudy } from "@/components/CaseStudy";
-import { getCase } from "@/lib/cases";
+import { CasePasswordGate } from "@/components/CasePasswordGate";
+import { getCase, isCaseLocked } from "@/lib/cases";
+import { unlockCase } from "./actions";
+import { caseFromUnlockCookie } from "./unlock";
 
 // Case pages from the intranet's Case CMS (STU-1146). Read on every request,
 // like /writing, so publishing in the intranet shows up here straight away.
+// A password-protected case (STU-1156) shows a password form until this
+// browser has unlocked it.
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const study = await getCase((await params).slug);
-  if (!study) return {};
-  return { title: `${study.title} — Studio Manfred`, description: study.intro || undefined };
+type Props = { params: Promise<{ slug: string }>; searchParams: Promise<{ wrong?: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const open = await getCase(slug);
+  if (open) return { title: `${open.title} — Studio Manfred`, description: open.intro || undefined };
+  const unlocked = await caseFromUnlockCookie(slug);
+  if (unlocked) return { title: `${unlocked.title} — Studio Manfred`, robots: { index: false, follow: false } };
+  if (await isCaseLocked(slug)) return { title: "Password protected case — Studio Manfred", robots: { index: false, follow: false } };
+  return {};
 }
 
-export default async function CasePage({ params }: { params: Promise<{ slug: string }> }) {
-  const study = await getCase((await params).slug);
-  if (!study) notFound();
+export default async function CasePage({ params, searchParams }: Props) {
+  const { slug } = await params;
+  const study = (await getCase(slug)) ?? (await caseFromUnlockCookie(slug));
+
+  if (!study && !(await isCaseLocked(slug))) notFound();
+
   return (
     <>
       <PageNav variant="white" />
       <main id="main" tabIndex={-1}>
-        <CaseStudy study={study} />
+        {study ? (
+          <CaseStudy study={study} />
+        ) : (
+          <CasePasswordGate action={unlockCase.bind(null, slug)} wrong={(await searchParams).wrong === "1"} />
+        )}
       </main>
       <Footer />
     </>
