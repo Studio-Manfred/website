@@ -9,9 +9,20 @@ const MAX_ROLE_LENGTH = 80;
 const RULE = /^[-–—_*]{3,}$/;
 const BLOCK = /^\s*<(h[1-3]|p)>([\s\S]*?)<\/\1>/i;
 
+// Only used to compare text (never rendered): strip tags until nothing changes,
+// so nested fragments like "<scr<b>ipt>" can't leave a tag behind.
+const stripTags = (html: string): string => {
+  let prev: string;
+  let out = html;
+  do {
+    prev = out;
+    out = out.replace(/<[^>]*>/g, "");
+  } while (out !== prev);
+  return out;
+};
+
 const textOf = (html: string) =>
-  html
-    .replace(/<[^>]*>/g, "")
+  stripTags(html)
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
