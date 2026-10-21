@@ -6,6 +6,7 @@ const cv = {
   title: "Senior UX @ Example Bank",
   language: "en" as const,
   contentHtml: "<h2>Introduction</h2><p>Moa is a researcher.</p>",
+  role: "",
   name: "Moa Bogren",
   email: "moa@studiomanfred.com",
   avatarUrl: "https://x/moa.jpg",
@@ -34,6 +35,11 @@ describe("SharedCv (STU-1155)", () => {
     render(<SharedCv cv={{ ...cv, language: "sv", cases: [] }} />);
     expect(screen.queryByText("Cases")).not.toBeInTheDocument();
     expect(screen.getByText("Kontakt")).toBeInTheDocument();
+  });
+
+  it("shows the role under the name in the Consultant box", () => {
+    render(<SharedCv cv={{ ...cv, role: "Senior UX Designer" }} />);
+    expect(screen.getByText("Senior UX Designer")).toBeInTheDocument();
   });
 
   it("Download PDF opens the print dialog", () => {

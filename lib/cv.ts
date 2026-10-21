@@ -1,5 +1,6 @@
 import sanitizeHtml from "sanitize-html";
 import { supabase } from "./supabase";
+import { splitCvHeader } from "./cv-header";
 
 // Shared CVs from the intranet (STU-1155). A CV is private until its owner
 // shares it; the link carries an unguessable token, and the only way in is
@@ -11,6 +12,8 @@ export type SharedCv = {
   title: string;
   language: "en" | "sv";
   contentHtml: string;
+  /** The role the CV starts with (taken out of contentHtml), shown under the name. */
+  role: string;
   name: string;
   email: string;
   avatarUrl: string;
@@ -46,11 +49,14 @@ export async function getSharedCv(token: string): Promise<SharedCv | null> {
   if (error || !data || typeof data !== "object") return null;
   const row = data as Obj;
   const avatar = str(row.avatar_url);
+  const name = str(row.name);
+  const { role, html } = splitCvHeader(sanitizeCvHtml(str(row.content)), name);
   return {
     title: str(row.title),
     language: row.language === "sv" ? "sv" : "en",
-    contentHtml: sanitizeCvHtml(str(row.content)),
-    name: str(row.name),
+    contentHtml: html,
+    role,
+    name,
     email: str(row.email),
     avatarUrl: avatar.startsWith("https://") ? avatar : "",
     cases: (Array.isArray(row.cases) ? row.cases : [])

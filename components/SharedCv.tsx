@@ -51,7 +51,10 @@ export function SharedCv({ cv }: { cv: Cv }) {
                       <img src={cv.avatarUrl} alt={cv.name} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }} />
                     </div>
                   )}
-                  <p className="font-extrabold text-[var(--color-text-primary)] text-sm">{cv.name}</p>
+                  <div>
+                    <p className="font-extrabold text-[var(--color-text-primary)] text-sm">{cv.name}</p>
+                    {cv.role && <p className="text-sm font-light text-[var(--color-text-primary)]">{cv.role}</p>}
+                  </div>
                 </div>
               </div>
               {cv.email && (
