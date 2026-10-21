@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Shared CV**: the name, role and `---` the CV text starts with are taken out of the text; the role shows under the name in the Consultant box (STU-1164).
 - **Cases**: an optional hero image under the intro of a case page, full width at 2:1 (STU-1153).
 - **Cases**: outcomes can show a big key figure (for example +28%) in two columns, one column when narrow (STU-1153).
 - **Cases**: the Process section is an accordion: several steps open at once, step 01 open first, a slowly pulsing ring on open steps (STU-1153).
@@ -28,6 +29,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Changed
 
+- **Shared CV**: Download PDF is the design system's outline Button with a down arrow; on phones it is a round icon-only button next to the kicker line (STU-1164).
 - **Design system 0.36 → 0.37.1.** Adds a `ColorPicker` component (not used on the site yet) and a packaging fix; no visible change.
 - **Design system 0.33 → 0.36** (STU-944). The site's Tailwind entry now imports the DS `tokens.css` (so token utilities like `bg-muted` work in the site's own code) and has an `@source` for the DS `dist`, which keeps DS-only responsive classes in production builds. Added with `manfred-ds-cli doctor --fix`, which now reports 8/8 checks green. The custom cursor is unaffected: its unlayered `cursor: none` still beats the DS base-layer `cursor: pointer`.
 

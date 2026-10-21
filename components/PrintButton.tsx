@@ -1,14 +1,17 @@
 "use client";
 
+import { Button } from "@/components/ds";
+
 /** Opens the browser's print dialog; the page's print stylesheet makes it an A4 PDF (STU-1155). */
 export function PrintButton({ label }: { label: string }) {
   return (
-    <button
-      type="button"
-      onClick={() => window.print()}
-      className="print-hidden inline-flex items-center gap-2 rounded-full bg-[var(--color-business-blue)] px-5 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity"
-    >
-      {label}
-    </button>
+    <Button type="button" variant="outline" size="sm" className="print-hidden max-sm:absolute max-sm:right-0 max-sm:top-0 max-sm:-mt-2.5 max-sm:h-10 max-sm:w-10 max-sm:px-0" onClick={() => window.print()}>
+      {/* TODO(STU-1165): swap for the DS icon when the design system gets a download/arrow-down glyph */}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M12 4v12m0 0l-5-5m5 5l5-5M5 20h14" />
+      </svg>
+      {/* Phone: a round icon-only button (40px); the text stays for screen readers. */}
+      <span className="max-sm:sr-only">{label}</span>
+    </Button>
   );
 }

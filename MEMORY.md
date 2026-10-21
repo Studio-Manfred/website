@@ -2,6 +2,12 @@
 
 Quick-start notes for future sessions. Audit this before editing — recent changes may have invalidated parts of it.
 
+## 2026-10-21 — Shared CV: role under the name, outline Download PDF (STU-1164, PR #42)
+- `lib/cv-header.ts` `splitCvHeader` mirrors the intranet's (PDF) one, but on sanitized HTML with string matching (no DOM on the server). `getSharedCv` returns `role` and the text without the header; `SharedCv` shows the role under the name in the Consultant box.
+- `PrintButton` is the DS `Button variant="outline" size="sm"` with an inline down-arrow SVG (the DS has no download icon yet). On phones (`max-sm:`) it is absolutely placed top right of the header block, 40px round, label `sr-only`. The header div is `relative` for that.
+- Preview deploys show the normal site: to see a shared CV take a share link from the intranet and swap the domain for the preview's (`.../cv/<token>`).
+- CodeQL flagged the tag-stripping regex in `textOf` (incomplete multi-character sanitization); it now strips until stable.
+
 ## Stack
 - **Next.js 16.2.6** App Router on **React 19.2.4**, **TypeScript 5**, **Tailwind v4** (PostCSS plugin, no `tailwind.config` — tokens live in the design system CSS).
 - `@studio-manfred/manfred-design-system@^0.37.1` pulled from **GitHub Packages** (see [.npmrc](.npmrc), [.github/dependabot.yml](.github/dependabot.yml) auto-bumps it weekly).
