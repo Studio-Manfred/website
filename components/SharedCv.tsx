@@ -19,7 +19,7 @@ export function SharedCv({ cv }: { cv: Cv }) {
   return (
     <section className="cv-page bg-white px-6 md:px-12 py-20 md:py-32">
       <div className="mx-auto" style={{ maxWidth: "1200px" }}>
-        <div className="mb-16 flex flex-wrap items-start justify-between gap-6">
+        <div className="relative mb-16 flex flex-wrap items-start justify-between gap-6">
           <div>
             <p className="text-sm font-light text-[var(--color-text-muted)] mb-4">{t.kicker}</p>
             <h1
