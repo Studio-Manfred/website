@@ -8,7 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Changed
 
-- **Shared CV**: the top nav now lines up with the CV's outer edges on wide screens (nav row is 1200 px, same as the CV).
+- **Top nav**: on wide screens the nav now lines up with the content's outer edges on the shared CV, `/cases`, case pages, course pages and `/join-us`.
 
 ### Added
 
