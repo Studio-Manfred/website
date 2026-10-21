@@ -6,6 +6,10 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ## [Unreleased]
 
+### Changed
+
+- **Shared CV**: the top nav now lines up with the CV's outer edges on wide screens (nav row is 1200 px, same as the CV).
+
 ### Added
 
 - **Shared CV**: the name, role and `---` the CV text starts with are taken out of the text; the role shows under the name in the Consultant box (STU-1164).

@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { Logo, Button } from "@/components/ds";
 import { GetInTouchLink } from "@/components/GetInTouchLink";
+import { WIDTH_PX, type LayoutWidth } from "@/lib/layout";
 
 interface PageNavProps {
   variant?: "white" | "blue";
+  /** Max width of the nav row. Match the page content's width to line up edges. */
+  width?: LayoutWidth;
 }
 
-export function PageNav({ variant = "white" }: PageNavProps) {
+export function PageNav({ variant = "white", width = "default" }: PageNavProps) {
   const isBlue = variant === "blue";
   return (
     <nav
@@ -16,7 +19,7 @@ export function PageNav({ variant = "white" }: PageNavProps) {
           : "bg-white"
       }`}
     >
-      <div className="mx-auto flex items-center justify-between" style={{ maxWidth: "960px" }}>
+      <div className="mx-auto flex items-center justify-between" style={{ maxWidth: `${WIDTH_PX[width]}px` }}>
         <Link href="/">
           <Logo variant="wordmark" color={isBlue ? "white" : "blue"} height={56} />
         </Link>

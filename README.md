@@ -101,7 +101,7 @@ overlays need to sit outside the max-width wrapper.
 - `/` **has no top nav** — the Hero's 100 px wordmark IS the nav (dramatic
   first-impression brand moment). Do not reintroduce a top-bar on home
   without discussion.
-- All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx).
+- All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx); an optional `width` aligns the nav row with wider content (widths in [lib/layout.ts](lib/layout.ts)).
 
 ### Analytics
 

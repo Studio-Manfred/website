@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Container } from "@/components/ds";
+import { WIDTH_PX, type LayoutWidth } from "@/lib/layout";
 
 // Section is the single page-level layout primitive used across the
 // marketing site. It composes the DS `Container` (semantic max-width
@@ -10,13 +11,6 @@ import { Container } from "@/components/ds";
 // 1200px — picked for line length, not container bands), so we keep
 // using Container as the centring shell and override `maxWidth` via
 // inline style.
-
-const WIDTH_PX = {
-  narrow: 720,
-  default: 960,
-  xl: 1100,
-  wide: 1200,
-} as const;
 
 const PADDING_CLASS = {
   /** First section after the PageNav — shorter bottom padding so the
@@ -49,7 +43,7 @@ export interface SectionProps {
   /** Surface background. `transparent` skips both bg + cursor-white. */
   background?: keyof typeof BACKGROUND_CLASS;
   /** Centred content max-width: narrow=720, default=960, wide=1200 px. */
-  width?: keyof typeof WIDTH_PX;
+  width?: LayoutWidth;
   /** Vertical padding preset. */
   padding?: keyof typeof PADDING_CLASS;
   /** Inline content alignment (passed through to the Container). */

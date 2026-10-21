@@ -29,7 +29,7 @@ Quick-start notes for future sessions. Audit this before editing — recent chan
 
 ## Components ([components/](components/))
 - [ds.tsx](components/ds.tsx) — single `"use client"` re-export of `Button`, `Logo`, `Typography` from the DS. Required because Radix needs Client Components. **Always import DS primitives via `@/components/ds`, never directly from the package.**
-- [PageNav.tsx](components/PageNav.tsx) — the single nav primitive. `variant="blue"` on every sub-page, `variant="white"` on the course-detail surface. Home is intentionally nav-less — the Hero with its 100px wordmark IS the nav (STU-315, 2026-05-25).
+- [PageNav.tsx](components/PageNav.tsx) — the single nav primitive. `variant="blue"` on every sub-page, `variant="white"` on the course-detail surface. Home is intentionally nav-less — the Hero with its 100px wordmark IS the nav (STU-315, 2026-05-25). Optional `width` prop (keys of `WIDTH_PX` in [lib/layout.ts](lib/layout.ts)) sets the nav row's max-width, default 960; `/cv/[token]` uses `wide` (1200) to line up with the CV.
 - [Footer.tsx](components/Footer.tsx) — large blue footer block; mentions Mather Studio network.
 - [CursorBlob.tsx](components/CursorBlob.tsx) — global cursor-follower mounted in `RootLayout`.
 - [Marquee.tsx](components/Marquee.tsx) — canvas-based wave marquee. Commit `e1ed5dc` enforced consistent SSR/client canvas height to fix hydration errors — be careful when touching it.

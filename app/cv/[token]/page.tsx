@@ -24,7 +24,7 @@ export default async function SharedCvPage({ params }: { params: Promise<{ token
   return (
     <>
       <div className="print-hidden">
-        <PageNav variant="white" />
+        <PageNav variant="white" width="wide" />
       </div>
       <main id="main" tabIndex={-1}>
         <SharedCv cv={cv} />

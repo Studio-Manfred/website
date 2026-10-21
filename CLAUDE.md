@@ -57,7 +57,7 @@ carry them).
 
 ## Page anatomy
 
-- **Top nav**: every public route except `/` uses [components/PageNav.tsx](components/PageNav.tsx) — `variant="blue"` on `/writing`, `/writing/[slug]`, `/training-and-courses`, `/join-us`, `/privacy-policy`; `variant="white"` inside [components/CourseDetail.tsx](components/CourseDetail.tsx).
+- **Top nav**: every public route except `/` uses [components/PageNav.tsx](components/PageNav.tsx) — `variant="blue"` on `/writing`, `/writing/[slug]`, `/training-and-courses`, `/join-us`, `/privacy-policy`; `variant="white"` inside [components/CourseDetail.tsx](components/CourseDetail.tsx). The nav row's max-width defaults to 960 px; pass `width` (a key of `WIDTH_PX` in [lib/layout.ts](lib/layout.ts), shared with `Section`) to match a page's content width — `/cv/[token]` uses `width="wide"` (1200 px) so nav and content share outer edges.
 - **`/` is intentionally nav-less.** The Hero's 100 px wordmark IS the nav — the dramatic full-viewport hero is part of the brand impression and a sticky bar would compete with it. Decision recorded under STU-315 (2026-05-25) after `NavBar.tsx` lived as dead code for several weeks. Don't reintroduce a top-bar on home without a separate decision.
 - **`<main>` requirements** (a11y baseline below): every route's `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link lands focus. Blue-background `<main>`s also need `cursor-white` (custom-cursor system).
 
