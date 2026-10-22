@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Share**: the Triple Diamond Roles overview shows each activity's title; selecting it opens a modal with how to work with it, tools and an example (STU-1171).
 - **Share**: UX / Product Designer is a role on the Triple Diamond Roles page, with an AI activity in every sub-phase (STU-1170).
 - **Share**: the Triple Diamond Roles page (where each role can use AI) on an unlisted, noindex share link under `/share/`, as a site page with the site's nav, footer and case-page type (STU-1167). The first `.html` link redirects there.
 - **Shared CV**: the name, role and `---` the CV text starts with are taken out of the text; the role shows under the name in the Consultant box (STU-1164).

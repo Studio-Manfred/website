@@ -74,6 +74,15 @@ main:focus {
   cursor: none;
 }
 
+/* A modal <dialog> sits in the browser's top layer, above the custom cursor,
+   so show the OS cursor inside it (STU-1171). */
+dialog, dialog *, dialog::backdrop {
+  cursor: auto;
+}
+dialog button, dialog a {
+  cursor: pointer;
+}
+
 /* .cursor-white and brand-blue button classes are kept as no-ops so consumer
    markup doesn't need to change while we A/B this. */
 
