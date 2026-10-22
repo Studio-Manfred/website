@@ -15,7 +15,7 @@ const allOff = () => Object.fromEntries(ROLES.map((r) => [r.id, false])) as Reco
 const label = "text-xs font-extrabold uppercase tracking-[0.08em] text-[var(--color-business-blue)]";
 
 // `connect` draws a dashed line from the right tip to the next diamond, across
-// the panel padding and the gap (desktop, three columns; STU-1174).
+// the panel padding (desktop, three columns, panels edge to edge; STU-1174, STU-1176).
 // max-lg:hidden, not `hidden lg:block`: the design system's CSS loads a second
 // `.hidden` after the lg: utilities, which would hide it on every width.
 function Diamond({ name, connect }: { name: string; connect: boolean }) {
@@ -25,7 +25,7 @@ function Diamond({ name, connect }: { name: string; connect: boolean }) {
         <span
           aria-hidden="true"
           data-connector="across"
-          className="max-lg:hidden absolute top-1/2 left-[calc(100%-2px)] w-[calc(3.5rem+4px)] border-t-2 border-dashed border-[var(--color-business-blue)]"
+          className="max-lg:hidden absolute top-1/2 left-[calc(100%-2px)] w-[calc(1rem+4px)] border-t-2 border-dashed border-[var(--color-business-blue)]"
         />
       )}
       <svg aria-hidden="true" viewBox="0 0 400 110" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
@@ -160,8 +160,8 @@ export function TripleDiamondRoles() {
   const shown = count(active);
 
   return (
-    <section className="bg-white px-6 md:px-12 py-20 md:py-32">
-      <div className="mx-auto" style={{ maxWidth: "1200px" }}>
+    <section className="bg-white px-6 md:px-12 lg:px-8 py-20 md:py-32">
+      <div className="mx-auto" style={{ maxWidth: "1600px" }}>
         <div className="mb-16">
           <p className="text-sm font-light text-[var(--color-text-muted)] mb-4">AI in the design process</p>
           <h1
@@ -219,9 +219,11 @@ export function TripleDiamondRoles() {
           </dl>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3 lg:gap-4">
+        {/* Mobile values as max-lg: so the design system's second copy of
+            .gap-6 / .rounded-2xl can't override the desktop layout (STU-1176). */}
+        <div className="grid max-lg:gap-6 lg:grid-cols-3">
           {PHASES.map((p, pi) => (
-            <section key={p.name} className="relative min-w-0 rounded-2xl p-4 md:p-5" style={{ background: PHASE_BG[pi] }}>
+            <section key={p.name} className="relative min-w-0 max-lg:rounded-2xl max-md:p-4 md:max-lg:p-5 lg:px-2 lg:py-5 lg:first:rounded-l-2xl lg:last:rounded-r-2xl" style={{ background: PHASE_BG[pi] }}>
               <Diamond name={p.name} connect={pi < PHASES.length - 1} />
               {pi < PHASES.length - 1 && (
                 // Stacked panels: a dashed line down the gap, under the diamond's centre (STU-1174).
@@ -233,7 +235,7 @@ export function TripleDiamondRoles() {
               )}
               <div className="grid sm:grid-cols-2 mt-8">
                 {p.subs.map((s, i) => (
-                  <div key={s.name} className={`min-w-0 pt-2 pb-6 sm:px-5 ${i === 1 ? "sm:border-l border-[var(--color-border-default)]" : ""}`}>
+                  <div key={s.name} className={`min-w-0 pt-2 pb-6 sm:px-5 lg:px-3 ${i === 1 ? "sm:border-l border-[var(--color-border-default)]" : ""}`}>
                     <h3 className="font-extrabold text-[var(--color-text-primary)] mb-5" style={{ fontSize: "clamp(1.05rem, 1.4vw, 1.2rem)" }}>
                       <span className="block text-xs font-light uppercase tracking-[0.08em] text-[var(--color-text-muted)] mb-1">{p.name}</span>
                       {s.name}
