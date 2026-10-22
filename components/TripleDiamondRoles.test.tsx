@@ -124,3 +124,17 @@ describe("a colour per phase (STU-1173)", () => {
     expect(dialog.querySelector("header")!.style.background).toBe(bgs[0]);
   });
 });
+
+describe("dashed lines connect the diamonds (STU-1174)", () => {
+  it("one line between each pair of phases, across (desktop) and down (stacked), hidden from screen readers", () => {
+    const { container } = render(<TripleDiamondRoles />);
+    for (const dir of ["across", "down"]) {
+      const lines = container.querySelectorAll(`[data-connector="${dir}"]`);
+      expect(lines).toHaveLength(PHASES.length - 1);
+      for (const l of lines) {
+        expect(l).toHaveAttribute("aria-hidden", "true");
+        expect(l.className).toContain("border-dashed");
+      }
+    }
+  });
+});
