@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Share**: on desktop the Triple Diamond Roles phase panels sit edge to edge with wider lanes (content up to 1600 px, less padding); phones keep the stacked panels (STU-1176).
 - **Share**: three AI activities per role and sub-phase on the Triple Diamond Roles page, 126 in total, each with how, tools, an example and a level; the overview groups them under the role (STU-1175).
 - **Share**: dashed lines connect the three Triple Diamond Roles diamonds, across on desktop and down between the stacked panels on phones (STU-1174).
 - **Share**: each Triple Diamond Roles phase sits on its own brand tint (Light Beige, Blue 50, Human Pink), and the modal header uses the phase's tint (STU-1173).
