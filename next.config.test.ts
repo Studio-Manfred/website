@@ -42,3 +42,16 @@ describe("next.config rewrites", () => {
     );
   });
 });
+
+describe("next.config redirects", () => {
+  it("sends the old static Triple Diamond link to the site page (STU-1167)", async () => {
+    vi.resetModules();
+    const { default: config } = await import("./next.config");
+    const redirects = await config.redirects!();
+    expect(redirects).toContainEqual({
+      source: "/share/triple-diamond-roles-jj0fmd7u.html",
+      destination: "/share/triple-diamond-roles-jj0fmd7u",
+      permanent: true,
+    });
+  });
+});
