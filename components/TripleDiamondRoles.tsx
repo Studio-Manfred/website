@@ -18,7 +18,7 @@ function Diamond({ name }: { name: string }) {
   return (
     <div className="relative h-[110px] max-w-[420px] lg:max-w-none">
       <svg aria-hidden="true" viewBox="0 0 400 110" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-        <polygon points="2,55 200,3 398,55 200,107" fill="white" stroke={BLUE} strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+        <polygon points="2,55 200,3 398,55 200,107" fill="white" fillOpacity="0.6" stroke={BLUE} strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
       </svg>
       <h2
         className="absolute inset-0 flex items-center justify-center text-center px-[22%] font-extrabold leading-[1.1] tracking-[var(--letter-spacing-tight)] text-[var(--color-business-blue)]"
@@ -29,6 +29,10 @@ function Diamond({ name }: { name: string }) {
     </div>
   );
 }
+
+// One brand tint per phase (STU-1173): Light Beige, Blue 50, a lighter Human
+// Pink. The panel and the modal header use it, so the phases are easy to tell apart.
+const PHASE_BG = ["var(--beige-light)", "var(--blue-50)", "color-mix(in srgb, var(--pink) 60%, white)"];
 
 const levelOf = (id: LevelId) => LEVELS.find((l) => l.id === id)!;
 
@@ -61,7 +65,7 @@ function LevelTag({ id }: { id: LevelId }) {
   );
 }
 
-type Open = { activity: Activity; role: string; phase: string; sub: string };
+type Open = { activity: Activity; role: string; phase: string; sub: string; bg: string };
 
 // A native <dialog> opened with showModal(): the browser traps focus, closes it
 // on Esc and returns focus to the title that opened it.
@@ -82,7 +86,8 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
       className="m-auto w-[calc(100%-32px)] max-w-2xl max-h-[calc(100%-32px)] rounded-2xl bg-white p-0 text-[var(--color-text-primary)] backdrop:bg-black/50"
     >
       {open && (
-        <div className="p-6 md:p-10">
+        <>
+          <header className="px-6 md:px-10 pt-6 md:pt-10 pb-6 md:pb-8" style={{ background: open.bg }}>
           <div className="flex items-start justify-between gap-6 mb-6">
             <div>
               <p className={`${label} mb-2`}>{open.role}</p>
@@ -94,7 +99,7 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
               type="button"
               onClick={close}
               aria-label="Close"
-              className="shrink-0 w-10 h-10 rounded-full border border-[var(--color-border-default)] flex items-center justify-center hover:border-[var(--color-business-blue)] hover:text-[var(--color-business-blue)]"
+              className="shrink-0 w-10 h-10 rounded-full bg-white border border-[var(--color-border-default)] flex items-center justify-center hover:border-[var(--color-business-blue)] hover:text-[var(--color-business-blue)]"
             >
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M18 6 6 18M6 6l12 12" />
@@ -103,11 +108,13 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
           </div>
           <h2
             id="activity-title"
-            className="font-extrabold text-[var(--color-business-blue)] leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-5"
+            className="font-extrabold text-[var(--color-business-blue)] leading-[1.15] tracking-[var(--letter-spacing-tight)]"
             style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)" }}
           >
             {open.activity.title}
           </h2>
+          </header>
+          <div className="p-6 md:p-10">
           <div className="flex items-start gap-3 rounded-xl bg-[var(--blue-50)] px-4 py-3 mb-8">
             <span className="mt-1"><LevelBars id={open.activity.level} /></span>
             <p className="text-sm font-light text-[var(--color-text-primary)]">
@@ -126,7 +133,8 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
             <h3 className="font-extrabold mb-2">Example</h3>
             <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>{open.activity.example}</p>
           </div>
-        </div>
+          </div>
+        </>
       )}
     </dialog>
   );
@@ -199,9 +207,9 @@ export function TripleDiamondRoles() {
           </dl>
         </div>
 
-        <div className="grid gap-16 lg:grid-cols-3 lg:gap-0">
-          {PHASES.map((p) => (
-            <section key={p.name} className="min-w-0">
+        <div className="grid gap-6 lg:grid-cols-3 lg:gap-4">
+          {PHASES.map((p, pi) => (
+            <section key={p.name} className="min-w-0 rounded-2xl p-4 md:p-5" style={{ background: PHASE_BG[pi] }}>
               <Diamond name={p.name} />
               <div className="grid sm:grid-cols-2 mt-8">
                 {p.subs.map((s, i) => (
@@ -216,7 +224,7 @@ export function TripleDiamondRoles() {
                           <li key={r.id} className="border-t border-[var(--color-border-default)]">
                             <button
                               type="button"
-                              onClick={() => setOpen({ activity: s.acts[r.id], role: r.name, phase: p.name, sub: s.name })}
+                              onClick={() => setOpen({ activity: s.acts[r.id], role: r.name, phase: p.name, sub: s.name, bg: PHASE_BG[pi] })}
                               className="group w-full text-left py-4 flex items-start justify-between gap-3"
                             >
                               <span className="min-w-0 flex-1">
