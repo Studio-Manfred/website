@@ -155,8 +155,9 @@ export function TripleDiamondRoles() {
   const [on, setOn] = useState<Record<RoleId, boolean>>(allOn);
   const [open, setOpen] = useState<Open | null>(null);
   const active = ROLES.filter((r) => on[r.id]);
-  const total = PHASES.reduce((n, p) => n + p.subs.length, 0) * ROLES.length;
-  const shown = PHASES.reduce((n, p) => n + p.subs.length, 0) * active.length;
+  const count = (roles: typeof ROLES) => PHASES.reduce((n, p) => n + p.subs.reduce((m, s) => m + roles.reduce((k, r) => k + s.acts[r.id].length, 0), 0), 0);
+  const total = count(ROLES);
+  const shown = count(active);
 
   return (
     <section className="bg-white px-6 md:px-12 py-20 md:py-32">
@@ -237,32 +238,38 @@ export function TripleDiamondRoles() {
                       <span className="block text-xs font-light uppercase tracking-[0.08em] text-[var(--color-text-muted)] mb-1">{p.name}</span>
                       {s.name}
                     </h3>
-                    {active.length > 0 && (
-                      <ul>
-                        {active.map((r) => (
-                          <li key={r.id} className="border-t border-[var(--color-border-default)]">
-                            <button
-                              type="button"
-                              onClick={() => setOpen({ activity: s.acts[r.id], role: r.name, phase: p.name, sub: s.name, bg: PHASE_BG[pi] })}
-                              className="group w-full text-left py-4 flex items-start justify-between gap-3"
-                            >
-                              <span className="min-w-0 flex-1">
-                                <span className={`${label} block mb-1`}>{r.name}</span>
-                                <span className="block font-light text-sm text-[var(--color-text-primary)] group-hover:text-[var(--color-business-blue)] group-hover:underline underline-offset-4" style={{ lineHeight: 1.6 }}>
-                                  {s.acts[r.id].title}
-                                </span>
-                                <span className="block mt-2">
-                                  <LevelTag id={s.acts[r.id].level} />
-                                </span>
-                              </span>
-                              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-5 text-[var(--color-business-blue)] transition-transform group-hover:translate-x-0.5">
-                                <path d="m9 6 6 6-6 6" />
-                              </svg>
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    {active.map((r) => {
+                      // Each role's activities in this sub-phase, as a list named by the role (STU-1175).
+                      const labelId = `acts-${p.name}-${s.name}-${r.id}`.replace(/\W+/g, "-");
+                      return (
+                        <div key={r.id} className="border-t border-[var(--color-border-default)] pt-4 pb-2">
+                          <p id={labelId} className={`${label} mb-1`}>{r.name}</p>
+                          <ul aria-labelledby={labelId}>
+                            {s.acts[r.id].map((a) => (
+                              <li key={a.title}>
+                                <button
+                                  type="button"
+                                  onClick={() => setOpen({ activity: a, role: r.name, phase: p.name, sub: s.name, bg: PHASE_BG[pi] })}
+                                  className="group w-full text-left py-2 flex items-start justify-between gap-3"
+                                >
+                                  <span className="min-w-0 flex-1">
+                                    <span className="block font-light text-sm text-[var(--color-text-primary)] group-hover:text-[var(--color-business-blue)] group-hover:underline underline-offset-4" style={{ lineHeight: 1.6 }}>
+                                      {a.title}
+                                    </span>
+                                    <span className="block mt-1">
+                                      <LevelTag id={a.level} />
+                                    </span>
+                                  </span>
+                                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-1 text-[var(--color-business-blue)] transition-transform group-hover:translate-x-0.5">
+                                    <path d="m9 6 6 6-6 6" />
+                                  </svg>
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    })}
                   </div>
                 ))}
               </div>
