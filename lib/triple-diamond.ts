@@ -1,10 +1,11 @@
 // Content of the Triple Diamond Roles share page (STU-1167): where each role
 // can use AI in each sub-phase of the triple diamond.
 
-export type RoleId = "res" | "pm" | "ba" | "qa" | "dev" | "ds";
+export type RoleId = "res" | "design" | "pm" | "ba" | "qa" | "dev" | "ds";
 
 export const ROLES: { id: RoleId; name: string }[] = [
   { id: "res", name: "Researcher" },
+  { id: "design", name: "UX / Product Designer" },
   { id: "pm", name: "PM / PO" },
   { id: "ba", name: "BA" },
   { id: "qa", name: "QA" },
@@ -22,6 +23,7 @@ export const PHASES: Phase[] = [
         name: "Journey Discovery",
         acts: {
           res: "Code and theme interview transcripts with a shared codebook",
+          design: "Draft journey maps and user flows from research findings and analytics",
           pm: "Summarise stakeholder input and customer feedback into a first problem view",
           ba: "Map current-state processes and pain points from interviews and documents",
           qa: "Review defects and support tickets for recurring failure patterns",
@@ -33,6 +35,7 @@ export const PHASES: Phase[] = [
         name: "Opportunity Definition",
         acts: {
           res: "Turn themes into opportunity statements backed by quotes",
+          design: "Turn opportunities into design challenges and How might we questions",
           pm: "Cluster insights, size and prioritise opportunities against goals",
           ba: "Translate opportunities into needs and business rules",
           qa: "Flag quality and compliance risks per opportunity",
@@ -49,6 +52,7 @@ export const PHASES: Phase[] = [
         name: "Solution Discovery",
         acts: {
           res: "Draft screeners and discussion guides for concept sessions",
+          design: "Explore many layout and flow variations quickly, then sketch the strongest concepts",
           pm: "Generate and compare solution ideas, write testable hypotheses",
           ba: "Draft requirements and user stories for the leading concepts",
           qa: "Generate test scenarios and edge cases from early concepts",
@@ -60,6 +64,7 @@ export const PHASES: Phase[] = [
         name: "Concept Validation",
         acts: {
           res: "Analyse test sessions and summarise findings per task",
+          design: "Build clickable prototypes for testing and iterate on them from the findings",
           pm: "Compare results with hypotheses and decide: go, change or stop",
           ba: "Refine requirements based on what the tests showed",
           qa: "Review prototypes for accessibility and usability issues",
@@ -76,6 +81,7 @@ export const PHASES: Phase[] = [
         name: "Design & Development",
         acts: {
           res: "Answer open design questions from the insight repository",
+          design: "Write UI copy and microcopy, check designs against the design system and accessibility",
           pm: "Keep backlog, acceptance criteria and scope aligned",
           ba: "Keep specifications and documentation up to date",
           qa: "Write and run test cases, triage bugs",
@@ -87,6 +93,7 @@ export const PHASES: Phase[] = [
         name: "Solution Rollout",
         acts: {
           res: "Theme early feedback and follow up with users",
+          design: "Review live usage and feedback to spot UX issues and plan design improvements",
           pm: "Draft release notes and summarise adoption and KPIs",
           ba: "Update process documentation and training material",
           qa: "Run regression checks and watch for issues after release",

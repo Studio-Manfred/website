@@ -37,3 +37,11 @@ describe("TripleDiamondRoles (STU-1167)", () => {
     expect(within(first).getAllByRole("listitem")[0]).toHaveTextContent("Researcher");
   });
 });
+
+describe("UX / Product Designer role (STU-1170)", () => {
+  it("is a role with an activity in every sub-phase", async () => {
+    render(<TripleDiamondRoles />);
+    expect(screen.getByRole("button", { name: "UX / Product Designer" })).toHaveAttribute("aria-pressed", "true");
+    for (const p of PHASES) for (const s of p.subs) expect(s.acts.design?.trim()).toBeTruthy();
+  });
+});
