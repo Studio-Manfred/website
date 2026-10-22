@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { PHASES, ROLES, type RoleId } from "@/lib/triple-diamond";
+import { useEffect, useRef, useState } from "react";
+import { PHASES, ROLES, type Activity, type RoleId } from "@/lib/triple-diamond";
 
 // Triple Diamond Roles share page (STU-1167): role filters on top, the three
 // diamonds, and per sub-phase the activities of the roles that are on. Same
-// type scale and blue accents as the case pages (CaseStudy, CaseList).
+// type scale and blue accents as the case pages (CaseStudy, CaseList). Each
+// activity shows its title; clicking it opens the details in a modal (STU-1171).
 
 const BLUE = "var(--color-business-blue)";
 const allOn = () => Object.fromEntries(ROLES.map((r) => [r.id, true])) as Record<RoleId, boolean>;
@@ -28,8 +29,74 @@ function Diamond({ name }: { name: string }) {
   );
 }
 
+type Open = { activity: Activity; role: string; phase: string; sub: string };
+
+// A native <dialog> opened with showModal(): the browser traps focus, closes it
+// on Esc and returns focus to the title that opened it.
+function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const d = ref.current;
+    if (open && d && !d.open) d.showModal();
+  }, [open]);
+  const close = () => ref.current?.close();
+
+  return (
+    <dialog
+      ref={ref}
+      onClose={onClose}
+      onClick={(e) => e.target === ref.current && close()}
+      aria-labelledby="activity-title"
+      className="m-auto w-[calc(100%-32px)] max-w-2xl max-h-[calc(100%-32px)] rounded-2xl bg-white p-0 text-[var(--color-text-primary)] backdrop:bg-black/50"
+    >
+      {open && (
+        <div className="p-6 md:p-10">
+          <div className="flex items-start justify-between gap-6 mb-6">
+            <div>
+              <p className={`${label} mb-2`}>{open.role}</p>
+              <p className="text-sm font-light text-[var(--color-text-muted)]">
+                {open.phase} · {open.sub}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Close"
+              className="shrink-0 w-10 h-10 rounded-full border border-[var(--color-border-default)] flex items-center justify-center hover:border-[var(--color-business-blue)] hover:text-[var(--color-business-blue)]"
+            >
+              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <h2
+            id="activity-title"
+            className="font-extrabold text-[var(--color-business-blue)] leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-8"
+            style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)" }}
+          >
+            {open.activity.title}
+          </h2>
+          <h3 className="font-extrabold mb-2">How to work with it</h3>
+          <p className="font-light text-[var(--color-text-secondary)] mb-8" style={{ lineHeight: 1.7 }}>{open.activity.how}</p>
+          <h3 className="font-extrabold mb-3">Tools</h3>
+          <ul className="flex flex-wrap gap-2 mb-8">
+            {open.activity.tools.map((t) => (
+              <li key={t} className="rounded-full bg-[var(--blue-50)] text-[var(--color-business-blue)] px-3 py-1 text-sm">{t}</li>
+            ))}
+          </ul>
+          <div className="border-t-4 border-[var(--color-business-blue)] pt-5">
+            <h3 className="font-extrabold mb-2">Example</h3>
+            <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>{open.activity.example}</p>
+          </div>
+        </div>
+      )}
+    </dialog>
+  );
+}
+
 export function TripleDiamondRoles() {
   const [on, setOn] = useState<Record<RoleId, boolean>>(allOn);
+  const [open, setOpen] = useState<Open | null>(null);
   const active = ROLES.filter((r) => on[r.id]);
   const total = PHASES.reduce((n, p) => n + p.subs.length, 0) * ROLES.length;
   const shown = PHASES.reduce((n, p) => n + p.subs.length, 0) * active.length;
@@ -96,11 +163,22 @@ export function TripleDiamondRoles() {
                     {active.length > 0 && (
                       <ul>
                         {active.map((r) => (
-                          <li key={r.id} className="border-t border-[var(--color-border-default)] py-4">
-                            <p className={`${label} mb-1`}>{r.name}</p>
-                            <p className="font-light text-[var(--color-text-secondary)] text-sm" style={{ lineHeight: 1.7 }}>
-                              {s.acts[r.id]}
-                            </p>
+                          <li key={r.id} className="border-t border-[var(--color-border-default)]">
+                            <button
+                              type="button"
+                              onClick={() => setOpen({ activity: s.acts[r.id], role: r.name, phase: p.name, sub: s.name })}
+                              className="group w-full text-left py-4 flex items-start justify-between gap-3"
+                            >
+                              <span className="min-w-0">
+                                <span className={`${label} block mb-1`}>{r.name}</span>
+                                <span className="block font-light text-sm text-[var(--color-text-primary)] group-hover:text-[var(--color-business-blue)] group-hover:underline underline-offset-4" style={{ lineHeight: 1.6 }}>
+                                  {s.acts[r.id].title}
+                                </span>
+                              </span>
+                              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-5 text-[var(--color-business-blue)] transition-transform group-hover:translate-x-0.5">
+                                <path d="m9 6 6 6-6 6" />
+                              </svg>
+                            </button>
                           </li>
                         ))}
                       </ul>
@@ -119,9 +197,10 @@ export function TripleDiamondRoles() {
         )}
 
         <p className="font-light text-sm text-[var(--color-text-muted)] max-w-[70ch] mt-20 pt-5 border-t border-[var(--color-border-default)]">
-          Activities are examples to start the conversation. Adjust them to how your teams work and what your policies allow.
+          Activities are examples to start the conversation. Select one to read how to work with it, tools and an example. Adjust them to how your teams work and what your policies allow.
         </p>
       </div>
+      <ActivityDialog open={open} onClose={() => setOpen(null)} />
     </section>
   );
 }
