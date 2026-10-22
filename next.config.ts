@@ -12,6 +12,17 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.example.com" },
     ],
   },
+  // STU-1167: the Triple Diamond Roles share page moved from a static file to a
+  // site page; the first shared link keeps working.
+  async redirects() {
+    return [
+      {
+        source: "/share/triple-diamond-roles-jj0fmd7u.html",
+        destination: "/share/triple-diamond-roles-jj0fmd7u",
+        permanent: true,
+      },
+    ];
+  },
   // Own-domain proxy for Manfred Analytics so ad-blockers can't catch the
   // events by hostname. The tracker derives its POST endpoint from
   // `new URL(scriptSrc).origin + "/api/event"`, so serving the script from
