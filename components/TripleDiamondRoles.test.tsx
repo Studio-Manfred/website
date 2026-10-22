@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TripleDiamondRoles } from "./TripleDiamondRoles";
-import { LEVELS, PHASES, ROLES } from "@/lib/triple-diamond";
+import { LEVELS, PHASES, ROLES, TD_CASE_DEFAULTS } from "@/lib/triple-diamond";
 
 // jsdom has no <dialog> methods; enough of them for open/close.
 beforeAll(() => {
@@ -149,5 +149,29 @@ describe("three activities per role and sub-phase (STU-1175)", () => {
     const lists = screen.getAllByRole("list", { name: "Researcher" });
     expect(lists).toHaveLength(subs.length);
     expect(within(lists[0]).getAllByRole("listitem")).toHaveLength(3);
+  });
+});
+
+describe("as a case page (STU-1179)", () => {
+  it("shows the case's title, intro, category and consultant", () => {
+    render(
+      <TripleDiamondRoles
+        title="AI Activities throughout the triple diamond process"
+        intro="An interactive guide."
+        categoryLine="Interactive guide"
+        consultants={[{ name: "Moa Bogren", title: "Design lead", photoUrl: "/team/moa.jpg" }]}
+      />,
+    );
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("AI Activities throughout the triple diamond process");
+    expect(screen.getByText("An interactive guide.")).toBeInTheDocument();
+    expect(screen.getByText("Interactive guide")).toBeInTheDocument();
+    expect(screen.getByText("Moa Bogren")).toBeInTheDocument();
+    expect(screen.getByText("Design lead")).toBeInTheDocument();
+  });
+
+  it("falls back to the defaults without a case row", () => {
+    render(<TripleDiamondRoles />);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(TD_CASE_DEFAULTS.title);
+    expect(screen.getByText(TD_CASE_DEFAULTS.intro)).toBeInTheDocument();
   });
 });

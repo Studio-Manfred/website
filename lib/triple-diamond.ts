@@ -4,6 +4,18 @@
 // (STU-1171, STU-1172).
 // Copy rule: no dashes as punctuation (the test checks it).
 
+// The page is listed under Cases (STU-1179): a published `cases` row with this
+// slug, created from Moa's account in the intranet, gives the title, intro,
+// category and consultant. The content below stays in code. These defaults
+// are used when the row can't be read.
+export const TD_CASE_SLUG = "ai-activities-triple-diamond";
+export const TD_CASE_DEFAULTS = {
+  title: "AI Activities throughout the triple diamond process",
+  categoryLine: "Interactive guide · AI in the design process",
+  intro:
+    "An interactive guide to where AI can help each role in the triple diamond, from problem discovery to rollout. Filter by role and open an activity to see how to work with it, which tools to try, an example and how hard it is to get started.",
+};
+
 export type RoleId = "res" | "design" | "pm" | "ba" | "qa" | "dev" | "ds";
 
 export type LevelId = "easy" | "medium" | "advanced";
