@@ -15,8 +15,10 @@ beforeAll(() => {
   };
 });
 
-const total = PHASES.reduce((n, p) => n + p.subs.length, 0) * ROLES.length;
-const first = PHASES[0].subs[0].acts.res;
+const subs = PHASES.flatMap((p) => p.subs);
+const all = subs.flatMap((s) => ROLES.flatMap((r) => s.acts[r.id].map((a) => ({ s, r, a }))));
+const total = all.length;
+const first = PHASES[0].subs[0].acts.res[0];
 
 describe("TripleDiamondRoles (STU-1167)", () => {
   it("one h1, three phases, and every activity with all roles on", () => {
@@ -33,7 +35,7 @@ describe("TripleDiamondRoles (STU-1167)", () => {
     expect(researcher).toHaveAttribute("aria-pressed", "true");
     await userEvent.click(researcher);
     expect(researcher).toHaveAttribute("aria-pressed", "false");
-    const perRole = total / ROLES.length;
+    const perRole = all.filter((x) => x.r.id === "res").length;
     expect(screen.getByText(`Showing ${total - perRole} of ${total} activities`)).toBeInTheDocument();
     expect(screen.queryByText(first.title)).not.toBeInTheDocument();
   });
@@ -45,29 +47,25 @@ describe("TripleDiamondRoles (STU-1167)", () => {
     expect(screen.queryAllByRole("listitem")).toHaveLength(0);
     await userEvent.click(screen.getByRole("button", { name: "Show all roles" }));
     expect(screen.getAllByRole("listitem")).toHaveLength(total);
-    const list = screen.getAllByRole("list")[0];
-    expect(within(list).getAllByRole("listitem")[0]).toHaveTextContent("Researcher");
+    expect(screen.getAllByRole("list", { name: "Researcher" })[0]).toHaveTextContent(first.title);
   });
 });
 
 describe("UX / Product Designer role (STU-1170)", () => {
-  it("is a role with an activity in every sub-phase", () => {
+  it("is a role with activities in every sub-phase", () => {
     render(<TripleDiamondRoles />);
     expect(screen.getByRole("button", { name: "UX / Product Designer" })).toHaveAttribute("aria-pressed", "true");
-    for (const p of PHASES) for (const s of p.subs) expect(s.acts.design.title.trim()).toBeTruthy();
+    for (const s of subs) expect(s.acts.design.length).toBeGreaterThan(0);
   });
 });
 
 describe("activity details in a modal (STU-1171)", () => {
   it("every activity has a title, how, tools and an example, with no dashes as punctuation", () => {
-    for (const p of PHASES)
-      for (const s of p.subs)
-        for (const r of ROLES) {
-          const a = s.acts[r.id];
-          expect(a.title && a.how && a.example, `${s.name} / ${r.name}`).toBeTruthy();
-          expect(a.tools.length, `${s.name} / ${r.name}`).toBeGreaterThan(0);
-          expect(`${a.title} ${a.how} ${a.example}`).not.toMatch(/[—–]/);
-        }
+    for (const { s, r, a } of all) {
+      expect(a.title && a.how && a.example, `${s.name} / ${r.name}`).toBeTruthy();
+      expect(a.tools.length, `${s.name} / ${r.name}`).toBeGreaterThan(0);
+      expect(`${a.title} ${a.how} ${a.example}`, a.title).not.toMatch(/[—–]/);
+    }
   });
 
   it("the overview shows only the title; clicking it opens the details, Close closes them", async () => {
@@ -87,13 +85,10 @@ describe("activity details in a modal (STU-1171)", () => {
 
 describe("short titles and a difficulty level (STU-1172)", () => {
   it("every title is short, and every activity has a level", () => {
-    for (const p of PHASES)
-      for (const s of p.subs)
-        for (const r of ROLES) {
-          const a = s.acts[r.id];
-          expect(a.title.length, `${s.name} / ${r.name}: ${a.title}`).toBeLessThanOrEqual(42);
-          expect(LEVELS.map((l) => l.id), `${s.name} / ${r.name}`).toContain(a.level);
-        }
+    for (const { s, r, a } of all) {
+      expect(a.title.length, `${s.name} / ${r.name}: ${a.title}`).toBeLessThanOrEqual(42);
+      expect(LEVELS.map((l) => l.id), `${s.name} / ${r.name}`).toContain(a.level);
+    }
   });
 
   it("the overview shows each activity's level; the modal explains it", async () => {
@@ -136,5 +131,23 @@ describe("dashed lines connect the diamonds (STU-1174)", () => {
         expect(l.className).toContain("border-dashed");
       }
     }
+  });
+});
+
+describe("three activities per role and sub-phase (STU-1175)", () => {
+  it("every role has three activities in every sub-phase, with distinct titles", () => {
+    expect(total).toBe(subs.length * ROLES.length * 3);
+    for (const s of subs)
+      for (const r of ROLES) {
+        expect(s.acts[r.id], `${s.name} / ${r.name}`).toHaveLength(3);
+        expect(new Set(s.acts[r.id].map((a) => a.title)).size, `${s.name} / ${r.name}`).toBe(3);
+      }
+  });
+
+  it("groups each sub-phase's activities under the role, as a list named by the role", () => {
+    render(<TripleDiamondRoles />);
+    const lists = screen.getAllByRole("list", { name: "Researcher" });
+    expect(lists).toHaveLength(subs.length);
+    expect(within(lists[0]).getAllByRole("listitem")).toHaveLength(3);
   });
 });
