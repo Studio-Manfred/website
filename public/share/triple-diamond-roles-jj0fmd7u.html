@@ -1,0 +1,219 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Triple Diamond Roles · Studio Manfred</title><meta name="robots" content="noindex, nofollow"><meta name="description" content="Where each role can use AI in the triple diamond."><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* Studio Manfred graphic profile: tokens from manfred-design-system (src/tokens/tokens.css).
+   Layout: role switches on top, three diamonds in a row, activities per sub-phase underneath, filtered by role. */
+:root{
+  --blue-50:#eaeafd; --blue-300:#807ef4; --blue-400:#5653f0; --blue-500:#2c28ec; --blue-700:#1a188e;
+  --neutral-50:#f5f5f6; --neutral-200:#d1d1d4; --neutral-300:#ababaf; --neutral-400:#7c7c82; --neutral-500:#56565c;
+  --neutral-600:#3f3f45; --neutral-700:#2e2e34; --neutral-800:#1e1e24; --neutral-900:#111116;
+  --pink:#efd6d3; --beige:#e6dcc8; --beige-light:#f4f3e8; --white:#fff;
+
+  --bg:var(--white); --surface:var(--beige-light); --ink:var(--neutral-800); --ink-2:var(--neutral-600); --muted:var(--neutral-500);
+  --brand:var(--blue-500); --line:var(--neutral-200); --focus:var(--blue-400);
+  /* Role colours: the DS chart palette (--color-chart-1..5) plus Almost Black */
+  --r1:var(--blue-500); --r2:#065f46; --r3:#92400e; --r4:var(--blue-700); --r5:var(--neutral-400); --r6:var(--neutral-800);
+  --font:'Host Grotesk',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]):not(.light){
+    --bg:var(--neutral-900); --surface:var(--neutral-800); --ink:var(--neutral-50); --ink-2:var(--neutral-200); --muted:var(--neutral-300);
+    --brand:var(--blue-300); --line:var(--neutral-700); --focus:var(--blue-300);
+    --r1:var(--blue-300); --r2:#6ee7b7; --r3:#fcd34d; --r4:var(--blue-50); --r5:var(--neutral-300); --r6:var(--pink);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"],:root.dark{
+  --bg:var(--neutral-900); --surface:var(--neutral-800); --ink:var(--neutral-50); --ink-2:var(--neutral-200); --muted:var(--neutral-300);
+  --brand:var(--blue-300); --line:var(--neutral-700); --focus:var(--blue-300);
+  --r1:var(--blue-300); --r2:#6ee7b7; --r3:#fcd34d; --r4:var(--blue-50); --r5:var(--neutral-300); --r6:var(--pink);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;font-weight:300;margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding-block:clamp(48px,8vw,128px) 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:768px){.wrap{padding-left:48px;padding-right:48px}}
+.eyebrow{font-size:14px;color:var(--muted);margin:0 0 16px}
+h1{font-size:clamp(2.25rem,5.5vw,4.5rem);line-height:1.1;letter-spacing:-0.02em;margin:0 0 32px;text-wrap:balance;font-weight:800;color:var(--brand);max-width:18ch}
+.lede{color:var(--ink);margin:0 0 64px;max-width:48rem;font-size:clamp(1.1rem,1.8vw,1.4rem);line-height:1.7}
+.toolbar{border-top:4px solid var(--brand);padding-top:20px;margin-bottom:48px}
+.label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:0 0 14px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.sw{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border:1.5px solid var(--line);border-radius:9999px;background:var(--bg);color:var(--ink);font:inherit;font-weight:500;cursor:pointer;transition:border-color 150ms ease}
+.sw:hover{border-color:var(--ink)}
+.sw .track{width:34px;height:20px;border-radius:9999px;background:var(--line);position:relative;transition:background 150ms ease}
+.sw .track::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--bg);transition:transform 150ms ease}
+.sw[aria-checked="true"]{border-color:var(--c)}
+.sw[aria-checked="true"] .track{background:var(--c)}
+.sw[aria-checked="true"] .track::after{transform:translateX(14px)}
+.sw:focus-visible,.link:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.links{display:flex;gap:4px;margin-top:10px}
+.link{background:none;border:0;color:var(--brand);font:inherit;font-weight:500;cursor:pointer;padding:8px 6px;text-decoration:underline;text-underline-offset:4px}
+.count{color:var(--muted);font-size:14px;margin:8px 0 0}
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+.phase{min-width:0}
+.dia{position:relative;height:120px;margin-bottom:8px}
+.dia svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.dia polygon{fill:var(--bg);stroke:var(--brand);stroke-width:2.5;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.dia h2{position:absolute;inset:0;margin:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 22%;font-size:clamp(1.05rem,1.7vw,1.5rem);font-weight:800;letter-spacing:-0.02em;color:var(--brand);line-height:1.1}
+.subs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.sub{padding:20px 14px 8px;border-left:1px solid var(--line);min-width:0}
+.phase:first-child .sub:first-child{border-left:0}
+.sub h3{margin:0 0 16px;font-size:clamp(1.05rem,1.4vw,1.2rem);font-weight:800;line-height:1.2;color:var(--ink)}
+.sub h3 small{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:4px}
+.acts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.act{background:var(--surface);border-radius:8px;padding:12px 14px}
+.role{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;color:var(--ink)}
+.role i{width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.act p{margin:0;font-size:15px;line-height:1.55;color:var(--ink-2)}
+.empty{display:none;border:1.5px dashed var(--line);border-radius:16px;padding:32px;text-align:center;color:var(--muted);margin-top:12px}
+.empty.show{display:block}
+.note{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;max-width:70ch}
+@media (max-width:1100px){
+  .phases{grid-template-columns:1fr;gap:40px}
+  .dia{max-width:420px;height:100px}
+}
+@media (max-width:640px){
+  .subs{grid-template-columns:1fr}
+  .sub{border-left:0;border-top:1px solid var(--line)}
+  .phase:first-child .sub:first-child{border-top:0}
+  .sw{padding-right:12px}
+}
+@media (prefers-reduced-motion:reduce){.sw,.sw .track,.sw .track::after{transition:none}}
+</style>
+
+</head><body>
+<div class="wrap">
+  <p class="eyebrow">Studio Manfred · AI in the design process</p>
+  <h1>Where each role can use AI in the triple diamond</h1>
+  <p class="lede">Switch roles on and off to see the specific activities where AI helps in each part of the process. People review and decide. AI drafts, clusters, summarises and generates.</p>
+
+  <div class="toolbar">
+    <p class="label" id="roles-label">Roles</p>
+    <div class="controls" role="group" aria-labelledby="roles-label" id="switches"></div>
+    <div class="links">
+      <button class="link" id="all" type="button">Show all roles</button>
+      <button class="link" id="none" type="button">Clear</button>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+  </div>
+
+  <div class="phases" id="phases"></div>
+  <div class="empty" id="empty">No roles selected. Switch on one or more roles above to see their activities.</div>
+
+  <p class="note">Activities are examples to start the conversation. Adjust them to how your teams work and what your policies allow.</p>
+</div>
+
+<script>
+var ROLES=[
+ {id:'res',name:'Researcher'},
+ {id:'pm',name:'PM / PO'},
+ {id:'ba',name:'BA'},
+ {id:'qa',name:'QA'},
+ {id:'dev',name:'Dev'},
+ {id:'ds',name:'Data Scientist'}
+];
+var PHASES=[
+ {name:'Problem discovery',subs:[
+  {name:'Journey Discovery',acts:{
+   res:'Code and theme interview transcripts with a shared codebook',
+   pm:'Summarise stakeholder input and customer feedback into a first problem view',
+   ba:'Map current-state processes and pain points from interviews and documents',
+   qa:'Review defects and support tickets for recurring failure patterns',
+   dev:'Summarise technical constraints and legacy limits that shape the journey',
+   ds:'Analyse usage and survey data to find drop-off points'}},
+  {name:'Opportunity Definition',acts:{
+   res:'Turn themes into opportunity statements backed by quotes',
+   pm:'Cluster insights, size and prioritise opportunities against goals',
+   ba:'Translate opportunities into needs and business rules',
+   qa:'Flag quality and compliance risks per opportunity',
+   dev:'Estimate feasibility and rough effort per opportunity',
+   ds:'Segment users and quantify how many each opportunity affects'}}
+ ]},
+ {name:'Solution discovery',subs:[
+  {name:'Solution Discovery',acts:{
+   res:'Draft screeners and discussion guides for concept sessions',
+   pm:'Generate and compare solution ideas, write testable hypotheses',
+   ba:'Draft requirements and user stories for the leading concepts',
+   qa:'Generate test scenarios and edge cases from early concepts',
+   dev:'Build quick working prototypes to try the idea',
+   ds:'Define success metrics and set up the experiment design'}},
+  {name:'Concept Validation',acts:{
+   res:'Analyse test sessions and summarise findings per task',
+   pm:'Compare results with hypotheses and decide: go, change or stop',
+   ba:'Refine requirements based on what the tests showed',
+   qa:'Review prototypes for accessibility and usability issues',
+   dev:'Assess technical risk of the validated concept',
+   ds:'Read A/B and survey results and check significance'}}
+ ]},
+ {name:'Development',subs:[
+  {name:'Design & Development',acts:{
+   res:'Answer open design questions from the insight repository',
+   pm:'Keep backlog, acceptance criteria and scope aligned',
+   ba:'Keep specifications and documentation up to date',
+   qa:'Write and run test cases, triage bugs',
+   dev:'Write, review and refactor code, generate tests and docs',
+   ds:'Set up tracking, event schemas and dashboards'}},
+  {name:'Solution Rollout',acts:{
+   res:'Theme early feedback and follow up with users',
+   pm:'Draft release notes and summarise adoption and KPIs',
+   ba:'Update process documentation and training material',
+   qa:'Run regression checks and watch for issues after release',
+   dev:'Monitor logs and incidents, draft fixes',
+   ds:'Track outcome metrics, spot anomalies and churn signals'}}
+ ]}
+];
+
+var KEY='tdr-roles';
+var on={};
+try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(s)ROLES.forEach(function(r){on[r.id]=!!s[r.id]})}catch(e){}
+if(Object.keys(on).length===0)ROLES.forEach(function(r){on[r.id]=true});
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(on))}catch(e){}}
+
+var sw=document.getElementById('switches');
+ROLES.forEach(function(r,i){
+  var b=document.createElement('button');
+  b.type='button';b.className='sw';b.id='sw-'+r.id;
+  b.setAttribute('role','switch');b.style.setProperty('--c','var(--r'+(i+1)+')');
+  b.innerHTML='<span class="track" aria-hidden="true"></span><span>'+r.name+'</span>';
+  b.addEventListener('click',function(){on[r.id]=!on[r.id];save();update()});
+  sw.appendChild(b);
+});
+
+var host=document.getElementById('phases');
+PHASES.forEach(function(p){
+  var d=document.createElement('section');d.className='phase';
+  var h='<div class="dia"><svg viewBox="0 0 400 110" preserveAspectRatio="none" aria-hidden="true"><polygon points="2,55 200,3 398,55 200,107"/></svg><h2>'+p.name+'</h2></div><div class="subs">';
+  p.subs.forEach(function(s){
+    h+='<div class="sub"><h3><small>'+p.name+'</small>'+s.name+'</h3><ul class="acts">';
+    ROLES.forEach(function(r,i){
+      h+='<li class="act" data-role="'+r.id+'" style="--c:var(--r'+(i+1)+')"><div class="role"><i></i>'+r.name+'</div><p>'+s.acts[r.id]+'</p></li>';
+    });
+    h+='</ul></div>';
+  });
+  h+='</div>';
+  d.innerHTML=h;host.appendChild(d);
+});
+
+function update(){
+  var n=0,total=0;
+  ROLES.forEach(function(r){
+    var b=document.getElementById('sw-'+r.id);
+    b.setAttribute('aria-checked',on[r.id]?'true':'false');
+  });
+  document.querySelectorAll('.act').forEach(function(a){
+    total++;
+    var show=on[a.getAttribute('data-role')];
+    a.hidden=!show;if(show)n++;
+  });
+  document.getElementById('count').textContent='Showing '+n+' of '+total+' activities';
+  document.getElementById('empty').classList.toggle('show',n===0);
+}
+document.getElementById('all').addEventListener('click',function(){ROLES.forEach(function(r){on[r.id]=true});save();update()});
+document.getElementById('none').addEventListener('click',function(){ROLES.forEach(function(r){on[r.id]=false});save();update()});
+update();
+</script>
+
+</body></html>

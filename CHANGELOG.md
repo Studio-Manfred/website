@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Share**: the Triple Diamond Roles page (where each role can use AI) on an unlisted, noindex share link under `/share/` (STU-1167).
 - **Shared CV**: the name, role and `---` the CV text starts with are taken out of the text; the role shows under the name in the Consultant box (STU-1164).
 - **Cases**: an optional hero image under the intro of a case page, full width at 2:1 (STU-1153).
 - **Cases**: outcomes can show a big key figure (for example +28%) in two columns, one column when narrow (STU-1153).
