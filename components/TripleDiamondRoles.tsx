@@ -14,9 +14,20 @@ const allOn = () => Object.fromEntries(ROLES.map((r) => [r.id, true])) as Record
 const allOff = () => Object.fromEntries(ROLES.map((r) => [r.id, false])) as Record<RoleId, boolean>;
 const label = "text-xs font-extrabold uppercase tracking-[0.08em] text-[var(--color-business-blue)]";
 
-function Diamond({ name }: { name: string }) {
+// `connect` draws a dashed line from the right tip to the next diamond, across
+// the panel padding and the gap (desktop, three columns; STU-1174).
+// max-lg:hidden, not `hidden lg:block`: the design system's CSS loads a second
+// `.hidden` after the lg: utilities, which would hide it on every width.
+function Diamond({ name, connect }: { name: string; connect: boolean }) {
   return (
     <div className="relative h-[110px] max-w-[420px] lg:max-w-none">
+      {connect && (
+        <span
+          aria-hidden="true"
+          data-connector="across"
+          className="max-lg:hidden absolute top-1/2 left-[calc(100%-2px)] w-[calc(3.5rem+4px)] border-t-2 border-dashed border-[var(--color-business-blue)]"
+        />
+      )}
       <svg aria-hidden="true" viewBox="0 0 400 110" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
         <polygon points="2,55 200,3 398,55 200,107" fill="white" fillOpacity="0.6" stroke={BLUE} strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
       </svg>
@@ -209,8 +220,16 @@ export function TripleDiamondRoles() {
 
         <div className="grid gap-6 lg:grid-cols-3 lg:gap-4">
           {PHASES.map((p, pi) => (
-            <section key={p.name} className="min-w-0 rounded-2xl p-4 md:p-5" style={{ background: PHASE_BG[pi] }}>
-              <Diamond name={p.name} />
+            <section key={p.name} className="relative min-w-0 rounded-2xl p-4 md:p-5" style={{ background: PHASE_BG[pi] }}>
+              <Diamond name={p.name} connect={pi < PHASES.length - 1} />
+              {pi < PHASES.length - 1 && (
+                // Stacked panels: a dashed line down the gap, under the diamond's centre (STU-1174).
+                <span
+                  aria-hidden="true"
+                  data-connector="down"
+                  className="lg:hidden absolute top-full h-6 border-l-2 border-dashed border-[var(--color-business-blue)] left-[calc(1rem+min(210px,50%-1rem))] md:left-[calc(1.25rem+min(210px,50%-1.25rem))]"
+                />
+              )}
               <div className="grid sm:grid-cols-2 mt-8">
                 {p.subs.map((s, i) => (
                   <div key={s.name} className={`min-w-0 pt-2 pb-6 sm:px-5 ${i === 1 ? "sm:border-l border-[var(--color-border-default)]" : ""}`}>
