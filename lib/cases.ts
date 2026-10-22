@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { teamPhoto } from "./team";
 
 // Case pages from the intranet's Case CMS (STU-1143). Rows live in the
 // intranet Supabase `cases` table; RLS lets the anon key read published rows
@@ -92,7 +93,9 @@ export function parseCase(row: Obj): CaseStudy {
       .map(parseBlock)
       .filter((b): b is CaseBlock => b !== null),
     sidebar: {
-      consultants: objects(sidebar.consultants).map((c) => ({ name: str(c.name), title: str(c.title), photoUrl: str(c.photo_url) })),
+      // STU-1169: a team member gets the website photo, not the intranet avatar
+      // the case editor copied from their profile.
+      consultants: objects(sidebar.consultants).map((c) => ({ name: str(c.name), title: str(c.title), photoUrl: teamPhoto(str(c.name)) ?? str(c.photo_url) })),
       facts: objects(sidebar.facts).map((f) => ({ label: str(f.label), items: strings(f.items) })),
     },
   };

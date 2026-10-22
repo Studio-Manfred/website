@@ -21,6 +21,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Fixed
 
+- **Cases**: a consultant on the team shows their website team photo, not the intranet avatar the case editor copied (STU-1169).
 - **Cases**: the process timeline's step names now meet WCAG AA contrast (they were light grey, 1.6:1) (STU-1146).
 
 ### Removed

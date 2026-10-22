@@ -96,3 +96,21 @@ describe("hero image and key figures (STU-1153)", () => {
     for (const i of items.slice(1)) expect("figure" in i).toBe(false);
   });
 });
+
+describe("consultant photo from the website team (STU-1169)", () => {
+  const row = (name: string, photo_url: string) => ({
+    slug: "s",
+    title: "T",
+    sidebar: { consultants: [{ name, title: "UX Lead", photo_url }] },
+  });
+
+  it("uses the Team section photo when the consultant is on the team, not the intranet avatar", () => {
+    const c = parseCase(row(" moa bogren ", "https://x.supabase.co/storage/v1/object/public/content/avatars/abc"));
+    expect(c.sidebar.consultants[0].photoUrl).toBe("/team/moa.jpg");
+  });
+
+  it("keeps the stored photo for someone who isn't on the team", () => {
+    const c = parseCase(row("Guest Consultant", "https://x.supabase.co/a.jpg"));
+    expect(c.sidebar.consultants[0].photoUrl).toBe("https://x.supabase.co/a.jpg");
+  });
+});
