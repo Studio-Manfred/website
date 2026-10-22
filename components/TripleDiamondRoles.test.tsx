@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TripleDiamondRoles } from "./TripleDiamondRoles";
-import { PHASES, ROLES } from "@/lib/triple-diamond";
+import { LEVELS, PHASES, ROLES } from "@/lib/triple-diamond";
 
 // jsdom has no <dialog> methods; enough of them for open/close.
 beforeAll(() => {
@@ -82,5 +82,33 @@ describe("activity details in a modal (STU-1171)", () => {
     expect(dialog).toHaveTextContent(PHASES[0].subs[0].name);
     await userEvent.click(within(dialog).getByRole("button", { name: "Close" }));
     expect(screen.queryByText(first.how)).not.toBeInTheDocument();
+  });
+});
+
+describe("short titles and a difficulty level (STU-1172)", () => {
+  it("every title is short, and every activity has a level", () => {
+    for (const p of PHASES)
+      for (const s of p.subs)
+        for (const r of ROLES) {
+          const a = s.acts[r.id];
+          expect(a.title.length, `${s.name} / ${r.name}: ${a.title}`).toBeLessThanOrEqual(42);
+          expect(LEVELS.map((l) => l.id), `${s.name} / ${r.name}`).toContain(a.level);
+        }
+  });
+
+  it("the overview shows each activity's level; the modal explains it", async () => {
+    render(<TripleDiamondRoles />);
+    const button = screen.getByRole("button", { name: new RegExp(first.title) });
+    const level = LEVELS.find((l) => l.id === first.level)!;
+    expect(button).toHaveTextContent(`Level: ${level.name}`);
+    await userEvent.click(button);
+    const dialog = screen.getByRole("dialog", { name: first.title });
+    expect(dialog).toHaveTextContent(level.name);
+    expect(dialog).toHaveTextContent(level.description);
+  });
+
+  it("explains the three levels on the page", () => {
+    render(<TripleDiamondRoles />);
+    for (const l of LEVELS) expect(screen.getAllByText(l.description).length).toBeGreaterThan(0);
   });
 });

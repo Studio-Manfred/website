@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PHASES, ROLES, type Activity, type RoleId } from "@/lib/triple-diamond";
+import { LEVELS, PHASES, ROLES, type Activity, type LevelId, type RoleId } from "@/lib/triple-diamond";
 
 // Triple Diamond Roles share page (STU-1167): role filters on top, the three
 // diamonds, and per sub-phase the activities of the roles that are on. Same
 // type scale and blue accents as the case pages (CaseStudy, CaseList). Each
-// activity shows its title; clicking it opens the details in a modal (STU-1171).
+// activity shows its title and level; clicking it opens the details in a
+// modal (STU-1171, STU-1172).
 
 const BLUE = "var(--color-business-blue)";
 const allOn = () => Object.fromEntries(ROLES.map((r) => [r.id, true])) as Record<RoleId, boolean>;
@@ -26,6 +27,37 @@ function Diamond({ name }: { name: string }) {
         {name}
       </h2>
     </div>
+  );
+}
+
+const levelOf = (id: LevelId) => LEVELS.find((l) => l.id === id)!;
+
+// Three bars, as many filled as the level is hard. Decorative: the name is
+// always written next to it.
+function LevelBars({ id }: { id: LevelId }) {
+  const n = LEVELS.findIndex((l) => l.id === id) + 1;
+  return (
+    <span aria-hidden="true" className="inline-flex items-end gap-[2px]">
+      {[1, 2, 3].map((i) => (
+        <span
+          key={i}
+          className={`w-[4px] rounded-[1px] ${i <= n ? "bg-[var(--color-business-blue)]" : "bg-[var(--color-border-default)]"}`}
+          style={{ height: `${4 + i * 3}px` }}
+        />
+      ))}
+    </span>
+  );
+}
+
+function LevelTag({ id }: { id: LevelId }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs font-light text-[var(--color-text-muted)] whitespace-nowrap">
+      <LevelBars id={id} />
+      <span>
+        <span className="sr-only">Level: </span>
+        {levelOf(id).name}
+      </span>
+    </span>
   );
 }
 
@@ -71,11 +103,17 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
           </div>
           <h2
             id="activity-title"
-            className="font-extrabold text-[var(--color-business-blue)] leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-8"
+            className="font-extrabold text-[var(--color-business-blue)] leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-5"
             style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)" }}
           >
             {open.activity.title}
           </h2>
+          <div className="flex items-start gap-3 rounded-xl bg-[var(--blue-50)] px-4 py-3 mb-8">
+            <span className="mt-1"><LevelBars id={open.activity.level} /></span>
+            <p className="text-sm font-light text-[var(--color-text-primary)]">
+              <span className="font-extrabold">Level: {levelOf(open.activity.level).name}.</span> {levelOf(open.activity.level).description}
+            </p>
+          </div>
           <h3 className="font-extrabold mb-2">How to work with it</h3>
           <p className="font-light text-[var(--color-text-secondary)] mb-8" style={{ lineHeight: 1.7 }}>{open.activity.how}</p>
           <h3 className="font-extrabold mb-3">Tools</h3>
@@ -147,6 +185,18 @@ export function TripleDiamondRoles() {
               Showing {shown} of {total} activities
             </p>
           </div>
+          <p className={`${label} mt-10 mb-4`}>Levels</p>
+          <dl className="grid gap-4 sm:grid-cols-3">
+            {LEVELS.map((l) => (
+              <div key={l.id}>
+                <dt className="flex items-center gap-2 font-extrabold text-sm mb-1">
+                  <LevelBars id={l.id} />
+                  {l.name}
+                </dt>
+                <dd className="text-sm font-light text-[var(--color-text-secondary)]">{l.description}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
         <div className="grid gap-16 lg:grid-cols-3 lg:gap-0">
@@ -169,10 +219,13 @@ export function TripleDiamondRoles() {
                               onClick={() => setOpen({ activity: s.acts[r.id], role: r.name, phase: p.name, sub: s.name })}
                               className="group w-full text-left py-4 flex items-start justify-between gap-3"
                             >
-                              <span className="min-w-0">
+                              <span className="min-w-0 flex-1">
                                 <span className={`${label} block mb-1`}>{r.name}</span>
                                 <span className="block font-light text-sm text-[var(--color-text-primary)] group-hover:text-[var(--color-business-blue)] group-hover:underline underline-offset-4" style={{ lineHeight: 1.6 }}>
                                   {s.acts[r.id].title}
+                                </span>
+                                <span className="block mt-2">
+                                  <LevelTag id={s.acts[r.id].level} />
                                 </span>
                               </span>
                               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-5 text-[var(--color-business-blue)] transition-transform group-hover:translate-x-0.5">
@@ -197,7 +250,7 @@ export function TripleDiamondRoles() {
         )}
 
         <p className="font-light text-sm text-[var(--color-text-muted)] max-w-[70ch] mt-20 pt-5 border-t border-[var(--color-border-default)]">
-          Activities are examples to start the conversation. Select one to read how to work with it, tools and an example. Adjust them to how your teams work and what your policies allow.
+          Activities are examples to start the conversation. Select one to read how to work with it, tools and an example. Levels are a rough guide to how much it takes to get started. Adjust them to how your teams work and what your policies allow.
         </p>
       </div>
       <ActivityDialog open={open} onClose={() => setOpen(null)} />
