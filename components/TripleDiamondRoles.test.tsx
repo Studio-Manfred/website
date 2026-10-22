@@ -112,3 +112,15 @@ describe("short titles and a difficulty level (STU-1172)", () => {
     for (const l of LEVELS) expect(screen.getAllByText(l.description).length).toBeGreaterThan(0);
   });
 });
+
+describe("a colour per phase (STU-1173)", () => {
+  it("each phase sits on its own background, and the modal uses the phase's colour", async () => {
+    render(<TripleDiamondRoles />);
+    const bgs = PHASES.map((p) => screen.getByRole("heading", { level: 2, name: p.name }).closest("section")!.style.background);
+    expect(bgs.every(Boolean)).toBe(true);
+    expect(new Set(bgs).size).toBe(PHASES.length);
+    await userEvent.click(screen.getByRole("button", { name: new RegExp(first.title) }));
+    const dialog = screen.getByRole("dialog", { name: first.title });
+    expect(dialog.querySelector("header")!.style.background).toBe(bgs[0]);
+  });
+});
