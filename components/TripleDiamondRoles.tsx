@@ -241,18 +241,19 @@ export function TripleDiamondRoles() {
                       {s.name}
                     </h3>
                     {active.map((r) => {
-                      // Each role's activities in this sub-phase, as a list named by the role (STU-1175).
+                      // Each role's activities in this sub-phase, as a list named by the role (STU-1175),
+                      // with a light line between them (STU-1177).
                       const labelId = `acts-${p.name}-${s.name}-${r.id}`.replace(/\W+/g, "-");
                       return (
-                        <div key={r.id} className="border-t border-[var(--color-border-default)] pt-4 pb-2">
+                        <div key={r.id} className="border-t border-[color-mix(in_srgb,var(--color-business-blue)_40%,transparent)] pt-4 pb-2">
                           <p id={labelId} className={`${label} mb-1`}>{r.name}</p>
-                          <ul aria-labelledby={labelId}>
+                          <ul aria-labelledby={labelId} className="divide-y divide-black/10">
                             {s.acts[r.id].map((a) => (
                               <li key={a.title}>
                                 <button
                                   type="button"
                                   onClick={() => setOpen({ activity: a, role: r.name, phase: p.name, sub: s.name, bg: PHASE_BG[pi] })}
-                                  className="group w-full text-left py-2 flex items-start justify-between gap-3"
+                                  className="group w-full text-left py-3 flex items-start justify-between gap-3"
                                 >
                                   <span className="min-w-0 flex-1">
                                     <span className="block font-light text-sm text-[var(--color-text-primary)] group-hover:text-[var(--color-business-blue)] group-hover:underline underline-offset-4" style={{ lineHeight: 1.6 }}>
