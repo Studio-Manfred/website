@@ -44,14 +44,11 @@ describe("next.config rewrites", () => {
 });
 
 describe("next.config redirects", () => {
-  it("sends the old static Triple Diamond link to the site page (STU-1167)", async () => {
+  it("sends both old Triple Diamond share links to the case page (STU-1167, STU-1179)", async () => {
     vi.resetModules();
     const { default: config } = await import("./next.config");
     const redirects = await config.redirects!();
-    expect(redirects).toContainEqual({
-      source: "/share/triple-diamond-roles-jj0fmd7u.html",
-      destination: "/share/triple-diamond-roles-jj0fmd7u",
-      permanent: true,
-    });
+    for (const source of ["/share/triple-diamond-roles-jj0fmd7u.html", "/share/triple-diamond-roles-jj0fmd7u"])
+      expect(redirects).toContainEqual({ source, destination: "/cases/ai-activities-triple-diamond", permanent: true });
   });
 });

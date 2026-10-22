@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { LEVELS, PHASES, ROLES, type Activity, type LevelId, type RoleId } from "@/lib/triple-diamond";
+import { LEVELS, PHASES, ROLES, TD_CASE_DEFAULTS, type Activity, type LevelId, type RoleId } from "@/lib/triple-diamond";
+import type { Consultant } from "@/lib/cases";
 
 // Triple Diamond Roles share page (STU-1167): role filters on top, the three
 // diamonds, and per sub-phase the activities of the roles that are on. Same
@@ -151,7 +152,15 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
   );
 }
 
-export function TripleDiamondRoles() {
+type Props = { title?: string; intro?: string; categoryLine?: string; consultants?: Consultant[] };
+
+// Title, intro, category and consultants come from the case row (STU-1179).
+export function TripleDiamondRoles({
+  title = TD_CASE_DEFAULTS.title,
+  intro = TD_CASE_DEFAULTS.intro,
+  categoryLine = TD_CASE_DEFAULTS.categoryLine,
+  consultants = [],
+}: Props = {}) {
   const [on, setOn] = useState<Record<RoleId, boolean>>(allOn);
   const [open, setOpen] = useState<Open | null>(null);
   const active = ROLES.filter((r) => on[r.id]);
@@ -163,16 +172,33 @@ export function TripleDiamondRoles() {
     <section className="bg-white px-6 md:px-12 lg:px-8 py-20 md:py-32">
       <div className="mx-auto" style={{ maxWidth: "1600px" }}>
         <div className="mb-16">
-          <p className="text-sm font-light text-[var(--color-text-muted)] mb-4">AI in the design process</p>
+          {categoryLine && <p className="text-sm font-light text-[var(--color-text-muted)] mb-4">{categoryLine}</p>}
           <h1
             className="font-extrabold text-[var(--color-business-blue)] leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)] mb-8 max-w-4xl"
             style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
           >
-            Where each role can use AI in the triple diamond
+            {title}
           </h1>
           <p className="font-light text-[var(--color-text-primary)] max-w-3xl" style={{ fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)", lineHeight: 1.7 }}>
-            Switch roles on and off to see the specific activities where AI helps in each part of the process. People review and decide. AI drafts, clusters, summarises and generates.
+            {intro}
           </p>
+          <p className="font-light text-[var(--color-text-secondary)] max-w-3xl mt-4">
+            People review and decide. AI drafts, clusters, summarises and generates.
+          </p>
+          {consultants.map((c, i) => (
+            <div key={i} className="flex items-center gap-3 mt-8">
+              {c.photoUrl && (
+                <div style={{ width: "48px", height: "48px", borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
+                  {/* The name is right beside it, so the photo is decorative. */}
+                  <img src={c.photoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }} />
+                </div>
+              )}
+              <div>
+                <p className="font-extrabold text-[var(--color-text-primary)] text-sm">{c.name}</p>
+                {c.title && <p className="font-light text-[var(--color-text-secondary)] text-sm">{c.title}</p>}
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="border-t-4 border-[var(--color-business-blue)] pt-5 mb-20">

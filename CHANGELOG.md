@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Cases**: the Triple Diamond page is listed under Cases as "AI Activities throughout the triple diamond process" at `/cases/ai-activities-triple-diamond`, with title, intro, category and consultant from its case row (published from the intranet); the old share links redirect there (STU-1179).
 - **Share**: a light line between the activities in each Triple Diamond Roles role group, and a blue tinted line between roles, so each activity is easy to tell apart (STU-1177).
 - **Share**: on desktop the Triple Diamond Roles phase panels sit edge to edge with wider lanes (content up to 1600 px, less padding); phones keep the stacked panels (STU-1176).
 - **Share**: three AI activities per role and sub-phase on the Triple Diamond Roles page, 126 in total, each with how, tools, an example and a level; the overview groups them under the role (STU-1175).
