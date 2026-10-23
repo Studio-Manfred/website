@@ -154,4 +154,16 @@ describe("CustomerJourney", () => {
     expect(within(dialog).getByText(`${finance.name} · Alla kunder · Alla`)).toBeInTheDocument();
     expect(within(dialog).getAllByRole("listitem").length).toBeGreaterThan(1);
   });
+
+  it("the Analysera field takes a question and says the analysis isn't on yet", async () => {
+    render(<CustomerJourney />);
+    const examples = screen.getByRole("list", { name: "Exempelfrågor" });
+    const first = within(examples).getAllByRole("button")[0];
+    expect(first).toHaveTextContent(finance.personas[1].name);
+    await userEvent.click(first);
+    expect(screen.getByRole("textbox", { name: "Analysera" })).toHaveValue(first.textContent);
+    expect(screen.getByRole("status")).toHaveTextContent("AI-analysen är inte aktiverad än");
+    await userEvent.click(within(screen.getByRole("status")).getByRole("button", { name: "Rensa" }));
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
 });

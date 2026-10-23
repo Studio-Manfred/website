@@ -17,6 +17,7 @@ import type { IndustryId, MatrixCell, MatrixRow } from "@/lib/customer-journey/t
 import type { Consultant } from "@/lib/cases";
 import { CJ_CASE_DEFAULTS } from "@/lib/customer-journey/case";
 import { EmotionChart, GapChart } from "./charts";
+import { AskBar } from "./AskBar";
 import { CellDialog, InsightsDialog, type CellDetail } from "./dialogs";
 import { FilterBar, ROLES, type PersonaChoice } from "./FilterBar";
 import { BLUE, OPPORTUNITY, SENTIMENT, label, pad2, personaColor, personaTint } from "./theme";
@@ -183,6 +184,17 @@ export function CustomerJourney({
             </dl>
           </div>
 
+          <AskBar
+            key={industryId}
+            examples={[
+              `Churnrisk för ${ind.personas[1].name}`,
+              "Vilka faser har störst gap mellan förväntning och leverans?",
+              `Jämför NPS och retention mellan ${ind.personas[0].name} och ${ind.personas[3].name}`,
+              "Vad driver support-ärenden i onboarding-fasen?",
+              "Topp 3 quick wins med låg effort",
+            ]}
+          />
+
           {/* Gap analysis */}
           <section aria-labelledby="cj-gap" className="mt-16 border-t-4 border-[var(--color-business-blue)] pt-6">
             <div className="flex flex-wrap items-end justify-between gap-6 mb-8">
@@ -232,7 +244,7 @@ export function CustomerJourney({
                       type="button"
                       aria-pressed={gapPhase === i}
                       onClick={() => setGapPhase((g) => (g === i ? null : i))}
-                      className={`rounded-xl px-2 py-2 text-left text-xs transition-colors ${gapPhase === i ? "bg-[var(--color-business-blue)] text-white" : "hover:bg-white"}`}
+                      className={`rounded-xl px-2 py-2 text-center text-xs transition-colors ${gapPhase === i ? "bg-[var(--color-business-blue)] text-white" : "hover:bg-white"}`}
                     >
                       <span className="block font-light opacity-80">{pad2(i)}</span>
                       <span className="block font-extrabold">{p.name}</span>

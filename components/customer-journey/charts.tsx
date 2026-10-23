@@ -159,12 +159,50 @@ function deliveryAt(delivery: number[], phase: number, pos: number) {
 }
 
 export function GapChart({ phases, expect, delivery, expectColor, compare, markers, selected, onSelect, moments }: GapProps) {
-  const [tip, setTip] = useState<{ x: number; y: number; title: string; text: string } | null>(null);
+  const [tip, setTip] = useState<{ x: number; y: number; title: string; text: React.ReactNode } | null>(null);
   const summary = phases.map((p, i) => `${p.name}: förväntning ${Math.round(expect[i])}, leverans ${Math.round(delivery[i])}`).join("; ");
+  const gapText = (e: number, d: number) => {
+    const g = Math.round(d - e);
+    return g < 0 ? `${g}` : `+${g}`;
+  };
+  // Hovering a phase shows its numbers, per persona when comparing (as in the demo).
+  const phaseTip = (i: number) =>
+    setTip({
+      x: xOf(i),
+      y: 18,
+      title: phases[i].name,
+      text: compare ? (
+        <span className="mt-1 block space-y-0.5">
+          {compare.map(({ persona, expect: e, delivery: d }) => (
+            <span key={persona.id} className="flex items-center gap-2">
+              <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ background: personaColor(persona.color) }} />
+              <span className="flex-1">{persona.name}</span>
+              <span className="font-extrabold">{gapText(e[i], d[i])}</span>
+            </span>
+          ))}
+        </span>
+      ) : (
+        <span className="mt-1 block">
+          Förväntning {Math.round(expect[i])} · Leverans {Math.round(delivery[i])} · Gap <strong className="font-extrabold">{gapText(expect[i], delivery[i])}</strong>
+        </span>
+      ),
+    });
 
   return (
     <div className="relative h-[260px]">
-      <svg role="img" aria-label={`Förväntning mot leverans per fas. ${summary}`} viewBox={`0 0 ${W} 100`} preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible">
+      {[
+        [100, "Hög"],
+        [50, "Medel"],
+        [0, "Låg"],
+      ].map(([v, t]) => (
+        <span key={t} aria-hidden="true" className="absolute left-0 -translate-y-1/2 bg-[var(--beige-light)] pr-1.5 text-[11px] font-light text-[var(--color-text-muted)]" style={{ top: `${yOf(v as number)}%` }}>
+          {t}
+        </span>
+      ))}
+      {phases.map((p, i) => (
+        <div key={p.name} aria-hidden="true" className="absolute inset-y-0" style={{ left: `${(i / 6) * 100}%`, width: `${100 / 6}%` }} onMouseEnter={() => phaseTip(i)} onMouseLeave={() => setTip(null)} />
+      ))}
+      <svg role="img" aria-label={`Förväntning mot leverans per fas. ${summary}`} viewBox={`0 0 ${W} 100`} preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
         <Grid />
         {compare ? (
           compare.map(({ persona, expect: e, delivery: d }) => (
@@ -184,7 +222,11 @@ export function GapChart({ phases, expect, delivery, expectColor, compare, marke
       </svg>
       {!compare &&
         expect.map((v, i) => (
-          <span key={`e${i}`} aria-hidden="true" className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white" style={{ ...at(xOf(i), yOf(v)), background: expectColor }} />
+          <span key={`e${i}`} aria-hidden="true" className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white" style={{ ...at(xOf(i), yOf(v)), background: expectColor }} />
+        ))}
+      {!compare &&
+        delivery.map((v, i) => (
+          <span key={`d${i}`} aria-hidden="true" className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white" style={{ ...at(xOf(i), yOf(v)), background: INK }} />
         ))}
       {markers.map((m) => {
         const x = (m.phase + m.pos) * (W / 6);
