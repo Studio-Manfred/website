@@ -2,6 +2,13 @@
 
 Quick-start notes for future sessions. Audit this before editing — recent changes may have invalidated parts of it.
 
+## 2026-10-23 — Home hero intro (STU-1183, branch `markus/stu-1183-animated-manfred-wordmark-intro-on-the-home-hero-lottie`)
+- Where it stopped: code, unit tests and e2e tests are done and committed. The PR is not open (the owner reviews the text first). Spec and plan: `docs/superpowers/specs|plans/2026-10-23-hero-wordmark-intro.md`. It branches from `main`, so it does not have the menu from PR #58 (STU-1181). Both touch the hero and CLAUDE.md, CHANGELOG.md and MEMORY.md: expect small conflicts, and rebase after #58 merges.
+- The owner's source files are outside the repo: `~/Downloads/manfred-logo-white-vector.lottie` and `.json` (a trace), `~/Downloads/Comp 1 1.gif` and `~/Desktop/manfred-logo-white-transparent.gif` (the GIF it came from). To rebuild the stencil: `node scripts/build-wordmark-stencil.mjs ~/Downloads/manfred-logo-white-vector.json 0 71`.
+- Decisions: 1.5× speed (1.89 s), the real wordmark through a stencil (no player library), the headline after the wordmark is fully drawn, the button 0.3 s later, every visit. The owner found the Lottie "chopped" at the top of the "d": that is the trace, not the GIF.
+- Gotchas found: the pen draws the "d" stem last, so the word is complete at frame 71, not 62; `useId()` gives colons, so strip them for an SVG `url(#id)`; the DS `Logo` takes no mask, so `lib/wordmark.ts` copies its paths; in `next dev` the first frame can show the whole wordmark for ~100 ms (CSS arrives late) but not in the production build; `preview_start` navigates the tab to `/` once it is ready, so navigate again to a temp page.
+- Open: a stroke-based export (trim paths) from the designer would allow a real handwriting reveal, with no stencil.
+
 ## 2026-10-23 — Home hamburger menu (STU-1181, branch `markus/stu-1181-hamburger-menu-for-studiomanfredcom`)
 - Where it stopped: code, unit tests and e2e tests are done and committed. The PR is not open. Specs: `docs/superpowers/specs/2026-10-23-home-hamburger-menu.md`; plan: `docs/superpowers/plans/2026-10-23-home-hamburger-menu.md` (tasks 0–9 done, task 10 = full checks + PR, ask before opening).
 - Design source: `manfred-website-hanburger-menu.pen` (pen.dev, in `~/.pencil/documents/`). It has desktop and mobile frames for the three states. Its values changed after local reviews: link text 48 px (design had 72), rows invert on hover, and there is **no sticky bar** (the owner dropped it on 2026-10-23, so frame B and the 104 px bar are gone; the menu button is `absolute` and scrolls away). The `.pen` file still shows the old design.

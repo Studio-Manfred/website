@@ -121,6 +121,17 @@ own domain automatically routes events to own domain. **Don't** hardcode
 `manfred-analytics.vercel.app` into the layout script tag again — it will
 work but restore the ad-blocker-catches-us problem.
 
+### Home hero intro (STU-1183, 2026-10-23)
+
+The hero wordmark draws itself, then the headline and the button rise.
+[components/HeroIntro.tsx](components/HeroIntro.tsx) runs it; [components/WordmarkReveal.tsx](components/WordmarkReveal.tsx) draws.
+
+- **Phases** (`lib/hero-intro.ts`): `pending` → `playing` → `done`. Reduced motion (`skip`), a failed stencil load (`error`) and a 4 s timeout all end in `done`, so the hero is never empty. The headline starts when the drawing is done, the button 300 ms later, both with the existing `FadeIn` (its `start` prop holds the rise). Speed is 25 fps × 1.5, so the word takes 1.89 s.
+- **The picture is the real wordmark.** `lib/wordmark.ts` is a typed copy of the DS `Logo` paths (the DS `Logo` cannot take a mask). `lib/wordmark.test.tsx` fails if the DS changes the artwork. A mask shows it only where the pen is, frame by frame, from `lib/wordmark-stencil.json` (72 frames, 12.6 KB gzip, loaded lazily). Nothing is swapped at the end: the mask is removed.
+- **Why a stencil and not the Lottie.** The owner's Lottie is a coarse trace of a GIF (292 points in whole pixels), so the round top of the "d" looks chopped. It also ends empty (it erases the word). We use it only for the pen path. The Lottie and the GIF are not in the repo. Regenerate the stencil with `node scripts/build-wordmark-stencil.mjs <lottie.json> 0 71`. The hold frame is 71 because the pen draws the "d" stem last (the stencil covers 99.7 % of the wordmark there, 96.4 % at frame 62).
+- **First paint.** The server renders the whole hero. `globals.css` hides the wordmark while `data-intro="pending"` under `@media (scripting: enabled)`, so it does not flash before it draws. Another rule, `@media (scripting: none)`, shows `.fade-up` content, since nothing can add `.in-view` without JavaScript. The hero keeps `id="hero"`.
+- Tests: `e2e/hero-intro.spec.ts` records the hero on every frame to check the order, that the whole wordmark never shows early, and the box size. Run it with `--repeat-each=10` after you touch the timing.
+
 ### AI landing page under /ai
 
 `/ai` is served by a separate Next.js app (`web/` in
