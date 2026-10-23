@@ -23,12 +23,12 @@ const links = [
   {
     title: "Writing",
     href: "/writing",
-    line: "Texts and thoughts from the team.",
+    line: "Thoughts from the messy middle.",
   },
   {
     title: "Training & Courses",
     href: "/training-and-courses",
-    line: "Training and courses we offer.",
+    line: "Steal our tricks. We won't mind.",
   },
 ];
 

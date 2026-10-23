@@ -75,12 +75,12 @@ One client component, `components/HomeMenu.tsx`, mounted in `app/page.tsx`. It o
 
 ### Content
 
-| Link | Route | Subtitle (proposal) |
+| Link | Route | Subtitle |
 |---|---|---|
-| Writing | `/writing` | Texts and thoughts from the team. |
-| Training & Courses | `/training-and-courses` | Training and courses we offer. |
+| Writing | `/writing` | Thoughts from the messy middle. |
+| Training & Courses | `/training-and-courses` | Steal our tricks. We won't mind. |
 
-- The design subtitles are in Swedish. The table above is an English proposal. It needs your approval.
+- The design subtitles were in Swedish. The English lines above are playful, in the site voice. The owner chose them on 2026-10-23.
 - There is no Home link (removed 2026-10-23). The wordmark in the panel header links to `/`, closes the menu and scrolls to the top.
 - "Get in touch" reuses `GetInTouchLink` with `location="menu"`. The analytics event stays the same.
 - The email is `hello@studiomanfred.com`, as a `mailto:` link.

@@ -75,8 +75,8 @@ describe("HomeMenu", () => {
     await openMenu();
     const nav = screen.getByRole("navigation", { name: "Primary" });
     for (const line of [
-      "Texts and thoughts from the team.",
-      "Training and courses we offer.",
+      "Thoughts from the messy middle.",
+      "Steal our tricks. We won't mind.",
     ]) {
       expect(within(nav).getByText(line)).toBeInTheDocument();
     }
