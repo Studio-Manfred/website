@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CustomerJourney } from "./CustomerJourney";
 import { INDUSTRIES } from "@/lib/customer-journey/datasets";
@@ -230,5 +230,137 @@ describe("complexity filter", () => {
     expect(within(complexity()).getByRole("button", { name: /Step 1/ })).toHaveAttribute("aria-pressed", "true");
     await userEvent.click(card);
     expect(within(complexity()).getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+  });
+});
+
+describe("chart tips and toggles", () => {
+  const phase = (i: number) => finance.phases[i].name;
+
+  it("an emotion dot shows its moment and quote on hover and focus, and click focuses the phase", async () => {
+    render(<CustomerJourney />);
+    const card = finance.emotionCards[0];
+    const dot = screen.getByRole("button", { name: new RegExp(`^${phase(0)}: ${card.emotion}`) });
+    const chart = within(dot.parentElement!);
+    fireEvent.mouseEnter(dot);
+    expect(chart.getByText(card.quote)).toBeInTheDocument();
+    fireEvent.mouseLeave(dot);
+    expect(chart.queryByText(card.quote)).not.toBeInTheDocument();
+    fireEvent.focus(dot);
+    expect(chart.getByText(card.quote)).toBeInTheDocument();
+    fireEvent.blur(dot);
+    expect(chart.queryByText(card.quote)).not.toBeInTheDocument();
+    await userEvent.click(dot);
+    expect(dot).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(dot);
+    expect(dot).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("hovering a phase in the gap chart shows expectation, delivery and gap", () => {
+    render(<CustomerJourney />);
+    const gap = screen.getByRole("img", { name: /Expectation against delivery/ }).parentElement!;
+    const zones = gap.querySelectorAll<HTMLElement>(":scope > div[aria-hidden='true']");
+    expect(zones).toHaveLength(finance.phases.length);
+    fireEvent.mouseEnter(zones[2]);
+    expect(within(gap).getByText(/Expectation \d+ · Delivery/)).toBeInTheDocument();
+    fireEvent.mouseLeave(zones[2]);
+    expect(within(gap).queryByText(/Expectation \d+ · Delivery/)).not.toBeInTheDocument();
+  });
+
+  it("comparing all personas, a phase tip lists each persona's gap", async () => {
+    render(<CustomerJourney />);
+    await openFilters();
+    await userEvent.click(within(filterPanel()).getByRole("button", { name: "Compare all" }));
+    const gap = screen.getByRole("img", { name: /Expectation against delivery/ }).parentElement!;
+    fireEvent.mouseEnter(gap.querySelectorAll<HTMLElement>(":scope > div[aria-hidden='true']")[1]);
+    for (const p of finance.personas) expect(within(gap).getByText(p.name)).toBeInTheDocument();
+  });
+
+  it("an opportunity marker shows a tip and selects on click, and again deselects", async () => {
+    render(<CustomerJourney />);
+    const marker = screen.getAllByRole("button", { name: /^(Critical gap|Quick win|Watch): .*, gap / })[0];
+    const name = marker.getAttribute("aria-label")!.split(": ")[1].split(", gap")[0];
+    const gap = screen.getByRole("img", { name: /Expectation against delivery/ }).parentElement!;
+    fireEvent.mouseEnter(marker);
+    expect(within(gap).getByText(name)).toBeInTheDocument();
+    fireEvent.mouseLeave(marker);
+    expect(within(gap).queryByText(name)).not.toBeInTheDocument();
+    fireEvent.focus(marker);
+    expect(within(gap).getByText(name)).toBeInTheDocument();
+    fireEvent.blur(marker);
+    expect(within(gap).queryByText(name)).not.toBeInTheDocument();
+    await userEvent.click(marker);
+    expect(marker).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(marker);
+    expect(marker).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("a persona moment shows its insight on hover and focus", async () => {
+    render(<CustomerJourney />);
+    const p = finance.personas[0];
+    await openFilters();
+    await userEvent.click(within(filterPanel()).getByRole("button", { name: new RegExp(p.name) }));
+    const m = p.moments[0];
+    const pill = screen.getByRole("button", { name: `${p.name}, ${phase(m.phase)}: ${m.insight}` });
+    const gap = screen.getByRole("img", { name: /Expectation against delivery/ }).parentElement!;
+    fireEvent.mouseEnter(pill);
+    expect(within(gap).getByText(`${p.name} · ${phase(m.phase)}`)).toBeInTheDocument();
+    fireEvent.mouseLeave(pill);
+    fireEvent.focus(pill);
+    expect(within(gap).getByText(`${p.name} · ${phase(m.phase)}`)).toBeInTheDocument();
+    fireEvent.blur(pill);
+    expect(within(gap).queryByText(`${p.name} · ${phase(m.phase)}`)).not.toBeInTheDocument();
+  });
+
+  it("chips clear segment, compare and view one at a time, and None clears the persona", async () => {
+    render(<CustomerJourney />);
+    await openFilters();
+    const panel = filterPanel();
+    await userEvent.selectOptions(within(panel).getByRole("combobox"), finance.segments[1].id);
+    await userEvent.click(within(panel).getByRole("button", { name: "Compare all" }));
+    await userEvent.click(within(panel).getByRole("button", { name: "Designer" }));
+    for (const name of ["Segment", "Persona", "View"]) {
+      await userEvent.click(screen.getByRole("button", { name: `Remove the ${name} filter` }));
+      expect(screen.queryByRole("button", { name: `Remove the ${name} filter` })).not.toBeInTheDocument();
+    }
+    await userEvent.click(within(filterPanel()).getByRole("button", { name: new RegExp(finance.personas[0].name) }));
+    await userEvent.click(within(filterPanel()).getByRole("button", { name: "None" }));
+    expect(screen.queryByText(finance.personas[0].desc)).not.toBeInTheDocument();
+  });
+
+  it("in compare mode a persona in the legend can be picked", async () => {
+    render(<CustomerJourney />);
+    await openFilters();
+    await userEvent.click(within(filterPanel()).getByRole("button", { name: "Compare all" }));
+    await userEvent.keyboard("{Escape}");
+    const p = finance.personas[0];
+    const legend = screen.getByRole("button", { name: `${p.name} ${p.share}%` });
+    await userEvent.click(legend);
+    expect(screen.getByText(p.desc)).toBeInTheDocument();
+  });
+
+  it("a phase header in the matrix toggles focus on that phase", async () => {
+    render(<CustomerJourney />);
+    const head = screen.getAllByRole("button", { name: new RegExp(`^0?1\\s*${phase(0)}`) })[0];
+    await userEvent.click(head);
+    expect(head).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(head);
+    expect(head).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("the Analyse field submits a typed question, and All in the complexity filter goes back from a step", async () => {
+    render(<CustomerJourney />);
+    await userEvent.type(screen.getByLabelText("Analyse"), "Where do we lose customers?{Enter}");
+    expect(screen.getByRole("status")).toHaveTextContent("Where do we lose customers?");
+    await userEvent.click(within(complexity()).getByRole("button", { name: /Step 2/ }));
+    await userEvent.click(within(complexity()).getByRole("button", { name: "All" }));
+    expect(within(complexity()).getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("Insights closes with its close button", async () => {
+    render(<CustomerJourney />);
+    await userEvent.click(screen.getByRole("button", { name: /^Insights/ }));
+    const dialog = screen.getByRole("dialog");
+    await userEvent.click(within(dialog).getByRole("button", { name: /close/i }));
+    expect(dialog).not.toHaveAttribute("open");
   });
 });
