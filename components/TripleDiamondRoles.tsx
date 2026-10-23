@@ -50,14 +50,15 @@ const levelOf = (id: LevelId) => LEVELS.find((l) => l.id === id)!;
 
 // Three bars, as many filled as the level is hard. Decorative: the name is
 // always written next to it.
-function LevelBars({ id }: { id: LevelId }) {
+// `inverted`: white bars for a blue (pressed) button.
+function LevelBars({ id, inverted = false }: { id: LevelId; inverted?: boolean }) {
   const n = LEVELS.findIndex((l) => l.id === id) + 1;
   return (
     <span aria-hidden="true" className="inline-flex items-end gap-[2px]">
       {[1, 2, 3].map((i) => (
         <span
           key={i}
-          className={`w-[4px] rounded-[1px] ${i <= n ? "bg-[var(--color-business-blue)]" : "bg-[var(--color-border-default)]"}`}
+          className={`w-[4px] rounded-[1px] ${i <= n ? (inverted ? "bg-white" : "bg-[var(--color-business-blue)]") : inverted ? "bg-white/35" : "bg-[var(--color-border-default)]"}`}
           style={{ height: `${4 + i * 3}px` }}
         />
       ))}
@@ -135,12 +136,6 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
           </div>
           <h3 className="font-extrabold mb-2">How to work with it</h3>
           <p className="font-light text-[var(--color-text-secondary)] mb-8" style={{ lineHeight: 1.7 }}>{open.activity.how}</p>
-          <h3 className="font-extrabold mb-3">Tools</h3>
-          <ul className="flex flex-wrap gap-2 mb-8">
-            {open.activity.tools.map((t) => (
-              <li key={t} className="rounded-full bg-[var(--blue-50)] text-[var(--color-business-blue)] px-3 py-1 text-sm">{t}</li>
-            ))}
-          </ul>
           <div className="border-t-4 border-[var(--color-business-blue)] pt-5">
             <h3 className="font-extrabold mb-2">Example</h3>
             <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>{open.activity.example}</p>
@@ -163,10 +158,14 @@ export function TripleDiamondRoles({
 }: Props = {}) {
   const [on, setOn] = useState<Record<RoleId, boolean>>(allOn);
   const [open, setOpen] = useState<Open | null>(null);
+  // Level filter (STU-1182): an activity shows when its role and its level are on.
+  const [levelOn, setLevelOn] = useState<Record<LevelId, boolean>>({ easy: true, medium: true, advanced: true });
   const active = ROLES.filter((r) => on[r.id]);
-  const count = (roles: typeof ROLES) => PHASES.reduce((n, p) => n + p.subs.reduce((m, s) => m + roles.reduce((k, r) => k + s.acts[r.id].length, 0), 0), 0);
-  const total = count(ROLES);
-  const shown = count(active);
+  const visible = (acts: Activity[]) => acts.filter((a) => levelOn[a.level]);
+  const count = (roles: typeof ROLES, pick: (acts: Activity[]) => Activity[]) =>
+    PHASES.reduce((n, p) => n + p.subs.reduce((m, s) => m + roles.reduce((k, r) => k + pick(s.acts[r.id]).length, 0), 0), 0);
+  const total = count(ROLES, (acts) => acts);
+  const shown = count(active, visible);
 
   return (
     <section className="bg-white px-6 md:px-12 lg:px-8 py-20 md:py-32">
@@ -231,18 +230,27 @@ export function TripleDiamondRoles({
               Showing {shown} of {total} activities
             </p>
           </div>
-          <p className={`${label} mt-10 mb-4`}>Levels</p>
-          <dl className="grid gap-4 sm:grid-cols-3">
+          <p id="levels-label" className={`${label} mt-10 mb-4`}>Levels</p>
+          <div role="group" aria-labelledby="levels-label" className="grid gap-4 sm:grid-cols-3">
             {LEVELS.map((l) => (
               <div key={l.id}>
-                <dt className="flex items-center gap-2 font-extrabold text-sm mb-1">
-                  <LevelBars id={l.id} />
+                <button
+                  type="button"
+                  aria-pressed={levelOn[l.id]}
+                  onClick={() => setLevelOn((v) => ({ ...v, [l.id]: !v[l.id] }))}
+                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm mb-2 transition-colors ${
+                    levelOn[l.id]
+                      ? "bg-[var(--color-business-blue)] border-[var(--color-business-blue)] text-white"
+                      : "bg-white border-[var(--color-business-blue)] text-[var(--color-business-blue)] hover:bg-[var(--blue-50)]"
+                  }`}
+                >
+                  <LevelBars id={l.id} inverted={levelOn[l.id]} />
                   {l.name}
-                </dt>
-                <dd className="text-sm font-light text-[var(--color-text-secondary)]">{l.description}</dd>
+                </button>
+                <p className="text-sm font-light text-[var(--color-text-secondary)]">{l.description}</p>
               </div>
             ))}
-          </dl>
+          </div>
         </div>
 
         {/* Mobile values as max-lg: so the design system's second copy of
@@ -267,6 +275,8 @@ export function TripleDiamondRoles({
                       {s.name}
                     </h3>
                     {active.map((r) => {
+                      const acts = visible(s.acts[r.id]);
+                      if (acts.length === 0) return null;
                       // Each role's activities in this sub-phase, as a list named by the role (STU-1175),
                       // with a light line between them (STU-1177).
                       const labelId = `acts-${p.name}-${s.name}-${r.id}`.replace(/\W+/g, "-");
@@ -274,7 +284,7 @@ export function TripleDiamondRoles({
                         <div key={r.id} className="border-t border-[color-mix(in_srgb,var(--color-business-blue)_40%,transparent)] pt-4 pb-2">
                           <p id={labelId} className={`${label} mb-1`}>{r.name}</p>
                           <ul aria-labelledby={labelId} className="divide-y divide-black/10">
-                            {s.acts[r.id].map((a) => (
+                            {acts.map((a) => (
                               <li key={a.title}>
                                 <button
                                   type="button"
@@ -306,14 +316,16 @@ export function TripleDiamondRoles({
           ))}
         </div>
 
-        {active.length === 0 && (
+        {shown === 0 && (
           <p className="font-light text-[var(--color-text-secondary)] text-center border border-dashed border-[var(--color-border-default)] rounded-2xl p-8 mt-4">
-            No roles selected. Switch on one or more roles above to see their activities.
+            {active.length === 0
+              ? "No roles selected. Switch on one or more roles above to see their activities."
+              : "No activities match the selected roles and levels. Switch on more levels above."}
           </p>
         )}
 
         <p className="font-light text-sm text-[var(--color-text-muted)] max-w-[70ch] mt-20 pt-5 border-t border-[var(--color-border-default)]">
-          Activities are examples to start the conversation. Select one to read how to work with it, tools and an example. Levels are a rough guide to how much it takes to get started. Adjust them to how your teams work and what your policies allow.
+          Activities are examples to start the conversation. Select one to read how to work with it and an example. Levels are a rough guide to how much it takes to get started. Adjust them to how your teams work and what your policies allow.
         </p>
       </div>
       <ActivityDialog open={open} onClose={() => setOpen(null)} />
