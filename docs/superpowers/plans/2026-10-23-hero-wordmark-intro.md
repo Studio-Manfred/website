@@ -136,4 +136,4 @@ The wordmark paths use the DS token `--color-brand-logo-paper`, as the DS `Logo`
 | The static flashes before the animation. | The `@media (scripting: enabled)` rule hides it while `pending`. |
 | The hero stays empty if the stencil hangs. | A timeout and an error both move to `done`. |
 | The DS changes the logo. | The guard test in Task 2 fails. |
-| PR #58 and this branch both edit the hero. | Keep `id="hero"`. Rebase after #58 merges. |
+| PR #58 and this branch both edit the hero. | Done: #58 merged first and this branch is rebased on `main`. The menu dropped `id="hero"` and the sticky bar. |

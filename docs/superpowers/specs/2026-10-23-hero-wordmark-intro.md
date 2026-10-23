@@ -59,7 +59,7 @@ The picture is the real vector wordmark (the DS `Logo` artwork). The traced anim
 
 - The server renders the real wordmark, headline and button. The largest paint stays fast, and a visitor without JavaScript sees everything.
 - With JavaScript, the hero starts in `pending`. A CSS rule under `@media (scripting: enabled)` hides the three parts, so the full wordmark does not flash before the animation.
-- The hero keeps `id="hero"`. The home menu (STU-1181) watches it.
+- The home menu button (STU-1181) is `absolute` at the top right and shows from the first frame. It does not wait for the intro. The hero has no `id` now, and there is no sticky bar.
 - No layout shift: the wordmark box has a fixed size from the first paint.
 
 ## Accessibility
@@ -85,4 +85,4 @@ The picture is the real vector wordmark (the DS `Logo` artwork). The traced anim
 ## Open items
 
 1. The stencil size. The plan measures it in task 3. If it passes 30 KB gzip, we drop to every second frame and interpolate.
-2. Merge order with PR #58 (STU-1181). Both touch the hero. PR #58 adds `id="hero"`. Rebase this branch after #58 merges.
+2. ~~Merge order with PR #58 (STU-1181).~~ Done. #58 merged first (`66303d7`) and this branch is rebased on `main`.

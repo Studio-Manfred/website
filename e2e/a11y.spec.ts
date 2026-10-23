@@ -99,6 +99,11 @@ for (const route of ROUTES) {
 test("a11y: / with the menu open", async ({ page }, testInfo) => {
   await page.goto("/");
   await page.waitForLoadState("networkidle");
+  // Let the hero intro settle first, so axe does not see text mid-fade.
+  await expect(page.locator("[data-intro] .fade-up").last()).toHaveCSS(
+    "opacity",
+    "1",
+  );
   await page.getByRole("button", { name: "Open menu" }).click();
   const panel = page.getByRole("dialog", { name: "Menu" });
   await expect(panel).toBeVisible();
@@ -112,14 +117,20 @@ test("a11y: / with the menu open", async ({ page }, testInfo) => {
 
   if (blocking.length > 0) {
     const summary = blocking
-      .map((v) => `${v.id} (${v.impact}, ${v.nodes.length} node${v.nodes.length === 1 ? "" : "s"})`)
+      .map(
+        (v) =>
+          `${v.id} (${v.impact}, ${v.nodes.length} node${v.nodes.length === 1 ? "" : "s"})`,
+      )
       .join("; ");
     testInfo.annotations.push({
       type: AXE_ENFORCE ? "a11y-fail" : "a11y-warn",
       description: `${blocking.length} serious/critical: ${summary}`,
     });
     if (AXE_ENFORCE) {
-      expect(blocking, `/ (menu open): serious/critical violations — ${summary}`).toEqual([]);
+      expect(
+        blocking,
+        `/ (menu open): serious/critical violations — ${summary}`,
+      ).toEqual([]);
     } else {
       console.warn(`axe (warn-only) / (menu open): ${summary}`);
     }
