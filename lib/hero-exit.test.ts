@@ -25,4 +25,21 @@ describe("isPastHero", () => {
       isPastHero({ isIntersecting: false, boundingClientRect: { bottom: 0 } }),
     ).toBe(true);
   });
+
+  it("compares against the top of a shrunken observer root", () => {
+    expect(
+      isPastHero({
+        isIntersecting: false,
+        boundingClientRect: { bottom: 100 },
+        rootBounds: { top: 129 },
+      }),
+    ).toBe(true);
+    expect(
+      isPastHero({
+        isIntersecting: false,
+        boundingClientRect: { bottom: 500 },
+        rootBounds: { top: 129 },
+      }),
+    ).toBe(false);
+  });
 });
