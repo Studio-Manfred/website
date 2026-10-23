@@ -12,6 +12,18 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Cases**: the AI Activities (Triple Diamond) page filters by level (Easy, Medium, Advanced) as well as by role (STU-1182).
+- **Home**: a hamburger menu on the home page only. The button sits top right of the hero and scrolls away with the page: there is no sticky bar. The menu opens full screen with links to Writing and Training & Courses (the wordmark links home), a Get in touch button, the email and the phone number. A row turns white with blue text on hover, focus and tap. The close button takes the place of the menu button when the menu opens. Other pages keep their nav (STU-1181).
+- **Cases**: the Triple Diamond page is listed under Cases as "AI Activities throughout the triple diamond process" at `/cases/ai-activities-triple-diamond`, with title, intro, category and consultant from its case row (published from the intranet); the old share links redirect there (STU-1179).
+- **Share**: a light line between the activities in each Triple Diamond Roles role group, and a blue tinted line between roles, so each activity is easy to tell apart (STU-1177).
+- **Share**: on desktop the Triple Diamond Roles phase panels sit edge to edge with wider lanes (content up to 1600 px, less padding); phones keep the stacked panels (STU-1176).
+- **Share**: three AI activities per role and sub-phase on the Triple Diamond Roles page, 126 in total, each with how, tools, an example and a level; the overview groups them under the role (STU-1175).
+- **Share**: dashed lines connect the three Triple Diamond Roles diamonds, across on desktop and down between the stacked panels on phones (STU-1174).
+- **Share**: each Triple Diamond Roles phase sits on its own brand tint (Light Beige, Blue 50, Human Pink), and the modal header uses the phase's tint (STU-1173).
+- **Share**: Triple Diamond Roles activities have shorter titles and a difficulty level (Easy, Medium, Advanced), shown in the overview, explained in a legend and in the modal (STU-1172).
+- **Share**: the Triple Diamond Roles overview shows each activity's title; selecting it opens a modal with how to work with it, tools and an example (STU-1171).
+- **Share**: UX / Product Designer is a role on the Triple Diamond Roles page, with an AI activity in every sub-phase (STU-1170).
+- **Share**: the Triple Diamond Roles page (where each role can use AI) on an unlisted, noindex share link under `/share/`, as a site page with the site's nav, footer and case-page type (STU-1167). The first `.html` link redirects there.
 - **Shared CV**: the name, role and `---` the CV text starts with are taken out of the text; the role shows under the name in the Consultant box (STU-1164).
 - **Cases**: an optional hero image under the intro of a case page, full width at 2:1 (STU-1153).
 - **Cases**: outcomes can show a big key figure (for example +28%) in two columns, one column when narrow (STU-1153).
@@ -24,10 +36,12 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Fixed
 
+- **Cases**: a consultant on the team shows their website team photo, not the intranet avatar the case editor copied (STU-1169).
 - **Cases**: the process timeline's step names now meet WCAG AA contrast (they were light grey, 1.6:1) (STU-1146).
 
 ### Removed
 
+- **Cases**: suggested tools and software are gone from the AI Activities (Triple Diamond) page, in the data, the modal and the copy (STU-1182).
 - **Cases**: the hardcoded Fishbrain and Bokadirekt pages; both are now edited in the intranet's Case CMS (STU-1147).
 - **Team**: Axel Nathorst-Böös has left Studio Manfred and is removed from the team section.
 

@@ -2,6 +2,13 @@
 
 Quick-start notes for future sessions. Audit this before editing — recent changes may have invalidated parts of it.
 
+## 2026-10-23 — Home hamburger menu (STU-1181, branch `markus/stu-1181-hamburger-menu-for-studiomanfredcom`)
+- Where it stopped: code, unit tests and e2e tests are done and committed. The PR is not open. Specs: `docs/superpowers/specs/2026-10-23-home-hamburger-menu.md`; plan: `docs/superpowers/plans/2026-10-23-home-hamburger-menu.md` (tasks 0–9 done, task 10 = full checks + PR, ask before opening).
+- Design source: `manfred-website-hanburger-menu.pen` (pen.dev, in `~/.pencil/documents/`). It has desktop and mobile frames for the three states. Its values changed after local reviews: link text 48 px (design had 72), rows invert on hover, and there is **no sticky bar** (the owner dropped it on 2026-10-23, so frame B and the 104 px bar are gone; the menu button is `absolute` and scrolls away). The `.pen` file still shows the old design.
+- `HomeMenu` is on `/` only. Links: Writing and Training & Courses. Home and Cases are out (the owner may bring Cases back). The wordmark in the panel header links home. Subtitles are playful, in the site voice: "Thoughts from the messy middle." and "Steal our tricks. We won't mind." (owner's pick, 2026-10-23). Phone is plain text, as in the footer.
+- Gotchas found: the DS stylesheet repeats Tailwind utilities, so `md:` variants lose to a DS base class (use arbitrary values); Next's `Link` prevents the default click, so Radix `SheetClose` does not close (close from state); the global focus rule beats a `focus-visible:outline-offset-*` utility; `cursor-white` is a no-op; a hidden Browser pane reports a 0×0 viewport, so set the size before you measure.
+- To run the e2e tests locally: start `node e2e/mock-supabase.mjs`, build with `NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321 NEXT_PUBLIC_SUPABASE_ANON_KEY=test-anon-key npm run build`, then `npx playwright test` (needs `npx playwright install chromium` once). Stop any dev server on port 3000 first.
+
 ## 2026-10-21 — Shared CV: role under the name, outline Download PDF (STU-1164, PR #42)
 - `lib/cv-header.ts` `splitCvHeader` mirrors the intranet's (PDF) one, but on sanitized HTML with string matching (no DOM on the server). `getSharedCv` returns `role` and the text without the header; `SharedCv` shows the role under the name in the Consultant box.
 - `PrintButton` is the DS `Button variant="outline" size="sm"` with an inline down-arrow SVG (the DS has no download icon yet). On phones (`max-sm:`) it is absolutely placed top right of the header block, 40px round, label `sr-only`. The header div is `relative` for that.
@@ -28,8 +35,8 @@ Quick-start notes for future sessions. Audit this before editing — recent chan
 - `/join-us`, `/privacy-policy` — static content pages.
 
 ## Components ([components/](components/))
-- [ds.tsx](components/ds.tsx) — single `"use client"` re-export of `Button`, `Logo`, `Typography` from the DS. Required because Radix needs Client Components. **Always import DS primitives via `@/components/ds`, never directly from the package.**
-- [PageNav.tsx](components/PageNav.tsx) — the single nav primitive. `variant="blue"` on every sub-page, `variant="white"` on the course-detail surface. Home is intentionally nav-less — the Hero with its 100px wordmark IS the nav (STU-315, 2026-05-25). Optional `width` prop (keys of `WIDTH_PX` in [lib/layout.ts](lib/layout.ts)) sets the nav row's max-width, default 960; `/cv/[token]`, `/cases`, `/cases/[slug]`, CourseDetail use `wide` (1200), `/join-us` `xl` (1100), `/writing` + `/privacy-policy` `narrow` (720); the rest stay 960 (their content is 960, or a centred card). Home has no nav.
+- [ds.tsx](components/ds.tsx) — single `"use client"` re-export of `Button`, `Container`, `Icon`, `Logo`, `Sheet*`, `Typography` from the DS. Required because Radix needs Client Components. **Always import DS primitives via `@/components/ds`, never directly from the package.**
+- [PageNav.tsx](components/PageNav.tsx) — the single nav primitive. `variant="blue"` on every sub-page, `variant="white"` on the course-detail surface. Home has no `PageNav`: the Hero's wordmark is its nav, plus [HomeMenu](components/HomeMenu.tsx), a hamburger menu (STU-315, STU-1181; no sticky bar). Optional `width` prop (keys of `WIDTH_PX` in [lib/layout.ts](lib/layout.ts)) sets the nav row's max-width, default 960; `/cv/[token]`, `/cases`, `/cases/[slug]`, CourseDetail use `wide` (1200), `/join-us` `xl` (1100), `/writing` + `/privacy-policy` `narrow` (720); the rest stay 960 (their content is 960, or a centred card). Home has no nav.
 - [Footer.tsx](components/Footer.tsx) — large blue footer block; mentions Mather Studio network.
 - [CursorBlob.tsx](components/CursorBlob.tsx) — global cursor-follower mounted in `RootLayout`.
 - [Marquee.tsx](components/Marquee.tsx) — canvas-based wave marquee. Commit `e1ed5dc` enforced consistent SSR/client canvas height to fix hydration errors — be careful when touching it.
@@ -46,7 +53,7 @@ Quick-start notes for future sessions. Audit this before editing — recent chan
 - Tailwind v4 in [app/globals.css](app/globals.css): `@import "tailwindcss";` + `@import "@studio-manfred/manfred-design-system/tokens.css";` + `@source` for the DS dist (STU-944). The prebuilt DS stylesheet is still imported in [layout.tsx](app/layout.tsx). Check the setup with `npx @studio-manfred/manfred-ds-cli@latest doctor` (auth via `NPM_RC_TOKEN`).
 - Heavy reliance on CSS variables from the DS: `var(--color-business-blue)`, `var(--size-container-2xl)`, `var(--letter-spacing-tight)`, `var(--line-height-tight)`, `var(--color-interactive-brand-bg)`.
 - `html` is locked to `lang="en"` + `className="h-full light"` — no dark-mode toggle yet.
-- Custom cursor system: `/m-cursor.svg` default, `/m-cursor-white.svg` on blue sections via `.cursor-white` (auto-applies on brand-bg buttons via attribute selector).
+- Custom cursor system: the M is the fixed `CustomCursor` div (`z-index` 10000, `mix-blend-mode: difference`); `globals.css` sets `cursor: none` everywhere. `.cursor-white` is a no-op. A native `<dialog>` gets the OS cursor (STU-1171).
 - Scroll reveal uses `.fade-up` + `.in-view` toggled by IntersectionObserver, with `fade-up-delay-1..3` for staggering.
 - `.article-body` class styles WordPress-imported HTML (figures, iframes, captions) — used by the writing slug page.
 

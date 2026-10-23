@@ -20,6 +20,12 @@
   --color-text-on-brand-muted: rgba(255, 255, 255, 0.8);
 }
 
+/* Muted brand-blue text on a white surface — 5.4:1 on white. Used on the home
+   menu rows when they invert on hover (STU-1181). */
+:root {
+  --color-text-on-white-muted: rgba(44, 40, 236, 0.8);
+}
+
 /* ─── Focus indicator (WCAG 2.4.7) ──────────────────────────────────────────── */
 /* currentColor inherits the foreground of the focused element, which by
    definition has 4.5:1 with its background — so the ring stays visible on
@@ -34,6 +40,12 @@ select:focus-visible,
   outline: 2px solid currentColor;
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+/* Home menu rows fill the screen edge to edge, so the focus ring sits inside the
+   row. The class beats the a:focus-visible rule above on specificity (STU-1181). */
+.menu-row:focus-visible {
+  outline-offset: -4px;
 }
 
 /* ─── Skip link ─────────────────────────────────────────────────────────────── */
@@ -72,6 +84,15 @@ main:focus {
    Reduced-motion + forced-colors below restore the OS cursor. */
 *, *::before, *::after {
   cursor: none;
+}
+
+/* A modal <dialog> sits in the browser's top layer, above the custom cursor,
+   so show the OS cursor inside it (STU-1171). */
+dialog, dialog *, dialog::backdrop {
+  cursor: auto;
+}
+dialog button, dialog a {
+  cursor: pointer;
 }
 
 /* .cursor-white and brand-blue button classes are kept as no-ops so consumer

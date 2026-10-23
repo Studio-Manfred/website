@@ -58,8 +58,9 @@ carry them).
 ## Page anatomy
 
 - **Top nav**: every public route except `/` uses [components/PageNav.tsx](components/PageNav.tsx) — `variant="blue"` on `/writing`, `/writing/[slug]`, `/training-and-courses`, `/join-us`, `/privacy-policy`; `variant="white"` inside [components/CourseDetail.tsx](components/CourseDetail.tsx). The nav row's max-width defaults to 960 px; pass `width` (a key of `WIDTH_PX` in [lib/layout.ts](lib/layout.ts), shared with `Section`) to match a page's content width — `/cv/[token]`, `/cases`, `/cases/[slug]` and [CourseDetail](components/CourseDetail.tsx) use `wide` (1200 px), `/join-us` uses `xl` (1100 px), `/writing` and `/privacy-policy` use `narrow` (720 px), so nav and content share outer edges. Left at the 960 px default: `/training-and-courses` and `/writing/[slug]` (their content is 960 px), and the case password form (a centred 560 px card).
-- **`/` is intentionally nav-less.** The Hero's 100 px wordmark IS the nav — the dramatic full-viewport hero is part of the brand impression and a sticky bar would compete with it. Decision recorded under STU-315 (2026-05-25) after `NavBar.tsx` lived as dead code for several weeks. Don't reintroduce a top-bar on home without a separate decision.
-- **`<main>` requirements** (a11y baseline below): every route's `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link lands focus. Blue-background `<main>`s also need `cursor-white` (custom-cursor system).
+- **`/` has no top bar over the hero, and a hamburger menu instead (STU-1181, 2026-10-23).** The Hero's 100 px wordmark is its nav (STU-315, 2026-05-25). [components/HomeMenu.tsx](components/HomeMenu.tsx) adds a hamburger button top right (absolute, so it scrolls away with the page; **no sticky bar**, decided 2026-10-23) and a full-screen DS `Sheet` panel. The menu is on `/` only. Other pages keep `PageNav`. Do not add a top bar over the hero.
+- **HomeMenu rules.** Links: Writing and Training & Courses (Home and Cases are out; the wordmark in the panel header links home and scrolls to the top). Get in touch uses `GetInTouchLink location="menu"`. Email and phone come from [lib/contact.ts](lib/contact.ts); the phone is plain text, as in the footer. **No-jump rule:** the close button in the panel sits exactly where the menu button was (same size and position; e2e test `e2e/home-menu.spec.ts` measures it). Rows invert on hover, focus and tap (white fill, blue text). The panel closes from component state, because Next's `Link` prevents the default click and Radix `SheetClose` skips prevented clicks. Sizes that switch at `md` use arbitrary values (see "Known fragile areas").
+- **`<main>` requirements** (a11y baseline below): every route's `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link lands focus. `cursor-white` is a no-op now (the M cursor is the `CustomCursor` component), so new markup does not need it.
 
 ### Section primitive + typography tokens (STU-312, 2026-05-25)
 
@@ -68,7 +69,7 @@ carry them).
   inside a `<section>` (or `<main>` / `<article>` via `as`). Props: `background`
   (`transparent` / `white` / `blue` / `cream`), `width` (`narrow` 720 / `default`
   960 / `wide` 1200 px), `padding` (`first` / `default` / `tight` / `roomy` /
-  `none`), `align`. `blue` background auto-includes `cursor-white`.
+  `none`), `align`. `blue` background auto-includes `cursor-white` (a no-op now).
 - **DS `Container` size presets** (`sm` 640 / `md` 768 / `lg` 1024 / `xl` 1280 /
   `2xl` 1536 px) don't align with our 720 / 960 / 1200 widths (chosen for
   line-length, not container bands), so we use `Container` as the semantic
@@ -93,6 +94,10 @@ Container, Logo) and **0 of the layout primitives** (Stack / HStack /
 VStack / Grid). Root cause: [`components/ds.tsx`](components/ds.tsx)
 re-exports only 4 components, so per the "import DS primitives via
 `@/components/ds`" rule everything else is structurally unreachable.
+
+`components/ds.tsx` now also re-exports `Icon` and the `Sheet` family
+(`Sheet`, `SheetClose`, `SheetContent`, `SheetTitle`, `SheetTrigger`) for the
+home menu (STU-1181).
 
 Widening the re-export (add Typography variants, layout primitives,
 Accordion family) unblocks Typography adoption and lets the training-page
@@ -267,7 +272,19 @@ The PR template (`.github/pull_request_template.md`) makes the rule explicit at 
   initial canvas dimensions consistent between server and client.
 - **Custom cursor system** ([app/globals.css](app/globals.css) `*` selector) —
   overrides default cursors globally. If you re-introduce interactive elements,
-  double-check `cursor: pointer` isn't lost; see Linear STU-291.
+  double-check `cursor: pointer` isn't lost; see Linear STU-291. The M is a fixed
+  `div` (`CustomCursor`, `z-index` 10000) and the OS cursor is `cursor: none`.
+  A native `<dialog>` sits in the top layer above the M, so it gets the OS
+  cursor (STU-1171). Do not use a native `<dialog>` for new overlays. Radix
+  portals (DS `Sheet`, `Dialog`) are fine. Do not add `cursor-*` classes.
+- **DS stylesheet order** — the DS stylesheet repeats Tailwind utilities later
+  in the same layer. A base class the DS also ships (`h-12`, `flex-col`,
+  `w-full`) beats our `md:` variant, so the `md:` size never applies. For a
+  size that switches at a breakpoint use arbitrary values (`h-[48px]
+  md:h-[56px]`) or `max-md:`. `HomeMenu` shows the pattern.
+- **Focus ring on full-bleed rows** — the global `a:focus-visible` rule is
+  unlayered, so it beats a `focus-visible:outline-offset-*` utility. Use a class
+  in `globals.css` (`.menu-row:focus-visible`).
 - **[components/CursorBlob.tsx](components/CursorBlob.tsx)** — `aria-hidden`,
   must stay decorative; AT users see nothing.
 - **Writing pages** depend on Supabase reachability at build time. Lose the env
