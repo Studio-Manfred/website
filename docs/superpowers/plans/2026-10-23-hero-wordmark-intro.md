@@ -8,7 +8,7 @@ Each task is one Red, Green, Refactor cycle. Commit after each task. Use Convent
 
 | Task | Depends on | Gate |
 |---|---|---|
-| 0. Spike: player, weight, end frame | none | You choose the player and approve the end-frame match. |
+| 0. Spike: player, weight, end frame | none | Done (2026-10-23). `lottie-web` light. |
 | 1. Trimmed and cropped asset | 0 | You approve the look (a screenshot of the held frame). |
 | 2. `lib/hero-intro.ts` (phases) | none | none |
 | 3. `WordmarkIntro` component | 0, 1, 2 | none |
@@ -21,7 +21,9 @@ Task 2 does not depend on the others. It can start now.
 
 ## Task 0. Spike
 
-Not committed. Use a throwaway page under `public/`, and delete it.
+**Done (2026-10-23).** Result in the spec, under "Spike result". `lottie-web` light build (46 KB gzip) plays the file; the Lottie matches the static wordmark; `dotlottie-react` needs a 496 KB gzip WebAssembly file and is out. The throwaway page is deleted. Nothing is committed.
+
+The original steps, for the record. Not committed. Use a throwaway page under `public/`, and delete it.
 
 1. Install each player in a scratch copy (or measure with `npm pack` sizes). Build the home page with each. Record the added first-load JS (gzip) from the `next build` output.
 2. Draw frame 62 of the Lottie next to the static `Logo` at the same height. Compare the shapes. Record any difference (width, slant, stroke).
@@ -30,9 +32,9 @@ Not committed. Use a throwaway page under `public/`, and delete it.
 
 ## Task 1. Asset
 
-- Cut the animation to frames 0 to 62. Crop the canvas to the wordmark box (x 456, y 342, 1010×357) plus 8 px padding. Keep white fill.
-- Write the result as a `.lottie` (or JSON, if the spike says so) in `public/` (path decided in Task 0).
-- Check: the file is under 25 KB, and the held frame is the full wordmark.
+- Cut the animation to frames 0 to 62. Crop the canvas to x 332, y 232, 1260×573 (the shape of the static `Logo`, 620:282). Keep white fill.
+- Write the result as JSON in `public/` (for example `public/hero/wordmark-intro.json`).
+- Check: the file is under 25 KB gzip, and the held frame is the full wordmark. Lay the held frame over the static `Logo` at 220×100 px. They must line up.
 - Commit: `feat(hero): trimmed wordmark animation asset (STU-1183)`.
 
 ## Task 2. Phase logic
@@ -53,7 +55,7 @@ Not committed. Use a throwaway page under `public/`, and delete it.
 File: `components/WordmarkIntro.tsx` (`"use client"`). One test, then one change:
 
 1. It renders the static wordmark with the name "Manfred" when the phase is `done` without the player.
-2. It loads the player lazily and reports `ready`.
+2. It loads `lottie-web` (light build) lazily and reports `ready`.
 3. It reports `complete` when the animation passes the hold frame, and it stops there.
 4. It reports `error` when the player fails, and shows the static wordmark.
 5. It has one accessible name, "Manfred", in every phase.

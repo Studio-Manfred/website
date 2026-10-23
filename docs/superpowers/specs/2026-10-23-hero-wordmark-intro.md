@@ -31,12 +31,23 @@ What the animation does:
 - The full wordmark is 1010×357 px inside the canvas, at x 456 and y 342. It sits at the centre of the canvas, and its aspect is 2.83 to 1. The rest of the canvas is empty.
 - The current static wordmark (DS `Logo`) is about 2.2 to 1. The two shapes may differ. A spike must compare them.
 
+## Spike result (2026-10-23)
+
+| Question | Answer |
+|---|---|
+| Which player? | `lottie-web`, the light build (`lottie-web/build/player/lottie_light`, SVG only). 46 KB gzip. It reads the JSON. |
+| Why not `dotlottie-react`? | Its wrapper is small (15 KB gzip), but it needs a WebAssembly file of 1.24 MB (496 KB gzip), loaded from a CDN by default. That is ten times too heavy for a 1.7 s intro. |
+| Does the light build play the file? | Yes. The file has no expressions and only white fills. We played frames 0–62 at 1.5× and got a `complete` event after 1650 ms. |
+| Does the Lottie match the static wordmark? | Yes. It is the same artwork. The glyph box has the same aspect (2.83 for the Lottie, 2.85 for the static `Logo`). The static `Logo` has padding in its `viewBox` (0 0 620×282). |
+| What does that mean for the crop? | Crop the Lottie canvas so it has the same `viewBox` shape as the static `Logo` (620:282). Then it is a drop-in replacement at the same height (220×100 px in the hero). The crop box in the 1920×1080 canvas is x 332, y 232, 1260×573. |
+| File format | JSON, not `.lottie`. `lottie-web` reads JSON. Trimmed to frames 0–62 and cropped, it should be well under 25 KB gzip. The `.lottie` file is not used. |
+
 ## Decisions to make
 
-1. **Speed.** Plain speed gives 2.5 s to the full wordmark, and about 3 s before the headline shows. Proposal: 1.5× speed (1.7 s). The owner decides.
-2. **End state.** Proposal: the Lottie holds its last frame as the wordmark. The static `Logo` shows only without JavaScript, with reduced motion, or when the player fails.
-3. **How the text comes in.** Proposal: the existing `FadeIn` rise. The headline starts when the drawing is 85 % done, and the button 0.3 s after the headline.
-4. **Every visit or once per session.** Proposal: every visit, as asked. Revisit after a month of use.
+1. **Speed.** Decided: 1.5× speed. The full wordmark takes 1.65 s.
+2. **End state.** Decided: the Lottie holds its last frame as the wordmark. The static `Logo` shows only without JavaScript, with reduced motion, or when the player fails.
+3. **How the text comes in.** Decided: the existing `FadeIn` rise. The headline starts when the drawing is 85 % done, and the button 0.3 s after the headline.
+4. **Every visit or once per session.** Decided: every visit.
 
 ## Approach
 
@@ -51,8 +62,8 @@ What the animation does:
 
 ### Player
 
-- Two candidates: `@lottiefiles/dotlottie-react` (reads the 40 KB `.lottie`, uses WebAssembly) and `lottie-web` (reads the JSON). The spike measures both. Rule: at most 60 KB gzip on the home page's first load. The player loads lazily (`next/dynamic`, no SSR).
-- Trim the file first. We need only frames 0 to 62. That halves it. We also crop the canvas to the wordmark with a small padding, so the file does not draw 1920×1080 of empty space. A one-off script does it. We commit the result, not the script's input.
+- Player: `lottie-web` light build (see "Spike result"). Rule: at most 60 KB gzip on the home page's first load. The player loads lazily (`next/dynamic`, no SSR).
+- Trim the file first. We need only frames 0 to 62. We crop the canvas to 332, 232, 1260×573, so it has the shape of the static `Logo`. A one-off script does it. We commit the result, not the script's input.
 
 ### Page load and the first paint
 
@@ -84,6 +95,6 @@ What the animation does:
 ## Open items
 
 1. The owner's answers to the four decisions above.
-2. The spike result: which player, and does the Lottie end frame match the static wordmark?
+2. ~~The spike result~~ Done. See "Spike result".
 3. A trimmed and cropped asset. A designer export would be cleaner than our script. Ask the owner if one exists.
 4. Merge order with PR #58 (STU-1181). Both touch the hero. PR #58 adds `id="hero"`. Rebase this branch after #58 merges.
