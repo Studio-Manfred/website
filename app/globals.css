@@ -113,6 +113,24 @@ dialog button, dialog a {
   transform: translateY(0) scale(1);
 }
 
+/* Home hero intro (STU-1183): with JavaScript, the wordmark waits hidden until
+   the stencil has loaded, so the whole wordmark does not flash before it
+   draws. Without JavaScript this rule does not apply and the wordmark shows. */
+@media (scripting: enabled) {
+  [data-intro="pending"] [role="img"][aria-label="Manfred"] {
+    opacity: 0;
+  }
+}
+
+/* Without JavaScript nothing can add .in-view, so the scroll-reveal content
+   would stay hidden. Show it (STU-1183). */
+@media (scripting: none) {
+  .fade-up {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .fade-up-delay-1 { transition-delay: 0.1s; }
 .fade-up-delay-2 { transition-delay: 0.2s; }
 .fade-up-delay-3 { transition-delay: 0.3s; }

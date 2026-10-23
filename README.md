@@ -104,6 +104,15 @@ overlays need to sit outside the max-width wrapper.
   ([`HomeMenu`](components/HomeMenu.tsx)). The menu is on `/` only.
 - All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx).
 
+### Home hero intro
+
+The wordmark in the home hero draws itself on load, then the headline and the
+button rise (STU-1183). [`HeroIntro`](components/HeroIntro.tsx) runs the phases and
+[`WordmarkReveal`](components/WordmarkReveal.tsx) draws the real wordmark through
+a stencil ([`lib/wordmark-stencil.json`](lib/wordmark-stencil.json)). Reduced
+motion, no JavaScript and a failed load all show the hero at once. The stencil is
+made by [`scripts/build-wordmark-stencil.mjs`](scripts/build-wordmark-stencil.mjs).
+
 ### Analytics
 
 Own-domain proxy so ad-blockers can't catch events by hostname. The tracker

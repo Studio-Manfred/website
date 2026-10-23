@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Home**: the wordmark in the hero draws itself when the page loads, in 1.6 s. When it is done, the headline rises, and the button 0.3 s later, with the same rise as before. Visitors who prefer reduced motion, visitors without JavaScript and a failed load all get the whole hero at once (STU-1183).
 - **Home**: the open menu has no Manfred wordmark any more. The panel header holds only the close button, in the same place as the menu button (STU-1184).
 - **Cases**: the AI Activities (Triple Diamond) page filters by level (Easy, Medium, Advanced) as well as by role (STU-1182).
 - **Home**: a hamburger menu on the home page only. The button sits top right of the hero and scrolls away with the page: there is no sticky bar. The menu opens full screen with links to Writing and Training & Courses, a Get in touch button, the email and the phone number. A row turns white with blue text on hover, focus and tap. The close button takes the place of the menu button when the menu opens. Other pages keep their nav (STU-1181).
