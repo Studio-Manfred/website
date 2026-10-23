@@ -6,7 +6,7 @@ After the first PR was ready, the owner dropped the sticky bar. What changed:
 
 - There is no bar. State B (scrolled, with a bar) is gone. The menu button is `absolute` at the top right of the page, so it scrolls away with the page.
 - `lib/hero-exit.ts` and the `IntersectionObserver` are removed. The hero no longer needs `id="hero"`.
-- The no-jump rule now covers the close button only: it sits where the menu button was. The wordmark exists only in the panel header.
+- The no-jump rule now covers the close button only: it sits where the menu button was. The wordmark exists only in the panel header. (Later, in STU-1184, the wordmark was removed from the panel too: the header holds only the close button.)
 - The rest of this document describes the earlier plan. Where it talks about the bar, read it as removed.
 
 Status: draft for review. Design source: `manfred-website-hanburger-menu.pen` (pen.dev).
