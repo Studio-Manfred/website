@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { sentimentOf, smoothPath, type RankedOpportunity } from "@/lib/customer-journey/engine";
+import {
+  sentimentOf,
+  smoothPath,
+  type RankedOpportunity,
+} from "@/lib/customer-journey/engine";
 import type { EmotionCard, Persona, Phase } from "@/lib/customer-journey/types";
 import { BLUE, INK, OPPORTUNITY, SENTIMENT, personaColor } from "./theme";
 
@@ -14,8 +18,12 @@ import { BLUE, INK, OPPORTUNITY, SENTIMENT, personaColor } from "./theme";
 const W = 600;
 const xOf = (i: number) => (i + 0.5) * (W / 6);
 const yOf = (v: number) => 92 - v * 0.84;
-const pts = (curve: number[]): [number, number][] => curve.map((v, i) => [xOf(i), yOf(v)]);
-const at = (x: number, y: number) => ({ left: `${(x / W) * 100}%`, top: `${y}%` });
+const pts = (curve: number[]): [number, number][] =>
+  curve.map((v, i) => [xOf(i), yOf(v)]);
+const at = (x: number, y: number) => ({
+  left: `${(x / W) * 100}%`,
+  top: `${y}%`,
+});
 
 /** The smooth curve split into one path per phase-to-phase stretch. */
 function stretches(curve: number[]): string[] {
@@ -28,19 +36,39 @@ function Grid() {
   return (
     <>
       {[0, 50, 100].map((v) => (
-        <line key={v} x1="0" x2={W} y1={yOf(v)} y2={yOf(v)} stroke="var(--color-border-default)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+        <line
+          key={v}
+          x1="0"
+          x2={W}
+          y1={yOf(v)}
+          y2={yOf(v)}
+          stroke="var(--color-border-default)"
+          strokeWidth="1"
+          vectorEffect="non-scaling-stroke"
+        />
       ))}
     </>
   );
 }
 
-function Tip({ x, y, children }: { x: number; y: number; children: React.ReactNode }) {
+function Tip({
+  x,
+  y,
+  children,
+}: {
+  x: number;
+  y: number;
+  children: React.ReactNode;
+}) {
   const right = x > W * 0.6;
   return (
     <div
       aria-hidden="true"
       className="pointer-events-none absolute z-20 w-60 rounded-xl bg-[var(--color-text-primary)] px-3 py-2 text-xs text-white shadow-lg"
-      style={{ ...at(x, y), transform: `translate(${right ? "calc(-100% - 14px)" : "14px"}, -50%)` }}
+      style={{
+        ...at(x, y),
+        transform: `translate(${right ? "calc(-100% - 14px)" : "14px"}, -50%)`,
+      }}
     >
       {children}
     </div>
@@ -58,24 +86,75 @@ type EmotionProps = {
   onFocus: (i: number) => void;
 };
 
-export function EmotionChart({ phases, cards, curve, base, compare, focus, onFocus }: EmotionProps) {
+export function EmotionChart({
+  phases,
+  cards,
+  curve,
+  base,
+  compare,
+  focus,
+  onFocus,
+}: EmotionProps) {
   const [hover, setHover] = useState<number | null>(null);
-  const summary = phases.map((p, i) => `${p.name} ${Math.round(curve[i])}`).join(", ");
+  const summary = phases
+    .map((p, i) => `${p.name} ${Math.round(curve[i])}`)
+    .join(", ");
 
   return (
     <div className="relative h-[190px]">
-      <svg role="img" aria-label={`Emotionskurva 0 till 100 per fas: ${summary}`} viewBox={`0 0 ${W} 100`} preserveAspectRatio="none" className="absolute inset-0 h-full w-full overflow-visible">
+      <svg
+        role="img"
+        aria-label={`Emotionskurva 0 till 100 per fas: ${summary}`}
+        viewBox={`0 0 ${W} 100`}
+        preserveAspectRatio="none"
+        className="absolute inset-0 h-full w-full overflow-visible"
+      >
         <Grid />
-        {focus !== null && <line x1={xOf(focus)} x2={xOf(focus)} y1="0" y2="100" stroke={BLUE} strokeWidth="1.5" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />}
+        {focus !== null && (
+          <line
+            x1={xOf(focus)}
+            x2={xOf(focus)}
+            y1="0"
+            y2="100"
+            stroke={BLUE}
+            strokeWidth="1.5"
+            strokeDasharray="4 4"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
         {(base || compare) && (
-          <path d={smoothPath(pts(base ?? curve))} fill="none" stroke="var(--color-border-strong)" strokeWidth="1.5" strokeDasharray="3 3" vectorEffect="non-scaling-stroke" />
+          <path
+            d={smoothPath(pts(base ?? curve))}
+            fill="none"
+            stroke="var(--color-border-strong)"
+            strokeWidth="1.5"
+            strokeDasharray="3 3"
+            vectorEffect="non-scaling-stroke"
+          />
         )}
         {compare
           ? compare.map(({ persona, curve: c }) => (
-              <path key={persona.id} d={smoothPath(pts(c))} fill="none" stroke={personaColor(persona.color)} strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
+              <path
+                key={persona.id}
+                d={smoothPath(pts(c))}
+                fill="none"
+                stroke={personaColor(persona.color)}
+                strokeWidth="2.5"
+                vectorEffect="non-scaling-stroke"
+              />
             ))
           : stretches(curve).map((d, i) => (
-              <path key={i} d={d} fill="none" stroke={SENTIMENT[sentimentOf((curve[i] + curve[i + 1]) / 2)].color} strokeWidth="3" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+              <path
+                key={i}
+                d={d}
+                fill="none"
+                stroke={
+                  SENTIMENT[sentimentOf((curve[i] + curve[i + 1]) / 2)].color
+                }
+                strokeWidth="3"
+                strokeLinecap="round"
+                vectorEffect="non-scaling-stroke"
+              />
             ))}
       </svg>
       {!compare &&
@@ -104,7 +183,10 @@ export function EmotionChart({ phases, cards, curve, base, compare, focus, onFoc
               key={`${persona.id}-${i}`}
               aria-hidden="true"
               className="absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white"
-              style={{ ...at(xOf(i), yOf(v)), background: personaColor(persona.color) }}
+              style={{
+                ...at(xOf(i), yOf(v)),
+                background: personaColor(persona.color),
+              }}
             />
           )),
         )}
@@ -132,7 +214,15 @@ type GapProps = {
   moments?: { persona: Persona };
 };
 
-function Shade({ expect, delivery, strength }: { expect: number[]; delivery: number[]; strength: number }) {
+function Shade({
+  expect,
+  delivery,
+  strength,
+}: {
+  expect: number[];
+  delivery: number[];
+  strength: number;
+}) {
   return (
     <>
       {expect.slice(0, -1).map((e, i) => {
@@ -145,7 +235,17 @@ function Shade({ expect, delivery, strength }: { expect: number[]; delivery: num
         ]
           .map((p) => p.join(","))
           .join(" ");
-        return <polygon key={i} points={points} fill={gap > 0 ? SENTIMENT.neg.color : SENTIMENT.pos.color} fillOpacity={Math.min(strength, (Math.abs(gap) / 100) * strength * 3)} />;
+        return (
+          <polygon
+            key={i}
+            points={points}
+            fill={gap > 0 ? SENTIMENT.neg.color : SENTIMENT.pos.color}
+            fillOpacity={Math.min(
+              strength,
+              (Math.abs(gap) / 100) * strength * 3,
+            )}
+          />
+        );
       })}
     </>
   );
@@ -158,9 +258,29 @@ function deliveryAt(delivery: number[], phase: number, pos: number) {
   return delivery[i] + (delivery[i + 1] - delivery[i]) * (t - i);
 }
 
-export function GapChart({ phases, expect, delivery, expectColor, compare, markers, selected, onSelect, moments }: GapProps) {
-  const [tip, setTip] = useState<{ x: number; y: number; title: string; text: React.ReactNode } | null>(null);
-  const summary = phases.map((p, i) => `${p.name}: förväntning ${Math.round(expect[i])}, leverans ${Math.round(delivery[i])}`).join("; ");
+export function GapChart({
+  phases,
+  expect,
+  delivery,
+  expectColor,
+  compare,
+  markers,
+  selected,
+  onSelect,
+  moments,
+}: GapProps) {
+  const [tip, setTip] = useState<{
+    x: number;
+    y: number;
+    title: string;
+    text: React.ReactNode;
+  } | null>(null);
+  const summary = phases
+    .map(
+      (p, i) =>
+        `${p.name}: förväntning ${Math.round(expect[i])}, leverans ${Math.round(delivery[i])}`,
+    )
+    .join("; ");
   const gapText = (e: number, d: number) => {
     const g = Math.round(d - e);
     return g < 0 ? `${g}` : `+${g}`;
@@ -175,7 +295,11 @@ export function GapChart({ phases, expect, delivery, expectColor, compare, marke
         <span className="mt-1 block space-y-0.5">
           {compare.map(({ persona, expect: e, delivery: d }) => (
             <span key={persona.id} className="flex items-center gap-2">
-              <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ background: personaColor(persona.color) }} />
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 rounded-full"
+                style={{ background: personaColor(persona.color) }}
+              />
               <span className="flex-1">{persona.name}</span>
               <span className="font-extrabold">{gapText(e[i], d[i])}</span>
             </span>
@@ -183,99 +307,190 @@ export function GapChart({ phases, expect, delivery, expectColor, compare, marke
         </span>
       ) : (
         <span className="mt-1 block">
-          Förväntning {Math.round(expect[i])} · Leverans {Math.round(delivery[i])} · Gap <strong className="font-extrabold">{gapText(expect[i], delivery[i])}</strong>
+          Förväntning {Math.round(expect[i])} · Leverans{" "}
+          {Math.round(delivery[i])} · Gap{" "}
+          <strong className="font-extrabold">
+            {gapText(expect[i], delivery[i])}
+          </strong>
         </span>
       ),
     });
 
+  // Axis labels get their own column, so the grid lines start after them.
   return (
-    <div className="relative h-[260px]">
-      {[
-        [100, "Hög"],
-        [50, "Medel"],
-        [0, "Låg"],
-      ].map(([v, t]) => (
-        <span key={t} aria-hidden="true" className="absolute left-0 -translate-y-1/2 bg-[var(--beige-light)] pr-1.5 text-[11px] font-light text-[var(--color-text-muted)]" style={{ top: `${yOf(v as number)}%` }}>
-          {t}
-        </span>
-      ))}
-      {phases.map((p, i) => (
-        <div key={p.name} aria-hidden="true" className="absolute inset-y-0" style={{ left: `${(i / 6) * 100}%`, width: `${100 / 6}%` }} onMouseEnter={() => phaseTip(i)} onMouseLeave={() => setTip(null)} />
-      ))}
-      <svg role="img" aria-label={`Förväntning mot leverans per fas. ${summary}`} viewBox={`0 0 ${W} 100`} preserveAspectRatio="none" className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
-        <Grid />
-        {compare ? (
-          compare.map(({ persona, expect: e, delivery: d }) => (
-            <g key={persona.id}>
-              <Shade expect={e} delivery={d} strength={0.08} />
-              <path d={smoothPath(pts(e))} fill="none" stroke={personaColor(persona.color)} strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
-              <path d={smoothPath(pts(d))} fill="none" stroke={personaColor(persona.color)} strokeWidth="1.5" strokeDasharray="5 4" strokeOpacity="0.7" vectorEffect="non-scaling-stroke" />
-            </g>
-          ))
-        ) : (
-          <>
-            <Shade expect={expect} delivery={delivery} strength={0.22} />
-            <path d={smoothPath(pts(expect))} fill="none" stroke={expectColor} strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
-            <path d={smoothPath(pts(delivery))} fill="none" stroke={INK} strokeWidth="2" strokeDasharray="6 4" vectorEffect="non-scaling-stroke" />
-          </>
-        )}
-      </svg>
-      {!compare &&
-        expect.map((v, i) => (
-          <span key={`e${i}`} aria-hidden="true" className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white" style={{ ...at(xOf(i), yOf(v)), background: expectColor }} />
+    <div className="flex h-[260px]">
+      <div aria-hidden="true" className="relative w-12 shrink-0">
+        {[
+          [100, "Hög"],
+          [50, "Medel"],
+          [0, "Låg"],
+        ].map(([v, t]) => (
+          <span
+            key={t}
+            className="absolute left-0 -translate-y-1/2 text-[11px] font-light text-[var(--color-text-muted)]"
+            style={{ top: `${yOf(v as number)}%` }}
+          >
+            {t}
+          </span>
         ))}
-      {!compare &&
-        delivery.map((v, i) => (
-          <span key={`d${i}`} aria-hidden="true" className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white" style={{ ...at(xOf(i), yOf(v)), background: INK }} />
-        ))}
-      {markers.map((m) => {
-        const x = (m.phase + m.pos) * (W / 6);
-        const y = yOf(deliveryAt(delivery, m.phase, m.pos));
-        const t = OPPORTUNITY[m.type];
-        const on = selected === m.index;
-        return (
-          <button
-            key={m.index}
-            type="button"
-            aria-pressed={on}
-            aria-label={`${t.label}: ${m.name}, gap ${m.gap > 0 ? "+" : ""}${m.gap}`}
-            onClick={() => onSelect(m.index)}
-            onMouseEnter={() => setTip({ x, y, title: `${t.label} · ${m.gap > 0 ? "+" : ""}${m.gap}`, text: m.name })}
+      </div>
+      <div className="relative min-w-0 flex-1">
+        {phases.map((p, i) => (
+          <div
+            key={p.name}
+            aria-hidden="true"
+            className="absolute inset-y-0"
+            style={{ left: `${(i / 6) * 100}%`, width: `${100 / 6}%` }}
+            onMouseEnter={() => phaseTip(i)}
             onMouseLeave={() => setTip(null)}
-            onFocus={() => setTip({ x, y, title: `${t.label} · ${m.gap > 0 ? "+" : ""}${m.gap}`, text: m.name })}
-            onBlur={() => setTip(null)}
-            className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-white transition-transform hover:scale-125 ${on ? "h-6 w-6 shadow-[0_0_0_2px_var(--color-text-primary)]" : "h-4 w-4 shadow-[0_0_0_1.5px_var(--color-border-strong)]"}`}
-            style={{ ...at(x, y), background: t.color }}
           />
-        );
-      })}
-      {moments &&
-        moments.persona.moments.map((m, i) => {
-          const x = xOf(m.phase);
-          const y = yOf(delivery[m.phase]);
-          const p = moments.persona;
+        ))}
+        <svg
+          role="img"
+          aria-label={`Förväntning mot leverans per fas. ${summary}`}
+          viewBox={`0 0 ${W} 100`}
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+        >
+          <Grid />
+          {compare ? (
+            compare.map(({ persona, expect: e, delivery: d }) => (
+              <g key={persona.id}>
+                <Shade expect={e} delivery={d} strength={0.08} />
+                <path
+                  d={smoothPath(pts(e))}
+                  fill="none"
+                  stroke={personaColor(persona.color)}
+                  strokeWidth="2.5"
+                  vectorEffect="non-scaling-stroke"
+                />
+                <path
+                  d={smoothPath(pts(d))}
+                  fill="none"
+                  stroke={personaColor(persona.color)}
+                  strokeWidth="1.5"
+                  strokeDasharray="5 4"
+                  strokeOpacity="0.7"
+                  vectorEffect="non-scaling-stroke"
+                />
+              </g>
+            ))
+          ) : (
+            <>
+              <Shade expect={expect} delivery={delivery} strength={0.22} />
+              <path
+                d={smoothPath(pts(expect))}
+                fill="none"
+                stroke={expectColor}
+                strokeWidth="2.5"
+                vectorEffect="non-scaling-stroke"
+              />
+              <path
+                d={smoothPath(pts(delivery))}
+                fill="none"
+                stroke={INK}
+                strokeWidth="2"
+                strokeDasharray="6 4"
+                vectorEffect="non-scaling-stroke"
+              />
+            </>
+          )}
+        </svg>
+        {!compare &&
+          expect.map((v, i) => (
+            <span
+              key={`e${i}`}
+              aria-hidden="true"
+              className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white"
+              style={{ ...at(xOf(i), yOf(v)), background: expectColor }}
+            />
+          ))}
+        {!compare &&
+          delivery.map((v, i) => (
+            <span
+              key={`d${i}`}
+              aria-hidden="true"
+              className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white"
+              style={{ ...at(xOf(i), yOf(v)), background: INK }}
+            />
+          ))}
+        {markers.map((m) => {
+          const x = (m.phase + m.pos) * (W / 6);
+          const y = yOf(deliveryAt(delivery, m.phase, m.pos));
+          const t = OPPORTUNITY[m.type];
+          const on = selected === m.index;
           return (
             <button
-              key={i}
+              key={m.index}
               type="button"
-              aria-label={`${p.name}, ${phases[m.phase].name}: ${m.insight}`}
-              onMouseEnter={() => setTip({ x, y: y - 14, title: `${p.name} · ${phases[m.phase].name}`, text: m.insight })}
+              aria-pressed={on}
+              aria-label={`${t.label}: ${m.name}, gap ${m.gap > 0 ? "+" : ""}${m.gap}`}
+              onClick={() => onSelect(m.index)}
+              onMouseEnter={() =>
+                setTip({
+                  x,
+                  y,
+                  title: `${t.label} · ${m.gap > 0 ? "+" : ""}${m.gap}`,
+                  text: m.name,
+                })
+              }
               onMouseLeave={() => setTip(null)}
-              onFocus={() => setTip({ x, y: y - 14, title: `${p.name} · ${phases[m.phase].name}`, text: m.insight })}
+              onFocus={() =>
+                setTip({
+                  x,
+                  y,
+                  title: `${t.label} · ${m.gap > 0 ? "+" : ""}${m.gap}`,
+                  text: m.name,
+                })
+              }
               onBlur={() => setTip(null)}
-              className="absolute z-10 -translate-x-1/2 -translate-y-[160%] whitespace-nowrap rounded-full border-2 bg-white px-2 py-0.5 text-[11px] font-extrabold text-[var(--color-text-primary)]"
-              style={{ ...at(x, y), borderColor: personaColor(p.color) }}
-            >
-              {p.emoji} {i + 1}
-            </button>
+              className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-white transition-transform hover:scale-125 ${on ? "h-6 w-6 shadow-[0_0_0_2px_var(--color-text-primary)]" : "h-4 w-4 shadow-[0_0_0_1.5px_var(--color-border-strong)]"}`}
+              style={{ ...at(x, y), background: t.color }}
+            />
           );
         })}
-      {tip && (
-        <Tip x={tip.x} y={tip.y}>
-          <strong className="block font-extrabold">{tip.title}</strong>
-          <span className="font-light">{tip.text}</span>
-        </Tip>
-      )}
+        {moments &&
+          moments.persona.moments.map((m, i) => {
+            const x = xOf(m.phase);
+            const y = yOf(delivery[m.phase]);
+            const p = moments.persona;
+            return (
+              <button
+                key={i}
+                type="button"
+                aria-label={`${p.name}, ${phases[m.phase].name}: ${m.insight}`}
+                onMouseEnter={() =>
+                  setTip({
+                    x,
+                    y: y - 14,
+                    title: `${p.name} · ${phases[m.phase].name}`,
+                    text: m.insight,
+                  })
+                }
+                onMouseLeave={() => setTip(null)}
+                onFocus={() =>
+                  setTip({
+                    x,
+                    y: y - 14,
+                    title: `${p.name} · ${phases[m.phase].name}`,
+                    text: m.insight,
+                  })
+                }
+                onBlur={() => setTip(null)}
+                className="absolute z-10 -translate-x-1/2 -translate-y-[160%] whitespace-nowrap rounded-full border-2 bg-white px-2 py-0.5 text-[11px] font-extrabold text-[var(--color-text-primary)]"
+                style={{ ...at(x, y), borderColor: personaColor(p.color) }}
+              >
+                {p.emoji} {i + 1}
+              </button>
+            );
+          })}
+        {tip && (
+          <Tip x={tip.x} y={tip.y}>
+            <strong className="block font-extrabold">{tip.title}</strong>
+            <span className="font-light">{tip.text}</span>
+          </Tip>
+        )}
+      </div>
     </div>
   );
 }

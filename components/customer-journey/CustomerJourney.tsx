@@ -224,7 +224,7 @@ export function CustomerJourney({
               </ul>
             </div>
 
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+            <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
               <div className="min-w-0 rounded-2xl bg-[var(--beige-light)] p-4 md:p-6">
                 <GapChart
                   phases={ind.phases}
@@ -237,7 +237,7 @@ export function CustomerJourney({
                   onSelect={(i) => setSelected((s) => (s === i ? null : i))}
                   moments={persona ? { persona } : undefined}
                 />
-                <div role="group" aria-label="Visa möjligheter för en fas" className="mt-4 grid grid-cols-3 sm:grid-cols-6 gap-1">
+                <div role="group" aria-label="Visa möjligheter för en fas" className="mt-4 ml-12 grid grid-cols-3 sm:grid-cols-6">
                   {ind.phases.map((p, i) => (
                     <button
                       key={p.name}
@@ -276,7 +276,7 @@ export function CustomerJourney({
                     Inga möjligheter i den här fasen.
                   </p>
                 ) : (
-                  <ul className="max-h-[560px] space-y-3 overflow-y-auto pr-1">
+                  <ul className="max-h-[480px] lg:max-h-[300px] space-y-3 overflow-y-auto pr-1">
                     {ranked.map((o) => {
                       const t = OPPORTUNITY[o.type];
                       const on = selected === o.index;
