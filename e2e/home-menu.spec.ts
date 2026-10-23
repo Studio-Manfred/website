@@ -49,6 +49,23 @@ test.describe("home menu", () => {
     await expect(bar(page).getByRole("img", { name: "Manfred home" })).toBeVisible();
   });
 
+  test("keeps the wordmark and the button centred in the bar", async ({ page }) => {
+    await page.goto("/");
+    await scrollPastHero(page);
+    const barBox = await box(bar(page));
+    const wordmark = await box(bar(page).getByRole("img", { name: "Manfred home" }));
+    const button = await box(openMenuButton(page));
+    expect(Math.abs(wordmark.y + wordmark.height / 2 - barBox.height / 2)).toBeLessThanOrEqual(1);
+    expect(Math.abs(button.y + button.height / 2 - barBox.height / 2)).toBeLessThanOrEqual(1);
+  });
+
+  test("uses a 104 px bar on desktop and a 72 px bar on a phone", async ({ page }, testInfo) => {
+    await page.goto("/");
+    await scrollPastHero(page);
+    const height = (await box(bar(page))).height;
+    expect(height).toBe(testInfo.project.name === "chromium-desktop" ? 104 : 72);
+  });
+
   test("is not on other pages", async ({ page }) => {
     await page.goto("/writing");
     await expect(openMenuButton(page)).toHaveCount(0);
@@ -113,6 +130,48 @@ test.describe("home menu", () => {
     await panel(page).getByRole("link", { name: /^Home/ }).click();
     await expect(panel(page)).toBeHidden();
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThanOrEqual(1);
+  });
+});
+
+test.describe("home menu rows", () => {
+  const row = (page: Page) => panel(page).getByRole("link", { name: /^Writing/ });
+
+  test("inverts the whole row on hover and keeps the text in place", async ({
+    page,
+  }, testInfo) => {
+    test.skip(testInfo.project.name !== "chromium-desktop", "No hover on touch screens");
+    await page.goto("/");
+    await openPanel(page);
+
+    const title = row(page).getByText("Writing", { exact: true });
+    const before = await box(title);
+    await row(page).hover();
+
+    await expect(row(page)).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(title).toHaveCSS("color", "rgb(44, 40, 236)");
+    expectSameBox(await box(title), before);
+
+    const rowBox = await box(row(page));
+    const viewport = page.viewportSize();
+    expect(rowBox.x).toBe(0);
+    expect(rowBox.width).toBe(viewport?.width);
+  });
+
+  test("inverts the row on keyboard focus and keeps the ring inside it", async ({ page }) => {
+    await page.goto("/");
+    await openPanel(page);
+    await page.keyboard.press("Tab");
+    await row(page).focus();
+
+    await expect(row(page)).toBeFocused();
+    await expect(row(page)).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(row(page)).toHaveCSS("outline-offset", "-4px");
+  });
+
+  test("leaves a resting row blue", async ({ page }) => {
+    await page.goto("/");
+    await openPanel(page);
+    await expect(row(page)).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   });
 });
 

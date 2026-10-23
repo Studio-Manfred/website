@@ -210,6 +210,17 @@ describe("HomeMenu sticky bar", () => {
     expect(options[0]).toEqual({ threshold: 0, rootMargin: "-72px 0px 0px 0px" });
   });
 
+  it("uses the taller desktop bar height from 768 px up", () => {
+    vi.spyOn(window, "matchMedia").mockReturnValue({
+      matches: true,
+    } as MediaQueryList);
+    renderWithHero();
+    expect(options[0]).toEqual({
+      threshold: 0,
+      rootMargin: "-104px 0px 0px 0px",
+    });
+  });
+
   it("disconnects the observer on unmount", () => {
     const { unmount } = renderWithHero();
     unmount();

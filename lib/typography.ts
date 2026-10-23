@@ -25,8 +25,8 @@ export const fontSize = {
   eyebrow: "clamp(1.5rem, 2.2vw, 2rem)",
   /** Article-card title (writing list rows). */
   articleCardTitle: "clamp(28px, 5vw, 48px)",
-  /** Home menu links — 32 px at 390 px wide, 72 px at 1440 px wide. */
-  menuLink: "clamp(2rem, 1.07rem + 3.81vw, 4.5rem)",
+  /** Home menu links — 32 px at 390 px wide, 60 px at 1440 px wide and up. */
+  menuLink: "clamp(2rem, 1.35rem + 2.67vw, 3.75rem)",
 } as const;
 
 export type FontSizeToken = keyof typeof fontSize;

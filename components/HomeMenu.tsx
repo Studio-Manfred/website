@@ -59,7 +59,7 @@ function MenuWordmark() {
         <Logo
           variant="wordmark"
           color="white"
-          height={73}
+          height={60}
           aria-label="Manfred home"
         />
       </span>
@@ -75,7 +75,7 @@ export function HomeMenu() {
     const hero = document.getElementById("hero");
     if (!hero) return;
     const barHeight = window.matchMedia("(min-width: 768px)").matches
-      ? 129
+      ? 104
       : 72;
     // threshold must stay 0: see the note in FadeIn.
     const observer = new IntersectionObserver(
@@ -100,7 +100,7 @@ export function HomeMenu() {
       <div
         data-testid="home-menu-bar"
         aria-hidden={!barVisible}
-        className={`fixed inset-x-0 top-0 z-30 flex h-[72px] items-center bg-[var(--color-business-blue)] shadow-[0_4px_16px_rgba(0,0,0,0.15)] motion-safe:transition-[opacity,visibility] motion-safe:duration-300 md:h-[129px] ${
+        className={`fixed inset-x-0 top-0 z-30 flex h-[72px] items-center bg-[var(--color-business-blue)] shadow-[0_4px_16px_rgba(0,0,0,0.15)] motion-safe:transition-[opacity,visibility] motion-safe:duration-300 md:h-[104px] ${
           barVisible ? "opacity-100" : "invisible opacity-0"
         }`}
         style={{ paddingInline: menuGutter }}
@@ -114,7 +114,7 @@ export function HomeMenu() {
           <button
             type="button"
             aria-label="Open menu"
-            className="fixed top-[12px] z-40 flex h-[48px] w-[48px] items-center justify-center rounded-full text-white md:top-[36.5px] md:h-[56px] md:w-[56px]"
+            className="fixed top-[12px] z-40 flex h-[48px] w-[48px] items-center justify-center rounded-full text-white md:top-[24px] md:h-[56px] md:w-[56px]"
             style={{ right: menuGutter }}
           >
             <Icon name="menu" size="lg" />
@@ -128,7 +128,7 @@ export function HomeMenu() {
         >
           <SheetTitle className="sr-only">Menu</SheetTitle>
           <div
-            className="flex h-[72px] shrink-0 items-center justify-between md:h-[129px]"
+            className="flex h-[72px] shrink-0 items-center justify-between md:h-[104px]"
             style={{ paddingInline: menuGutter }}
           >
             <Link href="/" onClick={goToTop} className="flex items-center">
@@ -144,28 +144,36 @@ export function HomeMenu() {
               </button>
             </SheetClose>
           </div>
-          <nav aria-label="Primary" style={{ paddingInline: menuGutter }}>
+          <nav aria-label="Primary">
             <ul>
               {links.map(({ title, href, line }) => (
-                <li key={href} className="border-b border-white/20">
+                <li key={href} className="relative">
                   <Link
                     href={href}
                     onClick={href === "/" ? goToTop : close}
-                    className="flex items-center justify-between py-[20px] text-white md:py-[clamp(12px,2.2vh,36px)]"
+                    className="menu-row group flex items-center justify-between py-[20px] text-white hover:bg-white hover:text-[var(--color-business-blue)] focus-visible:bg-white focus-visible:text-[var(--color-business-blue)] active:bg-white active:text-[var(--color-business-blue)] motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out md:py-[clamp(12px,2.2vh,36px)]"
+                    style={{ paddingInline: menuGutter }}
                   >
-                    <span className="flex flex-col gap-[6px] md:gap-[12px]">
+                    <span className="flex flex-col gap-[6px] md:gap-[10px]">
                       <span
                         className="font-extrabold leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)]"
                         style={{ fontSize: fontSize.menuLink }}
                       >
                         {title}
                       </span>
-                      <span className="text-[15px] font-light text-[var(--color-text-on-brand-muted)] md:text-[20px]">
+                      <span className="text-[15px] font-light text-[var(--color-text-on-brand-muted)] group-hover:text-[var(--color-text-on-white-muted)] group-focus-visible:text-[var(--color-text-on-white-muted)] group-active:text-[var(--color-text-on-white-muted)] motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out md:text-[18px]">
                         {line}
                       </span>
                     </span>
-                    <Icon name="arrow-right" size="lg" />
+                    <span className="flex group-hover:translate-x-[8px] group-focus-visible:translate-x-[8px] motion-safe:transition-transform motion-safe:duration-200 motion-safe:ease-out">
+                      <Icon name="arrow-right" size="lg" />
+                    </span>
                   </Link>
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute bottom-0 h-px bg-white/20"
+                    style={{ left: menuGutter, right: menuGutter }}
+                  />
                 </li>
               ))}
             </ul>
