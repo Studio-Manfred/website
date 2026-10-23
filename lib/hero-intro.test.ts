@@ -60,9 +60,9 @@ describe("nextPhase", () => {
 });
 
 describe("timing", () => {
-  it("holds frame 62 and runs at 25 fps and 1.5x speed", () => {
-    expect(HOLD_FRAME).toBe(62);
-    expect(INTRO_DURATION_MS).toBe(1653);
+  it("holds frame 71 and runs at 25 fps and 1.5x speed", () => {
+    expect(HOLD_FRAME).toBe(71);
+    expect(INTRO_DURATION_MS).toBe(1893);
   });
 
   it("gives up after 4 seconds", () => {
@@ -94,8 +94,8 @@ describe("textStartTimes", () => {
 
   it("rounds to whole milliseconds", () => {
     expect(textStartTimes(INTRO_DURATION_MS)).toEqual({
-      headline: 1405,
-      button: 1705,
+      headline: 1609,
+      button: 1909,
     });
   });
 });

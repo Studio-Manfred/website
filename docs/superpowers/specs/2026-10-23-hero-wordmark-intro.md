@@ -13,8 +13,8 @@ When the home page loads, the Manfred wordmark in the hero draws itself in. When
 | Source | A GIF, 1920×1080, 137 frames at 25 fps, 5.48 s. White wordmark on a transparent background. |
 | Lottie | A trace of that GIF. It has the same timeline. 820 KB as JSON, 40 KB packed as `.lottie`. |
 | Motion | The pen follows the stroke order. The "a" and the "d" start as round shapes ("o", "c"), then the stem or the tail comes. It is not a plain wipe. |
-| Timeline | Frame 0 is empty. Frames 10–60 (0.4–2.4 s) draw the word. Frames 60–80 hold it. Frames 90–125 erase it. Frames 130–136 are empty. |
-| The last frame | Empty. Played to the end, the wordmark disappears. We use frames 0 to 62 only. |
+| Timeline | Frame 0 is empty. Frames 10–71 (0.4–2.8 s) draw the word, with the "d" stem last. Frames 71–80 hold it. Frames 90–125 erase it. Frames 130–136 are empty. |
+| The last frame | Empty. Played to the end, the wordmark disappears. We use frames 0 to 71 only. The word is complete at frame 71, because the pen draws the "d" stem last (measured: the stencil covers 99.7 % of the real wordmark at frame 71, and 96.4 % at frame 62). |
 
 ### Why the Lottie is not used as the picture
 
@@ -22,7 +22,7 @@ We compared the Lottie with the GIF, frame by frame, in the browser.
 
 - The overlap of the two shapes is 96 % on average (96.6 % in the hold). The 13 empty frames match.
 - The Lottie shapes are about 3 % fatter.
-- **The trace is coarse.** The full word is 292 points in 8 paths, all in whole pixels, with straight segments. The round top of the "d" stem is about seven points, so it looks chopped. In the GIF it is round. The owner saw this in the held frame.
+- **The trace is coarse.** The full word is 292 points in 8 paths, in whole pixels, with few curves. The round top of the "d" stem is about seven points, so it looks chopped. In the GIF it is round. The owner saw this in the held frame.
 - The static wordmark on the site (DS `Logo`) has real curves and a round top.
 
 So the Lottie is good enough to say *where the pen is*, but not to be *seen*.
@@ -31,16 +31,16 @@ So the Lottie is good enough to say *where the pen is*, but not to be *seen*.
 
 The picture is the real vector wordmark (the DS `Logo` artwork). The traced animation is used only as a stencil: at each frame, the real wordmark shows only where the traced shape is, widened by a few units. At the end, the stencil is removed and the real wordmark is all there. There is nothing to swap, so nothing can jump.
 
-- **Stencil data.** A one-off script reads the Lottie JSON, takes frames 0 to 62, maps each frame to the static wordmark's `viewBox` (0 0 620×282), and writes one path per frame. We commit the result, not the script's input. Budget: at most 30 KB gzip.
+- **Stencil data.** A one-off script reads the Lottie JSON, takes frames 0 to 71, maps each frame to the static wordmark's `viewBox` (0 0 620×282), and writes one path per frame. We commit the result, not the script's input. Budget: at most 30 KB gzip.
 - **Mapping.** The glyph box in the Lottie canvas is x 456, y 342, 1010×357. In the static `viewBox` it is x 61, y 54, 497.2×174.5. The script uses that box-to-box transform. The two aspect ratios differ by 0.7 %, and the widening hides that.
 - **Widening.** The stencil paths get a white stroke of about 3 units, so the crisp edge of the real wordmark is never cut. The 3 % extra weight of the trace is hidden the same way.
 - **Player.** No Lottie library. A small `requestAnimationFrame` loop picks the frame from the elapsed time and sets the stencil path. `lottie-web` is not needed. This also removes the 46 KB gzip player that the first spike chose.
-- **Speed.** 1.5×, so frames 0 to 62 take 1.65 s. The loop runs at the screen's rate and picks the frame at 25 fps × 1.5.
+- **Speed.** 1.5×, so frames 0 to 71 take 1.89 s. The loop runs at the screen's rate and picks the frame at 25 fps × 1.5.
 - **The wordmark artwork.** The path data comes from the DS `Logo`. We keep a typed copy in `lib/wordmark.ts` and a test that checks it still equals what the DS renders. If the DS changes the logo, the test fails.
 
 ## Decisions (made by the owner)
 
-1. Speed: 1.5×.
+1. Speed: 1.5×. The full word takes 1.89 s.
 2. End state: the real wordmark, with the stencil removed.
 3. The headline starts when the drawing is 85 % done, and the button 0.3 s after the headline. Both use the existing `FadeIn` rise.
 4. The animation plays on every visit.

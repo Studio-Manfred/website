@@ -3,7 +3,9 @@ export type IntroEvent = "ready" | "complete" | "error" | "timeout";
 
 export const FPS = 25;
 export const SPEED = 1.5;
-export const HOLD_FRAME = 62;
+// The pen finishes the "d" stem at frame 71: the stencil covers the real
+// wordmark best there (99.7 %), better than at frame 62 (96.4 %).
+export const HOLD_FRAME = 71;
 export const INTRO_DURATION_MS = Math.round(
   (HOLD_FRAME / (FPS * SPEED)) * 1000,
 );

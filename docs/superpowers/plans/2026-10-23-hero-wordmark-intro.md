@@ -42,12 +42,12 @@ Test first: `lib/hero-intro.test.ts`.
   - A `done` phase ignores every event.
 - `frameAt(elapsedMs)`:
   - 0 ms gives frame 0. A negative time gives frame 0.
-  - 1650 ms gives frame 61 or 62 (25 fps × 1.5).
-  - Any time after the duration gives the hold frame (62).
-- `INTRO_DURATION_MS` is the time to reach the hold frame (about 1653 ms).
+  - 1893 ms gives frame 71 (25 fps × 1.5).
+  - Any time after the duration gives the hold frame (71).
+- `INTRO_DURATION_MS` is the time to reach the hold frame (1893 ms).
 - `textStartTimes(durationMs)` gives the headline at 85 % and the button 300 ms after the headline.
 
-Green: `lib/hero-intro.ts` exports the types, the functions and the constants (`FPS = 25`, `SPEED = 1.5`, `HOLD_FRAME = 62`, `INTRO_TIMEOUT_MS = 4000`).
+Green: `lib/hero-intro.ts` exports the types, the functions and the constants (`FPS = 25`, `SPEED = 1.5`, `HOLD_FRAME = 71`, `INTRO_TIMEOUT_MS = 4000`).
 
 Commit: `feat(hero): intro phase logic, frame and timing (STU-1183)`.
 
@@ -59,8 +59,8 @@ Commit: `feat(hero): intro phase logic, frame and timing (STU-1183)`.
 
 ## Task 3. Stencil data
 
-- A one-off script (kept in `scripts/`, with a short comment on how to run it) reads the Lottie JSON and writes frames 0 to 62. Each frame is one `d` string, mapped to the static `viewBox` with the box-to-box transform in the spec, numbers rounded to one decimal, and written as deltas to save space.
-- Output: `public/hero/wordmark-stencil.json` (or a TypeScript module, if it is small enough to bundle).
+- A one-off script (kept in `scripts/`, with a short comment on how to run it) reads the Lottie JSON and writes frames 0 to 71. Each frame is one `d` string, mapped to the static `viewBox` with the box-to-box transform in the spec, numbers rounded to one decimal, and written as deltas to save space.
+- Output: `lib/wordmark-stencil.json`, loaded lazily with a dynamic import (12.6 KB gzip with whole-number coordinates).
 - Test: `lib/wordmark-stencil.test.ts`. 63 frames. Frame 0 is empty. Every frame after the first has a non-empty path. The last frame covers the whole static wordmark (check with a point set from the artwork).
 - Check size: at most 30 KB gzip. If it is more, keep every second frame and interpolate in the player.
 - Show you screenshots: the held frame (stencil over the real wordmark, with the stencil outlined) and two mid frames. Commit after you approve.
