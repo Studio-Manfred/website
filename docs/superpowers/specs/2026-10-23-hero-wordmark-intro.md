@@ -1,100 +1,88 @@
 # Animated wordmark intro on the home hero (STU-1183)
 
-Status: draft for review. Asset: `manfred-logo-white-vector.lottie` (and a `.json` with the same content).
+Status: draft for review. Source: `manfred-logo-white-transparent.gif` (the owner's file) and the Lottie traced from it.
 
 ## Goal
 
-When the home page loads, the Manfred wordmark in the hero draws itself in from a Lottie file. When it is done, the headline and the "Get in touch" button come in.
+When the home page loads, the Manfred wordmark in the hero draws itself in. When it is done, the headline and the "Get in touch" button come in.
 
-## What we found in the file
+## What we found
 
 | Fact | Value |
 |---|---|
-| `.lottie` size | 40 KB |
-| `.json` size | 820 KB (the same animation, not packed) |
-| Canvas | 1920×1080, 25 fps, 137 frames, 5.48 s |
-| Content | Vector. White fill (`#FFFFFF`), 578 paths, no images, no expressions |
-| Build | Each frame is its own layer, made from a GIF. It is frame by frame, not a keyframed animation |
-| Loop | `loop: true` in the manifest |
+| Source | A GIF, 1920×1080, 137 frames at 25 fps, 5.48 s. White wordmark on a transparent background. |
+| Lottie | A trace of that GIF. It has the same timeline. 820 KB as JSON, 40 KB packed as `.lottie`. |
+| Motion | The pen follows the stroke order. The "a" and the "d" start as round shapes ("o", "c"), then the stem or the tail comes. It is not a plain wipe. |
+| Timeline | Frame 0 is empty. Frames 10–60 (0.4–2.4 s) draw the word. Frames 60–80 hold it. Frames 90–125 erase it. Frames 130–136 are empty. |
+| The last frame | Empty. Played to the end, the wordmark disappears. We use frames 0 to 62 only. |
 
-What the animation does:
+### Why the Lottie is not used as the picture
 
-| Frames | Time | What shows |
-|---|---|---|
-| 0 | 0.0 s | Nothing |
-| 10–60 | 0.4–2.4 s | The wordmark draws in from left to right |
-| 60–80 | 2.4–3.2 s | The full wordmark |
-| 90–125 | 3.6–5.0 s | The wordmark erases |
-| 130–136 | 5.2–5.5 s | Nothing |
+We compared the Lottie with the GIF, frame by frame, in the browser.
 
-- **The last frame is empty.** If we play it to the end, the wordmark disappears. We must stop at about frame 62 and hold it.
-- The full wordmark is 1010×357 px inside the canvas, at x 456 and y 342. It sits at the centre of the canvas, and its aspect is 2.83 to 1. The rest of the canvas is empty.
-- The current static wordmark (DS `Logo`) is about 2.2 to 1. The two shapes may differ. A spike must compare them.
+- The overlap of the two shapes is 96 % on average (96.6 % in the hold). The 13 empty frames match.
+- The Lottie shapes are about 3 % fatter.
+- **The trace is coarse.** The full word is 292 points in 8 paths, all in whole pixels, with straight segments. The round top of the "d" stem is about seven points, so it looks chopped. In the GIF it is round. The owner saw this in the held frame.
+- The static wordmark on the site (DS `Logo`) has real curves and a round top.
 
-## Spike result (2026-10-23)
+So the Lottie is good enough to say *where the pen is*, but not to be *seen*.
 
-| Question | Answer |
-|---|---|
-| Which player? | `lottie-web`, the light build (`lottie-web/build/player/lottie_light`, SVG only). 46 KB gzip. It reads the JSON. |
-| Why not `dotlottie-react`? | Its wrapper is small (15 KB gzip), but it needs a WebAssembly file of 1.24 MB (496 KB gzip), loaded from a CDN by default. That is ten times too heavy for a 1.7 s intro. |
-| Does the light build play the file? | Yes. The file has no expressions and only white fills. We played frames 0–62 at 1.5× and got a `complete` event after 1650 ms. |
-| Does the Lottie match the static wordmark? | Yes. It is the same artwork. The glyph box has the same aspect (2.83 for the Lottie, 2.85 for the static `Logo`). The static `Logo` has padding in its `viewBox` (0 0 620×282). |
-| What does that mean for the crop? | Crop the Lottie canvas so it has the same `viewBox` shape as the static `Logo` (620:282). Then it is a drop-in replacement at the same height (220×100 px in the hero). The crop box in the 1920×1080 canvas is x 332, y 232, 1260×573. |
-| File format | JSON, not `.lottie`. `lottie-web` reads JSON. Trimmed to frames 0–62 and cropped, it should be well under 25 KB gzip. The `.lottie` file is not used. |
+## Approach: reveal the real wordmark through a stencil
 
-## Decisions to make
+The picture is the real vector wordmark (the DS `Logo` artwork). The traced animation is used only as a stencil: at each frame, the real wordmark shows only where the traced shape is, widened by a few units. At the end, the stencil is removed and the real wordmark is all there. There is nothing to swap, so nothing can jump.
 
-1. **Speed.** Decided: 1.5× speed. The full wordmark takes 1.65 s.
-2. **End state.** Decided: the Lottie holds its last frame as the wordmark. The static `Logo` shows only without JavaScript, with reduced motion, or when the player fails.
-3. **How the text comes in.** Decided: the existing `FadeIn` rise. The headline starts when the drawing is 85 % done, and the button 0.3 s after the headline.
-4. **Every visit or once per session.** Decided: every visit.
+- **Stencil data.** A one-off script reads the Lottie JSON, takes frames 0 to 62, maps each frame to the static wordmark's `viewBox` (0 0 620×282), and writes one path per frame. We commit the result, not the script's input. Budget: at most 30 KB gzip.
+- **Mapping.** The glyph box in the Lottie canvas is x 456, y 342, 1010×357. In the static `viewBox` it is x 61, y 54, 497.2×174.5. The script uses that box-to-box transform. The two aspect ratios differ by 0.7 %, and the widening hides that.
+- **Widening.** The stencil paths get a white stroke of about 3 units, so the crisp edge of the real wordmark is never cut. The 3 % extra weight of the trace is hidden the same way.
+- **Player.** No Lottie library. A small `requestAnimationFrame` loop picks the frame from the elapsed time and sets the stencil path. `lottie-web` is not needed. This also removes the 46 KB gzip player that the first spike chose.
+- **Speed.** 1.5×, so frames 0 to 62 take 1.65 s. The loop runs at the screen's rate and picks the frame at 25 fps × 1.5.
+- **The wordmark artwork.** The path data comes from the DS `Logo`. We keep a typed copy in `lib/wordmark.ts` and a test that checks it still equals what the DS renders. If the DS changes the logo, the test fails.
 
-## Approach
+## Decisions (made by the owner)
 
-### Sequence (pure logic, tested first)
+1. Speed: 1.5×.
+2. End state: the real wordmark, with the stencil removed.
+3. The headline starts when the drawing is 85 % done, and the button 0.3 s after the headline. Both use the existing `FadeIn` rise.
+4. The animation plays on every visit.
 
-`lib/hero-intro.ts` holds a small state machine. The phases are `pending`, `playing` and `done`.
+## Sequence (pure logic, tested first)
 
-- `pending`: before the player is ready. The wordmark, headline and button are hidden.
-- `playing`: the wordmark draws. The headline and button wait.
-- `done`: the headline and button show.
-- `done` comes at once when: the user prefers reduced motion, the player fails to load, or a timeout passes (proposal: 4 s). The page must never stay empty.
+`lib/hero-intro.ts` holds the phase logic. The phases are `pending`, `playing` and `done`.
 
-### Player
+- `pending`: before the stencil is ready. The wordmark, headline and button are hidden.
+- `playing`: the wordmark draws. The headline and button wait for their start times.
+- `done`: everything shows.
+- `done` comes at once when: the user prefers reduced motion, the stencil fails to load, or a timeout passes (4 s). The page must never stay empty.
+- The same module holds the timing: the frame at a given time, the hold frame, and the start times of the headline and the button.
 
-- Player: `lottie-web` light build (see "Spike result"). Rule: at most 60 KB gzip on the home page's first load. The player loads lazily (`next/dynamic`, no SSR).
-- Trim the file first. We need only frames 0 to 62. We crop the canvas to 332, 232, 1260×573, so it has the shape of the static `Logo`. A one-off script does it. We commit the result, not the script's input.
+## Page load and the first paint
 
-### Page load and the first paint
-
-- The server renders the static wordmark, headline and button. The largest paint stays fast, and a visitor without JavaScript sees everything.
-- With JavaScript, the hero starts in `pending`. A CSS rule under `@media (scripting: enabled)` hides the three parts, so the static wordmark does not flash before the animation.
+- The server renders the real wordmark, headline and button. The largest paint stays fast, and a visitor without JavaScript sees everything.
+- With JavaScript, the hero starts in `pending`. A CSS rule under `@media (scripting: enabled)` hides the three parts, so the full wordmark does not flash before the animation.
 - The hero keeps `id="hero"`. The home menu (STU-1181) watches it.
 - No layout shift: the wordmark box has a fixed size from the first paint.
 
-### Accessibility
+## Accessibility
 
-- The Lottie has the same name as the static wordmark: `role="img"` and `aria-label="Manfred"`. The animation is `aria-hidden` for the moving parts.
+- The wordmark keeps its name, "Manfred", in every phase. The stencil is `aria-hidden`.
 - Reduced motion: no animation, the final state at once (`lib/prefers-reduced-motion.ts`, STU-290).
-- The M cursor, the skip link and the menu button work at all times. They do not wait for the animation.
-- Content is not hidden from assistive tech while it fades in: only visually.
+- The M cursor, the skip link and the menu button work at all times.
+- Content is hidden only visually while it waits. It stays in the accessibility tree.
 
 ## Tests (write them first)
 
-- `lib/hero-intro.test.ts`: every phase change, the timeout, reduced motion and the player error.
-- `components/WordmarkIntro.test.tsx` with a mocked player: it reports completion, falls back on error, and keeps one accessible name.
-- `e2e/hero-intro.spec.ts`: the final state shows headline, button and wordmark; with reduced motion all three show at once; with JavaScript off all three show; the wordmark box does not change size.
-- Axe on the final state (`e2e/a11y.spec.ts` already covers `/`).
+- `lib/hero-intro.test.ts`: the phases, the timeout, reduced motion, the error, the frame at a time and the text start times.
+- `lib/wordmark.test.ts`: our copy of the path equals the DS `Logo` artwork.
+- `components/WordmarkReveal.test.tsx`: the right frame shows at a given time, the stencil is removed at the end, the accessible name stays.
+- `e2e/hero-intro.spec.ts`: the final state shows wordmark, headline and button; with reduced motion all three show at once; with JavaScript off all three show; the wordmark box keeps its size; the headline and the button come after the wordmark.
 
 ## Out of scope
 
 - The hamburger menu (STU-1181).
 - Other pages.
-- Sound.
+- A new Lottie file. If the owner gets a stroke-based export later (trim paths), the stencil can be replaced by a real stroke animation.
 
 ## Open items
 
-1. The owner's answers to the four decisions above.
-2. ~~The spike result~~ Done. See "Spike result".
-3. A trimmed and cropped asset. A designer export would be cleaner than our script. Ask the owner if one exists.
-4. Merge order with PR #58 (STU-1181). Both touch the hero. PR #58 adds `id="hero"`. Rebase this branch after #58 merges.
+1. The stencil size. The plan measures it in task 3. If it passes 30 KB gzip, we drop to every second frame and interpolate.
+2. Merge order with PR #58 (STU-1181). Both touch the hero. PR #58 adds `id="hero"`. Rebase this branch after #58 merges.
