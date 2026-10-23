@@ -31,7 +31,6 @@ const links = [
     href: "/training-and-courses",
     line: "Training and courses we offer.",
   },
-  { title: "Cases", href: "/cases", line: "Projects we are proud of." },
 ];
 
 function scrollToTop() {

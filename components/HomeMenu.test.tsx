@@ -53,7 +53,7 @@ describe("HomeMenu", () => {
     expect(trigger).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("lists the four main links in the primary nav", async () => {
+  it("lists the three main links in the primary nav", async () => {
     await openMenu();
     const nav = screen.getByRole("navigation", { name: "Primary" });
     const links = within(nav).getAllByRole("link");
@@ -61,9 +61,9 @@ describe("HomeMenu", () => {
       ["Home", "/"],
       ["Writing", "/writing"],
       ["Training & Courses", "/training-and-courses"],
-      ["Cases", "/cases"],
     ];
     expect(links).toHaveLength(expected.length);
+    expect(within(nav).queryByText("Cases")).not.toBeInTheDocument();
     links.forEach((link, index) => {
       const [title, href] = expected[index];
       expect(link).toHaveAttribute("href", href);
@@ -78,7 +78,6 @@ describe("HomeMenu", () => {
       "Back to the top.",
       "Texts and thoughts from the team.",
       "Training and courses we offer.",
-      "Projects we are proud of.",
     ]) {
       expect(within(nav).getByText(line)).toBeInTheDocument();
     }
