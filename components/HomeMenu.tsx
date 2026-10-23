@@ -47,7 +47,7 @@ export function HomeMenu() {
         <button
           type="button"
           aria-label="Open menu"
-          className="fixed top-3 z-40 flex h-12 w-12 items-center justify-center rounded-full text-white md:top-[36.5px] md:h-14 md:w-14"
+          className="fixed top-[12px] z-40 flex h-[48px] w-[48px] items-center justify-center rounded-full text-white md:top-[36.5px] md:h-[56px] md:w-[56px]"
           style={{ right: menuGutter }}
         >
           <Icon name="menu" size="lg" />
@@ -64,14 +64,19 @@ export function HomeMenu() {
           className="flex h-[72px] shrink-0 items-center justify-between md:h-[129px]"
           style={{ paddingInline: menuGutter }}
         >
-          <Link href="/" onClick={goToTop}>
-            <Logo variant="wordmark" color="white" height={44} aria-label="Manfred home" />
+          <Link href="/" onClick={goToTop} className="flex items-center">
+            <span className="leading-[0] md:hidden">
+              <Logo variant="wordmark" color="white" height={44} aria-label="Manfred home" />
+            </span>
+            <span className="leading-[0] max-md:hidden">
+              <Logo variant="wordmark" color="white" height={73} aria-label="Manfred home" />
+            </span>
           </Link>
           <SheetClose asChild>
             <button
               type="button"
               aria-label="Close menu"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[var(--color-business-blue)] md:h-14 md:w-14"
+              className="flex h-[48px] w-[48px] items-center justify-center rounded-full bg-white text-[var(--color-business-blue)] md:h-[56px] md:w-[56px]"
             >
               <Icon name="x" size="lg" />
             </button>
@@ -84,16 +89,16 @@ export function HomeMenu() {
                 <Link
                   href={href}
                   onClick={href === "/" ? goToTop : close}
-                  className="flex items-center justify-between py-5 text-white md:py-9"
+                  className="flex items-center justify-between py-[20px] text-white md:py-[clamp(12px,2.2vh,36px)]"
                 >
-                  <span className="flex flex-col gap-1.5 md:gap-3">
+                  <span className="flex flex-col gap-[6px] md:gap-[12px]">
                     <span
                       className="font-extrabold leading-[var(--line-height-tight)] tracking-[var(--letter-spacing-tight)]"
                       style={{ fontSize: fontSize.menuLink }}
                     >
                       {title}
                     </span>
-                    <span className="text-[15px] font-light text-[var(--color-text-on-brand-muted)] md:text-xl">
+                    <span className="text-[15px] font-light text-[var(--color-text-on-brand-muted)] md:text-[20px]">
                       {line}
                     </span>
                   </span>
@@ -104,13 +109,13 @@ export function HomeMenu() {
           </ul>
         </nav>
         <div
-          className="mt-auto flex flex-col items-center gap-5 pb-10 pt-6 md:flex-row md:justify-between md:pb-[100px] md:pt-12"
+          className="mt-auto flex items-center justify-between gap-[20px] pb-[40px] pt-[24px] max-md:flex-col md:pb-[clamp(24px,4vh,100px)] md:pt-[clamp(16px,2.7vh,48px)]"
           style={{ paddingInline: menuGutter }}
         >
-          <Button variant="inverse" size="lg" asChild className="w-full md:w-auto">
+          <Button variant="inverse" size="lg" asChild className="max-md:w-full">
             <GetInTouchLink location="menu" />
           </Button>
-          <div className="flex flex-col items-center gap-1 text-white md:items-end">
+          <div className="flex flex-col gap-1 text-white max-md:items-center md:items-end">
             <a href={`mailto:${contact.email}`} className="font-bold">
               {contact.email}
             </a>
