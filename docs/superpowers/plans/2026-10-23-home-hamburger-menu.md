@@ -74,7 +74,7 @@ File: `components/HomeMenu.tsx` (`"use client"`). Test file: `components/HomeMen
 
 1. The trigger button has `aria-label="Open menu"` and `aria-expanded="false"`.
 2. Click on the trigger opens the panel. The trigger then reports `aria-expanded="true"`.
-3. The open panel has a `nav` named "Primary" with three links: Home `/`, Writing `/writing`, Training & Courses `/training-and-courses`. Cases is out for now.
+3. The open panel has a `nav` named "Primary" with two links: Writing `/writing` and Training & Courses `/training-and-courses`. Home and Cases are out.
 4. Each link shows its subtitle from the spec.
 5. Escape closes the panel and returns focus to the trigger.
 6. Click on the close button closes the panel.

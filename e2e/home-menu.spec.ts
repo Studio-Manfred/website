@@ -153,11 +153,11 @@ test.describe("home menu", () => {
     await expect(cta).toBeInViewport();
   });
 
-  test("closes on Home and scrolls to the top", async ({ page }) => {
+  test("closes on the wordmark and scrolls to the top", async ({ page }) => {
     await page.goto("/");
     await scrollPastHero(page);
     await openPanel(page);
-    await panel(page).getByRole("link", { name: /^Home/ }).click();
+    await panel(page).getByRole("link", { name: "Manfred home" }).click();
     await expect(panel(page)).toBeHidden();
     await expect
       .poll(() => page.evaluate(() => window.scrollY))

@@ -11,7 +11,7 @@ Add a hamburger menu to the home page (`/`) of studiomanfred.com. The menu opens
 - The menu exists on `/` only. Other pages keep `PageNav`.
 - This replaces the STU-315 decision that `/` has no nav. Update CLAUDE.md in the same PR.
 - The sticky bar appears after the user scrolls past the hero.
-- Menu links are in English. Cases is out for now (decided 2026-10-23); it returns later.
+- Menu links are in English. Cases and Home are out (decided 2026-10-23). Cases may return later.
 - The menu has no "Join us" or "Privacy policy" link.
 - The "Get in touch" button stays at the bottom of the menu.
 
@@ -21,7 +21,7 @@ Add a hamburger menu to the home page (`/`) of studiomanfred.com. The menu opens
 |---|---|
 | A. Top | The hero as it is today. A white hamburger button sits at the top right. There is no bar. |
 | B. Scrolled | A blue bar, 104 px high on desktop (72 px on a phone), fixed at the top. It holds the wordmark (left) and the hamburger button. |
-| C. Open | A full-screen blue panel. It starts with the same header as state B, with a close button instead of the hamburger. Below it: three links, the "Get in touch" button, the email and the phone number. |
+| C. Open | A full-screen blue panel. It starts with the same header as state B, with a close button instead of the hamburger. Below it: two links, the "Get in touch" button, the email and the phone number. |
 
 ## No-jump rule
 
@@ -77,12 +77,11 @@ One client component, `components/HomeMenu.tsx`, mounted in `app/page.tsx`. It o
 
 | Link | Route | Subtitle (proposal) |
 |---|---|---|
-| Home | `/` | Back to the top. |
 | Writing | `/writing` | Texts and thoughts from the team. |
 | Training & Courses | `/training-and-courses` | Training and courses we offer. |
 
 - The design subtitles are in Swedish. The table above is an English proposal. It needs your approval.
-- "Home" closes the menu and scrolls to the top.
+- There is no Home link (removed 2026-10-23). The wordmark in the panel header links to `/`, closes the menu and scrolls to the top.
 - "Get in touch" reuses `GetInTouchLink` with `location="menu"`. The analytics event stays the same.
 - The email is `hello@studiomanfred.com`, as a `mailto:` link.
 - The phone number is written as in `Footer.tsx`: `079 — 336 29 10`. It is plain text, as in the footer. It is not a link.
@@ -147,7 +146,7 @@ The design covers 1440 px only. The menu must work on phones too.
   - The bar shows when the sentinel leaves the view.
   - Click on the button opens the panel. The button then has `aria-expanded="true"`.
   - Escape closes the panel and returns focus to the button.
-  - The panel has three links with the right `href` values.
+  - The panel has two links with the right `href` values.
   - Click on "Get in touch" calls `window.manfred` with `location: "menu"`.
 - `test/setup.ts` already has an inert `IntersectionObserver` mock. Each test stubs its own observer so it can fire the callback.
 - `e2e/home-menu.spec.ts`: in the open panel, the computed `cursor` of the panel, the links and the close button is `none`. The M element is visible, has a higher `z-index` than the panel, and follows the mouse.

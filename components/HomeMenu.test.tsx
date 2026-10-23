@@ -53,17 +53,17 @@ describe("HomeMenu", () => {
     expect(trigger).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("lists the three main links in the primary nav", async () => {
+  it("lists the two main links in the primary nav", async () => {
     await openMenu();
     const nav = screen.getByRole("navigation", { name: "Primary" });
     const links = within(nav).getAllByRole("link");
     const expected = [
-      ["Home", "/"],
       ["Writing", "/writing"],
       ["Training & Courses", "/training-and-courses"],
     ];
     expect(links).toHaveLength(expected.length);
     expect(within(nav).queryByText("Cases")).not.toBeInTheDocument();
+    expect(within(nav).queryByText("Home")).not.toBeInTheDocument();
     links.forEach((link, index) => {
       const [title, href] = expected[index];
       expect(link).toHaveAttribute("href", href);
@@ -75,7 +75,6 @@ describe("HomeMenu", () => {
     await openMenu();
     const nav = screen.getByRole("navigation", { name: "Primary" });
     for (const line of [
-      "Back to the top.",
       "Texts and thoughts from the team.",
       "Training and courses we offer.",
     ]) {
@@ -101,10 +100,13 @@ describe("HomeMenu", () => {
     );
   });
 
-  it("closes and scrolls to the top when Home is clicked", async () => {
+  it("closes and scrolls to the top when the wordmark is clicked", async () => {
     const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
     const { user } = await openMenu();
-    await user.click(screen.getByRole("link", { name: /^Home/ }));
+    const dialog = screen.getByRole("dialog", { name: "Menu" });
+    await user.click(
+      within(dialog).getByRole("link", { name: /Manfred home/ }),
+    );
     await waitFor(() =>
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
     );

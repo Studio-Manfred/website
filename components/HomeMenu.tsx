@@ -20,7 +20,6 @@ import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { fontSize } from "@/lib/typography";
 
 const links = [
-  { title: "Home", href: "/", line: "Back to the top." },
   {
     title: "Writing",
     href: "/writing",
@@ -150,7 +149,7 @@ export function HomeMenu() {
                 <li key={href} className="relative">
                   <Link
                     href={href}
-                    onClick={href === "/" ? goToTop : close}
+                    onClick={close}
                     className="menu-row group flex items-center justify-between py-[20px] text-white hover:bg-white hover:text-[var(--color-business-blue)] focus-visible:bg-white focus-visible:text-[var(--color-business-blue)] active:bg-white active:text-[var(--color-business-blue)] motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out md:py-[clamp(12px,2.2vh,36px)]"
                     style={{ paddingInline: menuGutter }}
                   >
