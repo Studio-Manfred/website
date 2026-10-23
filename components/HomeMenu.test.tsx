@@ -100,17 +100,13 @@ describe("HomeMenu", () => {
     );
   });
 
-  it("closes and scrolls to the top when the wordmark is clicked", async () => {
-    const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
-    const { user } = await openMenu();
+  it("has no Manfred wordmark in the open panel", async () => {
+    await openMenu();
     const dialog = screen.getByRole("dialog", { name: "Menu" });
-    await user.click(
-      within(dialog).getByRole("link", { name: /Manfred home/ }),
-    );
-    await waitFor(() =>
-      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
-    );
-    expect(scrollTo).toHaveBeenCalledWith(expect.objectContaining({ top: 0 }));
+    expect(within(dialog).queryByRole("img", { name: /Manfred/ })).toBeNull();
+    expect(
+      within(dialog).queryByRole("link", { name: /Manfred home/ }),
+    ).toBeNull();
   });
 
   it("closes when another link is clicked", async () => {

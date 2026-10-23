@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Button,
   Icon,
-  Logo,
   Sheet,
   SheetClose,
   SheetContent,
@@ -15,7 +14,6 @@ import {
 import { GetInTouchLink } from "@/components/GetInTouchLink";
 import { contact } from "@/lib/contact";
 import { menuGutter } from "@/lib/menu-layout";
-import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { fontSize } from "@/lib/typography";
 
 const links = [
@@ -31,38 +29,6 @@ const links = [
   },
 ];
 
-function scrollToTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: prefersReducedMotion() ? "auto" : "smooth",
-  });
-}
-
-// Two sizes, one shown at a time. The line-box reset keeps the wordmark at the
-// vertical centre of the panel header.
-function MenuWordmark() {
-  return (
-    <>
-      <span className="leading-[0] md:hidden">
-        <Logo
-          variant="wordmark"
-          color="white"
-          height={44}
-          aria-label="Manfred home"
-        />
-      </span>
-      <span className="leading-[0] max-md:hidden">
-        <Logo
-          variant="wordmark"
-          color="white"
-          height={60}
-          aria-label="Manfred home"
-        />
-      </span>
-    </>
-  );
-}
-
 export function HomeMenu() {
   const [open, setOpen] = useState(false);
 
@@ -70,10 +36,6 @@ export function HomeMenu() {
   // Radix's SheetClose skips prevented clicks. So the panel closes from our
   // own state, not from SheetClose, on every link.
   const close = () => setOpen(false);
-  const goToTop = () => {
-    close();
-    scrollToTop();
-  };
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -95,12 +57,9 @@ export function HomeMenu() {
       >
         <SheetTitle className="sr-only">Menu</SheetTitle>
         <div
-          className="flex h-[72px] shrink-0 items-center justify-between md:h-[104px]"
+          className="flex h-[72px] shrink-0 items-center justify-end md:h-[104px]"
           style={{ paddingInline: menuGutter }}
         >
-          <Link href="/" onClick={goToTop} className="flex items-center">
-            <MenuWordmark />
-          </Link>
           <SheetClose asChild>
             <button
               type="button"

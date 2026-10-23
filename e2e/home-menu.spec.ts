@@ -101,14 +101,12 @@ test.describe("home menu", () => {
     await expect(cta).toBeInViewport();
   });
 
-  test("closes on the wordmark and scrolls to the top", async ({ page }) => {
+  test("has no wordmark in the open panel", async ({ page }) => {
     await page.goto("/");
     await openPanel(page);
-    await panel(page).getByRole("link", { name: "Manfred home" }).click();
-    await expect(panel(page)).toBeHidden();
-    await expect
-      .poll(() => page.evaluate(() => window.scrollY))
-      .toBeLessThanOrEqual(1);
+    await expect(panel(page).getByRole("img", { name: /Manfred/ })).toHaveCount(
+      0,
+    );
   });
 });
 
