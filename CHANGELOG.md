@@ -6,6 +6,10 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ## [Unreleased]
 
+### Changed
+
+- **Top nav**: on wide screens the nav now lines up with the content's outer edges on the shared CV, `/cases`, case pages, course pages, `/join-us`, `/writing` and `/privacy-policy`.
+
 ### Added
 
 - **Cases**: the AI Activities (Triple Diamond) page filters by level (Easy, Medium, Advanced) as well as by role (STU-1182).

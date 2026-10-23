@@ -102,7 +102,7 @@ overlays need to sit outside the max-width wrapper.
   hamburger button sits top right (STU-1181). It scrolls away with the page: there
   is no sticky bar. The button opens a full-screen menu
   ([`HomeMenu`](components/HomeMenu.tsx)). The menu is on `/` only.
-- All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx).
+- All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx); an optional `width` aligns the nav row with wider content (widths in [lib/layout.ts](lib/layout.ts)).
 
 ### Analytics
 
