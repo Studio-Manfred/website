@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, render, screen, waitFor, within } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HomeMenu } from "./HomeMenu";
 
@@ -143,130 +143,9 @@ describe("HomeMenu", () => {
     expect(screen.getByText("079 — 336 29 10")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /079/ })).not.toBeInTheDocument();
   });
-});
 
-describe("HomeMenu sticky bar", () => {
-  type Callback = (entries: unknown[]) => void;
-  let callbacks: Callback[];
-  let options: IntersectionObserverInit[];
-  let disconnect: ReturnType<typeof vi.fn>;
-
-  beforeEach(() => {
-    callbacks = [];
-    options = [];
-    disconnect = vi.fn();
-    vi.stubGlobal(
-      "IntersectionObserver",
-      class {
-        constructor(callback: Callback, init: IntersectionObserverInit) {
-          callbacks.push(callback);
-          options.push(init);
-        }
-        observe = vi.fn();
-        unobserve = vi.fn();
-        takeRecords = () => [];
-        disconnect = disconnect;
-      },
-    );
-  });
-
-  const renderWithHero = () =>
-    render(
-      <>
-        <div id="hero" />
-        <HomeMenu />
-      </>,
-    );
-  const bar = () => screen.getByTestId("home-menu-bar");
-  const scrollPastHero = () =>
-    act(() =>
-      callbacks[0]([
-        {
-          isIntersecting: false,
-          boundingClientRect: { bottom: 10 },
-          rootBounds: { top: 72 },
-        },
-      ]),
-    );
-
-  it("hides the bar while the hero is in view", () => {
-    renderWithHero();
-    expect(bar()).toHaveAttribute("aria-hidden", "true");
-  });
-
-  it("shows the bar once the hero has scrolled past", () => {
-    renderWithHero();
-    scrollPastHero();
-    expect(bar()).toHaveAttribute("aria-hidden", "false");
-  });
-
-  it("hides the bar again when the hero comes back into view", () => {
-    renderWithHero();
-    scrollPastHero();
-    act(() =>
-      callbacks[0]([
-        {
-          isIntersecting: true,
-          boundingClientRect: { bottom: 400 },
-          rootBounds: { top: 72 },
-        },
-      ]),
-    );
-    expect(bar()).toHaveAttribute("aria-hidden", "true");
-  });
-
-  it("uses the newest entry when the browser delivers several at once", () => {
-    renderWithHero();
-    act(() =>
-      callbacks[0]([
-        {
-          isIntersecting: true,
-          boundingClientRect: { bottom: 400 },
-          rootBounds: { top: 72 },
-        },
-        {
-          isIntersecting: false,
-          boundingClientRect: { bottom: 10 },
-          rootBounds: { top: 72 },
-        },
-      ]),
-    );
-    expect(bar()).toHaveAttribute("aria-hidden", "false");
-  });
-
-  it("keeps one menu button in both states", () => {
-    renderWithHero();
-    expect(screen.getAllByRole("button", { name: "Open menu" })).toHaveLength(
-      1,
-    );
-    scrollPastHero();
-    expect(screen.getAllByRole("button", { name: "Open menu" })).toHaveLength(
-      1,
-    );
-  });
-
-  it("watches the hero with the bar height as the top margin", () => {
-    renderWithHero();
-    expect(options[0]).toEqual({
-      threshold: 0,
-      rootMargin: "-72px 0px 0px 0px",
-    });
-  });
-
-  it("uses the taller desktop bar height from 768 px up", () => {
-    vi.spyOn(window, "matchMedia").mockReturnValue({
-      matches: true,
-    } as MediaQueryList);
-    renderWithHero();
-    expect(options[0]).toEqual({
-      threshold: 0,
-      rootMargin: "-104px 0px 0px 0px",
-    });
-  });
-
-  it("disconnects the observer on unmount", () => {
-    const { unmount } = renderWithHero();
-    unmount();
-    expect(disconnect).toHaveBeenCalled();
+  it("has no sticky bar", () => {
+    render(<HomeMenu />);
+    expect(screen.queryByTestId("home-menu-bar")).toBeNull();
   });
 });

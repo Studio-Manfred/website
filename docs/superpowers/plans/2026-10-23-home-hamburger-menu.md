@@ -1,5 +1,9 @@
 # Plan: home page hamburger menu (STU-1181)
 
+## Update 2026-10-23: no sticky bar
+
+Task 3 (`lib/hero-exit.ts`) and Task 6 (the sticky bar) were built and then removed when the owner dropped the sticky bar. The menu button is `absolute` and scrolls away. The hero has no `id="hero"` now.
+
 Spec: [2026-10-23-home-hamburger-menu.md](../specs/2026-10-23-home-hamburger-menu.md). Branch: `markus/stu-1181-hamburger-menu-for-studiomanfredcom`.
 
 Each task is one Red, Green, Refactor cycle. Commit after each task. Use Conventional Commits with `(STU-1181)` in the subject.

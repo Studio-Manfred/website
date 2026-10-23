@@ -5,17 +5,6 @@ const openMenuButton = (page: Page) =>
 const bar = (page: Page) => page.getByTestId("home-menu-bar");
 const panel = (page: Page) => page.getByRole("dialog", { name: "Menu" });
 
-async function scrollPastHero(page: Page) {
-  // Scroll again on each try: a scroll before hydration can be undone by the router.
-  await expect(async () => {
-    await page.evaluate(() => {
-      const hero = document.getElementById("hero");
-      window.scrollTo(0, (hero?.offsetHeight ?? 0) + 200);
-    });
-    await expect(bar(page)).toBeVisible({ timeout: 1_000 });
-  }).toPass({ timeout: 10_000 });
-}
-
 async function openPanel(page: Page) {
   await openMenuButton(page).click();
   await expect(panel(page)).toBeVisible();
@@ -39,51 +28,24 @@ function expectSameBox(
 }
 
 test.describe("home menu", () => {
-  test("shows the menu button and no bar at the top of the page", async ({
+  test("shows the menu button at the top of the page, with no bar", async ({
     page,
   }) => {
     await page.goto("/");
     await expect(openMenuButton(page)).toBeVisible();
-    await expect(bar(page)).toHaveAttribute("aria-hidden", "true");
-    await expect(bar(page)).toBeHidden();
+    await expect(bar(page)).toHaveCount(0);
   });
 
-  test("shows the bar after the hero has scrolled past", async ({ page }) => {
-    await page.goto("/");
-    await scrollPastHero(page);
-    await expect(bar(page)).toHaveAttribute("aria-hidden", "false");
-    await expect(
-      bar(page).getByRole("img", { name: "Manfred home" }),
-    ).toBeVisible();
-  });
-
-  test("keeps the wordmark and the button centred in the bar", async ({
+  test("has no sticky bar: the menu button scrolls away with the page", async ({
     page,
   }) => {
     await page.goto("/");
-    await scrollPastHero(page);
-    const barBox = await box(bar(page));
-    const wordmark = await box(
-      bar(page).getByRole("img", { name: "Manfred home" }),
-    );
-    const button = await box(openMenuButton(page));
-    expect(
-      Math.abs(wordmark.y + wordmark.height / 2 - barBox.height / 2),
-    ).toBeLessThanOrEqual(1);
-    expect(
-      Math.abs(button.y + button.height / 2 - barBox.height / 2),
-    ).toBeLessThanOrEqual(1);
-  });
-
-  test("uses a 104 px bar on desktop and a 72 px bar on a phone", async ({
-    page,
-  }, testInfo) => {
-    await page.goto("/");
-    await scrollPastHero(page);
-    const height = (await box(bar(page))).height;
-    expect(height).toBe(
-      testInfo.project.name === "chromium-desktop" ? 104 : 72,
-    );
+    // Scroll again on each try: a scroll before hydration can be undone by the router.
+    await expect(async () => {
+      await page.evaluate(() => window.scrollTo(0, 1200));
+      await expect(openMenuButton(page)).not.toBeInViewport({ timeout: 1_000 });
+    }).toPass({ timeout: 10_000 });
+    await expect(bar(page)).toHaveCount(0);
   });
 
   test("is not on other pages", async ({ page }) => {
@@ -91,27 +53,13 @@ test.describe("home menu", () => {
     await expect(openMenuButton(page)).toHaveCount(0);
   });
 
-  test("keeps the wordmark and the button in place when the menu opens", async ({
-    page,
-  }) => {
+  test("keeps the button in place when the menu opens", async ({ page }) => {
     await page.goto("/");
-    await scrollPastHero(page);
-
-    const barWordmark = await box(
-      bar(page).getByRole("img", { name: "Manfred home" }),
-    );
     const menuButton = await box(openMenuButton(page));
-
     await openPanel(page);
-
-    const panelWordmark = await box(
-      panel(page).getByRole("img", { name: "Manfred home" }),
-    );
     const closeButton = await box(
       panel(page).getByRole("button", { name: "Close menu" }),
     );
-
-    expectSameBox(panelWordmark, barWordmark);
     expectSameBox(closeButton, menuButton);
   });
 
@@ -155,7 +103,6 @@ test.describe("home menu", () => {
 
   test("closes on the wordmark and scrolls to the top", async ({ page }) => {
     await page.goto("/");
-    await scrollPastHero(page);
     await openPanel(page);
     await panel(page).getByRole("link", { name: "Manfred home" }).click();
     await expect(panel(page)).toBeHidden();

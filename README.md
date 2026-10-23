@@ -99,8 +99,8 @@ overlays need to sit outside the max-width wrapper.
 ### Nav story
 
 - `/` has no top bar over the hero. The Hero's 100 px wordmark is its nav, and a
-  hamburger button sits top right (STU-1181). After the hero, a flat blue bar
-  fades in. The button opens a full-screen menu
+  hamburger button sits top right (STU-1181). It scrolls away with the page: there
+  is no sticky bar. The button opens a full-screen menu
   ([`HomeMenu`](components/HomeMenu.tsx)). The menu is on `/` only.
 - All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx).
 

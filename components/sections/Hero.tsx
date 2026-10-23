@@ -7,7 +7,6 @@ import { fontSize } from "@/lib/typography";
 export function Hero() {
   return (
     <Section
-      id="hero"
       background="blue"
       width="wide"
       padding="none"
