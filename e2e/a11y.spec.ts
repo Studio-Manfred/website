@@ -88,3 +88,33 @@ for (const route of ROUTES) {
     }
   });
 }
+
+test("a11y: / with the menu open", async ({ page }, testInfo) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  await page.getByRole("button", { name: "Open menu" }).click();
+  const panel = page.getByRole("dialog", { name: "Menu" });
+  await expect(panel).toBeVisible();
+  // Wait for the slide-in to finish so axe measures contrast on the settled panel.
+  await expect.poll(async () => (await panel.boundingBox())?.y).toBe(0);
+
+  const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+  const blocking = results.violations.filter(
+    (v) => v.impact === "serious" || v.impact === "critical",
+  );
+
+  if (blocking.length > 0) {
+    const summary = blocking
+      .map((v) => `${v.id} (${v.impact}, ${v.nodes.length} node${v.nodes.length === 1 ? "" : "s"})`)
+      .join("; ");
+    testInfo.annotations.push({
+      type: AXE_ENFORCE ? "a11y-fail" : "a11y-warn",
+      description: `${blocking.length} serious/critical: ${summary}`,
+    });
+    if (AXE_ENFORCE) {
+      expect(blocking, `/ (menu open): serious/critical violations — ${summary}`).toEqual([]);
+    } else {
+      console.warn(`axe (warn-only) / (menu open): ${summary}`);
+    }
+  }
+});

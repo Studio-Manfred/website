@@ -87,7 +87,7 @@ but see the "DS consumption" note below):
   primitive. `background` (transparent / white / cream / blue), `width`
   (narrow=720 / default=960 / xl=1100 / wide=1200 px), `padding` (first /
   default / tight / roomy / none), `align` (left / center), `as` (section /
-  main / article / div). Blue background auto-includes `cursor-white`.
+  main / article / div). Blue background auto-includes `cursor-white` (a no-op now).
 - **[`lib/typography.ts`](lib/typography.ts)** — `clamp()` font-size tokens
   for hero-scale text the DS doesn't yet ship as fluid variants.
 
@@ -98,9 +98,10 @@ overlays need to sit outside the max-width wrapper.
 
 ### Nav story
 
-- `/` **has no top nav** — the Hero's 100 px wordmark IS the nav (dramatic
-  first-impression brand moment). Do not reintroduce a top-bar on home
-  without discussion.
+- `/` has no top bar over the hero. The Hero's 100 px wordmark is its nav, and a
+  hamburger button sits top right (STU-1181). It scrolls away with the page: there
+  is no sticky bar. The button opens a full-screen menu
+  ([`HomeMenu`](components/HomeMenu.tsx)). The menu is on `/` only.
 - All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx).
 
 ### Analytics

@@ -1,4 +1,5 @@
 import { Section } from "@/components/Section";
+import { contact } from "@/lib/contact";
 
 export function Footer() {
   return (
@@ -22,9 +23,9 @@ export function Footer() {
         >
           Stockholm, Sweden
           <br />
-          079 — 336 29 10
+          {contact.phone}
           <br />
-          <a href="mailto:hello@studiomanfred.com">hello@studiomanfred.com</a>
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>
           <br />
           Organisational number: 559419-6171
         </p>
