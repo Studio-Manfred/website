@@ -63,7 +63,7 @@ describe("activity details in a modal (STU-1171)", () => {
   it("every activity has a title, how, tools and an example, with no dashes as punctuation", () => {
     for (const { s, r, a } of all) {
       expect(a.title && a.how && a.example, `${s.name} / ${r.name}`).toBeTruthy();
-      expect(a.tools.length, `${s.name} / ${r.name}`).toBeGreaterThan(0);
+      expect("tools" in a, `${s.name} / ${r.name}: no tools (STU-1182)`).toBe(false);
       expect(`${a.title} ${a.how} ${a.example}`, a.title).not.toMatch(/[—–]/);
     }
   });
@@ -75,7 +75,7 @@ describe("activity details in a modal (STU-1171)", () => {
     const dialog = screen.getByRole("dialog", { name: first.title });
     expect(dialog).toHaveTextContent(first.how);
     expect(dialog).toHaveTextContent(first.example);
-    for (const t of first.tools) expect(within(dialog).getByText(t)).toBeInTheDocument();
+    expect(within(dialog).queryByRole("heading", { name: "Tools" })).not.toBeInTheDocument();
     expect(dialog).toHaveTextContent("Researcher");
     expect(dialog).toHaveTextContent(PHASES[0].subs[0].name);
     await userEvent.click(within(dialog).getByRole("button", { name: "Close" }));
@@ -173,5 +173,36 @@ describe("as a case page (STU-1179)", () => {
     render(<TripleDiamondRoles />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(TD_CASE_DEFAULTS.title);
     expect(screen.getByText(TD_CASE_DEFAULTS.intro)).toBeInTheDocument();
+  });
+});
+
+describe("filter by level (STU-1182)", () => {
+  it("each level is a toggle; switching one off hides its activities and updates the count", async () => {
+    render(<TripleDiamondRoles />);
+    const advanced = screen.getByRole("button", { name: "Advanced" });
+    expect(advanced).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(advanced);
+    expect(advanced).toHaveAttribute("aria-pressed", "false");
+    const nAdvanced = all.filter((x) => x.a.level === "advanced").length;
+    expect(screen.getByText(`Showing ${total - nAdvanced} of ${total} activities`)).toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).toHaveLength(total - nAdvanced);
+    const anAdvanced = all.find((x) => x.a.level === "advanced")!.a.title;
+    expect(screen.queryByText(anAdvanced)).not.toBeInTheDocument();
+  });
+
+  it("only Easy on: every visible activity is Easy, and role groups without one are hidden", async () => {
+    render(<TripleDiamondRoles />);
+    await userEvent.click(screen.getByRole("button", { name: "Medium" }));
+    await userEvent.click(screen.getByRole("button", { name: "Advanced" }));
+    const easy = all.filter((x) => x.a.level === "easy");
+    expect(screen.getAllByRole("listitem")).toHaveLength(easy.length);
+    for (const list of screen.getAllByRole("list", { name: /./ })) expect(within(list).queryAllByRole("listitem").length).toBeGreaterThan(0);
+  });
+
+  it("no levels on shows the empty message", async () => {
+    render(<TripleDiamondRoles />);
+    for (const l of LEVELS) await userEvent.click(screen.getByRole("button", { name: l.name }));
+    expect(screen.queryAllByRole("listitem")).toHaveLength(0);
+    expect(screen.getByText(/No activities match/)).toBeInTheDocument();
   });
 });
