@@ -42,9 +42,9 @@ Test first: `lib/hero-intro.test.ts`.
   - A `done` phase ignores every event.
 - `frameAt(elapsedMs)`:
   - 0 ms gives frame 0. A negative time gives frame 0.
-  - 1893 ms gives frame 71 (25 fps × 1.5).
+  - 1623 ms gives frame 71 (25 fps × 1.75).
   - Any time after the duration gives the hold frame (71).
-- `INTRO_DURATION_MS` is the time to reach the hold frame (1893 ms).
+- `INTRO_DURATION_MS` is the time to reach the hold frame (1623 ms).
 - `textStartTimes(durationMs)` gives the headline at 85 % and the button 300 ms after the headline.
 
 Green: `lib/hero-intro.ts` exports the types, the functions and the constants (`FPS = 25`, `SPEED = 1.5`, `HOLD_FRAME = 71`, `INTRO_TIMEOUT_MS = 4000`).

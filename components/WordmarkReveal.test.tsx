@@ -74,8 +74,8 @@ describe("WordmarkReveal", () => {
     act(() => {
       vi.advanceTimersByTime(800);
     });
-    // 800 ms at 25 fps and 1.5x is frame 30.
-    expect(Math.abs(shownFrame(container) - 30)).toBeLessThanOrEqual(1);
+    // 800 ms at 25 fps and 1.75x is frame 35.
+    expect(Math.abs(shownFrame(container) - 35)).toBeLessThanOrEqual(1);
   });
 
   it("reports completion once, and stops", () => {

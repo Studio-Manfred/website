@@ -79,7 +79,7 @@ test.describe("hero intro", () => {
     const buttonIn = at((row) => row.button);
 
     expect(playing).toBeLessThan(done);
-    expect(done - playing).toBeGreaterThan(1500);
+    expect(done - playing).toBeGreaterThan(1300);
     expect(headlineIn).toBeGreaterThanOrEqual(done);
     expect(buttonIn - headlineIn).toBeGreaterThanOrEqual(250);
   });

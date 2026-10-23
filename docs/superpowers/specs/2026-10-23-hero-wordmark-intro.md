@@ -35,12 +35,12 @@ The picture is the real vector wordmark (the DS `Logo` artwork). The traced anim
 - **Mapping.** The glyph box in the Lottie canvas is x 456, y 342, 1010×357. In the static `viewBox` it is x 61, y 54, 497.2×174.5. The script uses that box-to-box transform. The two aspect ratios differ by 0.7 %, and the widening hides that.
 - **Widening.** The stencil paths get a white stroke of about 3 units, so the crisp edge of the real wordmark is never cut. The 3 % extra weight of the trace is hidden the same way.
 - **Player.** No Lottie library. A small `requestAnimationFrame` loop picks the frame from the elapsed time and sets the stencil path. `lottie-web` is not needed. This also removes the 46 KB gzip player that the first spike chose.
-- **Speed.** 1.5×, so frames 0 to 71 take 1.89 s. The loop runs at the screen's rate and picks the frame at 25 fps × 1.5.
+- **Speed.** 1.75×, so frames 0 to 71 take 1.62 s. The loop runs at the screen's rate and picks the frame at 25 fps × 1.75.
 - **The wordmark artwork.** The path data comes from the DS `Logo`. We keep a typed copy in `lib/wordmark.ts` and a test that checks it still equals what the DS renders. If the DS changes the logo, the test fails.
 
 ## Decisions (made by the owner)
 
-1. Speed: 1.5×. The full word takes 1.89 s.
+1. Speed: 1.5× first, then 1.75× after the owner saw it (the full word takes 1.62 s).
 2. End state: the real wordmark, with the stencil removed.
 3. The headline starts when the drawing is 85 % done, and the button 0.3 s after the headline. Both use the existing `FadeIn` rise.
 4. The animation plays on every visit.

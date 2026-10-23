@@ -65,9 +65,9 @@ describe("nextPhase", () => {
 });
 
 describe("timing", () => {
-  it("holds frame 71 and runs at 25 fps and 1.5x speed", () => {
+  it("holds frame 71 and runs at 25 fps and 1.75x speed", () => {
     expect(HOLD_FRAME).toBe(71);
-    expect(INTRO_DURATION_MS).toBe(1893);
+    expect(INTRO_DURATION_MS).toBe(1623);
   });
 
   it("gives up after 4 seconds", () => {
@@ -81,9 +81,9 @@ describe("frameAt", () => {
     expect(frameAt(-250)).toBe(0);
   });
 
-  it("moves 37.5 frames per second", () => {
-    expect(frameAt(100)).toBe(3);
-    expect(frameAt(800)).toBe(30);
+  it("moves 43.75 frames per second", () => {
+    expect(frameAt(100)).toBe(4);
+    expect(frameAt(800)).toBe(35);
   });
 
   it("reaches the hold frame at the end and stays there", () => {
@@ -99,8 +99,8 @@ describe("textStartTimes", () => {
 
   it("uses the intro duration", () => {
     expect(textStartTimes(INTRO_DURATION_MS)).toEqual({
-      headline: 1893,
-      button: 2193,
+      headline: 1623,
+      button: 1923,
     });
   });
 });
