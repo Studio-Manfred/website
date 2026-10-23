@@ -86,7 +86,9 @@ describe("HomeMenu", () => {
   it("closes on Escape and returns focus to the menu button", async () => {
     const { user, trigger } = await openMenu();
     await user.keyboard("{Escape}");
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(trigger).toHaveFocus();
     expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
@@ -94,21 +96,27 @@ describe("HomeMenu", () => {
   it("closes when the close button is clicked", async () => {
     const { user } = await openMenu();
     await user.click(screen.getByRole("button", { name: "Close menu" }));
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
   });
 
   it("closes and scrolls to the top when Home is clicked", async () => {
     const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
     const { user } = await openMenu();
     await user.click(screen.getByRole("link", { name: /^Home/ }));
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     expect(scrollTo).toHaveBeenCalledWith(expect.objectContaining({ top: 0 }));
   });
 
   it("closes when another link is clicked", async () => {
     const { user } = await openMenu();
     await user.click(screen.getByRole("link", { name: /^Writing/ }));
-    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
   });
 
   it("reports the Get in touch click with the menu location", async () => {
@@ -171,7 +179,11 @@ describe("HomeMenu sticky bar", () => {
   const scrollPastHero = () =>
     act(() =>
       callbacks[0]([
-        { isIntersecting: false, boundingClientRect: { bottom: 10 }, rootBounds: { top: 72 } },
+        {
+          isIntersecting: false,
+          boundingClientRect: { bottom: 10 },
+          rootBounds: { top: 72 },
+        },
       ]),
     );
 
@@ -191,22 +203,52 @@ describe("HomeMenu sticky bar", () => {
     scrollPastHero();
     act(() =>
       callbacks[0]([
-        { isIntersecting: true, boundingClientRect: { bottom: 400 }, rootBounds: { top: 72 } },
+        {
+          isIntersecting: true,
+          boundingClientRect: { bottom: 400 },
+          rootBounds: { top: 72 },
+        },
       ]),
     );
     expect(bar()).toHaveAttribute("aria-hidden", "true");
   });
 
+  it("uses the newest entry when the browser delivers several at once", () => {
+    renderWithHero();
+    act(() =>
+      callbacks[0]([
+        {
+          isIntersecting: true,
+          boundingClientRect: { bottom: 400 },
+          rootBounds: { top: 72 },
+        },
+        {
+          isIntersecting: false,
+          boundingClientRect: { bottom: 10 },
+          rootBounds: { top: 72 },
+        },
+      ]),
+    );
+    expect(bar()).toHaveAttribute("aria-hidden", "false");
+  });
+
   it("keeps one menu button in both states", () => {
     renderWithHero();
-    expect(screen.getAllByRole("button", { name: "Open menu" })).toHaveLength(1);
+    expect(screen.getAllByRole("button", { name: "Open menu" })).toHaveLength(
+      1,
+    );
     scrollPastHero();
-    expect(screen.getAllByRole("button", { name: "Open menu" })).toHaveLength(1);
+    expect(screen.getAllByRole("button", { name: "Open menu" })).toHaveLength(
+      1,
+    );
   });
 
   it("watches the hero with the bar height as the top margin", () => {
     renderWithHero();
-    expect(options[0]).toEqual({ threshold: 0, rootMargin: "-72px 0px 0px 0px" });
+    expect(options[0]).toEqual({
+      threshold: 0,
+      rootMargin: "-72px 0px 0px 0px",
+    });
   });
 
   it("uses the taller desktop bar height from 768 px up", () => {

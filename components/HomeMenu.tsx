@@ -77,8 +77,9 @@ export function HomeMenu() {
       ? 104
       : 72;
     // threshold must stay 0: see the note in FadeIn.
+    // The browser can deliver several entries at once; the last is the newest.
     const observer = new IntersectionObserver(
-      ([entry]) => setBarVisible(isPastHero(entry)),
+      (entries) => setBarVisible(isPastHero(entries[entries.length - 1])),
       { threshold: 0, rootMargin: `-${barHeight}px 0px 0px 0px` },
     );
     observer.observe(hero);
