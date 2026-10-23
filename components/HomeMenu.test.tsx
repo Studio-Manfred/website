@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HomeMenu } from "./HomeMenu";
 
@@ -41,5 +41,32 @@ describe("HomeMenu", () => {
       expect(link).toHaveAttribute("href", href);
       expect(within(link).getByText(title)).toBeInTheDocument();
     });
+  });
+
+  it("shows a short line under each link", async () => {
+    await openMenu();
+    const nav = screen.getByRole("navigation", { name: "Primary" });
+    for (const line of [
+      "Back to the top.",
+      "Texts and thoughts from the team.",
+      "Training and courses we offer.",
+      "Projects we are proud of.",
+    ]) {
+      expect(within(nav).getByText(line)).toBeInTheDocument();
+    }
+  });
+
+  it("closes on Escape and returns focus to the menu button", async () => {
+    const { user, trigger } = await openMenu();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("closes when the close button is clicked", async () => {
+    const { user } = await openMenu();
+    await user.click(screen.getByRole("button", { name: "Close menu" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });
 });
