@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { FadeIn } from "./FadeIn";
 
 type ObserverCallback = (
@@ -124,10 +124,37 @@ describe("FadeIn", () => {
       );
       expect(lastObserver).toBeNull();
       expect(
-        (container.firstElementChild as HTMLElement).classList.contains("in-view"),
+        (container.firstElementChild as HTMLElement).classList.contains(
+          "in-view",
+        ),
       ).toBe(true);
     } finally {
       window.matchMedia = original;
     }
+  });
+
+  it("waits while start is false, and rises once start becomes true", () => {
+    const { container, rerender } = render(
+      <FadeIn start={false}>
+        <span>content</span>
+      </FadeIn>,
+    );
+    const wrapper = container.firstElementChild as HTMLElement;
+    expect(lastObserver).toBeNull();
+    expect(wrapper.classList.contains("in-view")).toBe(false);
+
+    rerender(
+      <FadeIn start>
+        <span>content</span>
+      </FadeIn>,
+    );
+    expect(lastObserver).not.toBeNull();
+    act(() => {
+      lastObserver!.callback(
+        [{ isIntersecting: true }],
+        lastObserver as unknown as IntersectionObserver,
+      );
+    });
+    expect(wrapper.classList.contains("in-view")).toBe(true);
   });
 });
