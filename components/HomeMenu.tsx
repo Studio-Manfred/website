@@ -100,7 +100,7 @@ export function HomeMenu() {
       <div
         data-testid="home-menu-bar"
         aria-hidden={!barVisible}
-        className={`fixed inset-x-0 top-0 z-30 flex h-[72px] items-center bg-[var(--color-business-blue)] shadow-[0_4px_16px_rgba(0,0,0,0.15)] motion-safe:transition-[opacity,visibility] motion-safe:duration-300 md:h-[104px] ${
+        className={`fixed inset-x-0 top-0 z-30 flex h-[72px] items-center bg-[var(--color-business-blue)] motion-safe:transition-[opacity,visibility] motion-safe:duration-300 md:h-[104px] ${
           barVisible ? "opacity-100" : "invisible opacity-0"
         }`}
         style={{ paddingInline: menuGutter }}
