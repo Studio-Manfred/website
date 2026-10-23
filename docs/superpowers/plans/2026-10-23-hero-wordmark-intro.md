@@ -14,7 +14,7 @@ Each task is one Red, Green, Refactor cycle. Commit after each task. Use Convent
 | 1. `lib/hero-intro.ts` (phases, frame, timing) | none | none |
 | 2. `lib/wordmark.ts` (path copy + guard test) | none | none |
 | 3. Stencil data and the script that makes it | 2 | You approve a screenshot of the held frame and two mid frames. Size at most 30 KB gzip. |
-| 4. `WordmarkReveal` component | 1, 2, 3 | none |
+| 4. `WordmarkReveal` component (done) | 1, 2, 3 | none |
 | 5. `HeroIntro`: headline and button wait | 1, 4 | You approve the timing. |
 | 6. First paint, no JavaScript, reduced motion | 5 | none |
 | 7. End-to-end tests | 6 | none |
@@ -66,28 +66,38 @@ Commit: `feat(hero): intro phase logic, frame and timing (STU-1183)`.
 - Show you screenshots: the held frame (stencil over the real wordmark, with the stencil outlined) and two mid frames. Commit after you approve.
 - Commit: `feat(hero): stencil frames for the wordmark intro (STU-1183)`.
 
-## Task 4. `WordmarkReveal`
+## Task 4. `WordmarkReveal` (done)
 
-File: `components/WordmarkReveal.tsx` (`"use client"`). One test, then one change:
+File: `components/WordmarkReveal.tsx` (`"use client"`). It only draws. `HeroIntro` (Task 5) loads the stencil, owns the phase and the timeout, and gives the component `phase`, `frames` and `onComplete`. This split keeps the component small and its tests free of loading logic.
 
-1. With the phase `done`, it renders the full real wordmark, named "Manfred", with no stencil.
-2. In `playing`, at elapsed time 0 the stencil shows frame 0 (nothing visible).
-3. At a mid time, the stencil path equals the frame from `frameAt`. The test fakes the clock and `requestAnimationFrame`.
-4. At the end, it reports `complete` once, and removes the stencil.
-5. If the stencil fails to load, it reports `error` and shows the full wordmark.
-6. It reports `ready` when the stencil has loaded.
-7. The box has a fixed size, so there is no layout shift.
-8. It does not run with reduced motion.
-9. The accessible name is "Manfred" in every phase. The stencil is `aria-hidden`.
+Tests (10, written first):
 
-The stencil is an SVG `<mask>` with one path, widened by a white stroke of 3 units. The real wordmark paths use `mask="url(#…)"` with a unique id.
+1. With the phase `done`, it renders the full wordmark (7 paths), with no mask.
+2. It has the name "Manfred" in every phase, and the drawing is `aria-hidden`.
+3. While `playing`, the mask is on and the stencil starts empty.
+4. Before the pen starts (`pending`) there is no mask.
+5. The stencil follows the frame for the elapsed time (800 ms is about frame 30).
+6. It reports completion once, at the hold frame, and stops.
+7. The mask is removed when the phase becomes `done`.
+8. The loop stops when the component unmounts.
+9. The box has a fixed size from the logo height (100 px high, 219.9 px wide).
+10. Each instance has its own mask id.
 
-Commit after steps 1 to 4 and after steps 5 to 9.
+The wordmark paths use the DS token `--color-brand-logo-paper`, as the DS `Logo` does.
 
 ## Task 5. `HeroIntro`
 
-- Red: tests that the headline and the button wait. In `pending` and `playing` they are hidden visually, but stay in the accessibility tree. In `playing` the headline shows at 85 % and the button 300 ms later. In `done` both show.
-- Green: wrap the hero content. Reuse `FadeIn` if a small, tested prop lets a phase start it. If not, add the minimum code.
+`components/HeroIntro.tsx` (`"use client"`). It wraps the hero's wordmark, headline and button. It owns the phase (reducer from `lib/hero-intro.ts`), loads the stencil, and starts the timeout.
+
+- Red: tests (with a fake loader passed as a prop, and fake timers):
+  1. Without reduced motion, it starts in `pending` and loads the stencil. When the stencil has loaded, the phase becomes `playing`.
+  2. With reduced motion, it goes to `done` at once and never loads the stencil.
+  3. If loading fails, the phase becomes `done`.
+  4. If nothing happens for 4 s, the phase becomes `done`.
+  5. The headline starts at 85 % of the drawing time and the button 300 ms later, counted from the start of `playing`. In `done` both show at once.
+  6. The headline and the button stay in the accessibility tree at all times. Only their visibility waits.
+- Green: the headline and the button use the existing `FadeIn` as it is. `FadeIn` gets one small prop, `start` (default `true`), so a parent can hold the rise until its time. Its tests keep passing.
+- The stencil loads with `import("@/lib/wordmark-stencil.json")`, so it is a separate chunk.
 - Commit: `feat(hero): headline and button follow the wordmark (STU-1183)`.
 
 ## Task 6. First paint, no JavaScript, reduced motion
