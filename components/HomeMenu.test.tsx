@@ -1,7 +1,34 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HomeMenu } from "./HomeMenu";
+
+// Next's Link calls preventDefault on a client-side navigation, so the mock
+// does too. A close handler that skips prevented clicks would then fail here.
+vi.mock("next/link", () => ({
+  default: ({
+    href,
+    onClick,
+    children,
+    ...rest
+  }: React.ComponentPropsWithoutRef<"a"> & { href: string }) => (
+    <a
+      href={href}
+      onClick={(event) => {
+        onClick?.(event);
+        event.preventDefault();
+      }}
+      {...rest}
+    >
+      {children}
+    </a>
+  ),
+}));
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  delete (window as unknown as { manfred?: unknown }).manfred;
+});
 
 async function openMenu() {
   const user = userEvent.setup();
@@ -68,5 +95,42 @@ describe("HomeMenu", () => {
     const { user } = await openMenu();
     await user.click(screen.getByRole("button", { name: "Close menu" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+  });
+
+  it("closes and scrolls to the top when Home is clicked", async () => {
+    const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
+    const { user } = await openMenu();
+    await user.click(screen.getByRole("link", { name: /^Home/ }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(scrollTo).toHaveBeenCalledWith(expect.objectContaining({ top: 0 }));
+  });
+
+  it("closes when another link is clicked", async () => {
+    const { user } = await openMenu();
+    await user.click(screen.getByRole("link", { name: /^Writing/ }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+  });
+
+  it("reports the Get in touch click with the menu location", async () => {
+    const manfred = vi.fn();
+    (window as unknown as { manfred?: typeof manfred }).manfred = manfred;
+    window.history.pushState({}, "", "/");
+    const { user } = await openMenu();
+    const link = screen.getByRole("link", { name: "Get in touch" });
+    expect(link).toHaveAttribute("href", "mailto:hello@studiomanfred.com");
+    link.addEventListener("click", (event) => event.preventDefault());
+    await user.click(link);
+    expect(manfred).toHaveBeenCalledWith("Get in touch", {
+      props: { location: "menu", page: "/" },
+    });
+  });
+
+  it("shows the email as a link and the phone number as plain text", async () => {
+    await openMenu();
+    expect(
+      screen.getByRole("link", { name: "hello@studiomanfred.com" }),
+    ).toHaveAttribute("href", "mailto:hello@studiomanfred.com");
+    expect(screen.getByText("079 — 336 29 10")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /079/ })).not.toBeInTheDocument();
   });
 });

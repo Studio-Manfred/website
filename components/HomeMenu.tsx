@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
+  Button,
   Icon,
   Logo,
   Sheet,
@@ -10,7 +12,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ds";
+import { GetInTouchLink } from "@/components/GetInTouchLink";
+import { contact } from "@/lib/contact";
 import { menuGutter } from "@/lib/menu-layout";
+import { prefersReducedMotion } from "@/lib/prefers-reduced-motion";
 import { fontSize } from "@/lib/typography";
 
 const links = [
@@ -25,8 +30,19 @@ const links = [
 ];
 
 export function HomeMenu() {
+  const [open, setOpen] = useState(false);
+
+  // Next's Link prevents the default click on a client-side navigation, and
+  // Radix's SheetClose skips prevented clicks. So the panel closes from our
+  // own state, not from SheetClose, on every link.
+  const close = () => setOpen(false);
+  const goToTop = () => {
+    close();
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  };
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button
           type="button"
@@ -48,11 +64,9 @@ export function HomeMenu() {
           className="flex h-[72px] shrink-0 items-center justify-between md:h-[129px]"
           style={{ paddingInline: menuGutter }}
         >
-          <SheetClose asChild>
-            <Link href="/">
-              <Logo variant="wordmark" color="white" height={44} aria-label="Manfred home" />
-            </Link>
-          </SheetClose>
+          <Link href="/" onClick={goToTop}>
+            <Logo variant="wordmark" color="white" height={44} aria-label="Manfred home" />
+          </Link>
           <SheetClose asChild>
             <button
               type="button"
@@ -69,6 +83,7 @@ export function HomeMenu() {
               <li key={href} className="border-b border-white/20">
                 <Link
                   href={href}
+                  onClick={href === "/" ? goToTop : close}
                   className="flex items-center justify-between py-5 text-white md:py-9"
                 >
                   <span className="flex flex-col gap-1.5 md:gap-3">
@@ -88,6 +103,22 @@ export function HomeMenu() {
             ))}
           </ul>
         </nav>
+        <div
+          className="mt-auto flex flex-col items-center gap-5 pb-10 pt-6 md:flex-row md:justify-between md:pb-[100px] md:pt-12"
+          style={{ paddingInline: menuGutter }}
+        >
+          <Button variant="inverse" size="lg" asChild className="w-full md:w-auto">
+            <GetInTouchLink location="menu" />
+          </Button>
+          <div className="flex flex-col items-center gap-1 text-white md:items-end">
+            <a href={`mailto:${contact.email}`} className="font-bold">
+              {contact.email}
+            </a>
+            <span className="font-light text-[var(--color-text-on-brand-muted)]">
+              {contact.phone}
+            </span>
+          </div>
+        </div>
       </SheetContent>
     </Sheet>
   );
