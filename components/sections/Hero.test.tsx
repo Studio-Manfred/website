@@ -10,4 +10,9 @@ describe("Hero", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Get in touch/i })).toBeInTheDocument();
   });
+
+  it("has the id the home menu watches", () => {
+    const { container } = render(<Hero />);
+    expect(container.querySelector("section#hero")).not.toBeNull();
+  });
 });
