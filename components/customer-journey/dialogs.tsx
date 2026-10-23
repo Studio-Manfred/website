@@ -47,7 +47,7 @@ function CloseButton() {
     <button
       type="button"
       onClick={(e) => e.currentTarget.closest("dialog")?.close()}
-      aria-label="Stäng"
+      aria-label="Close"
       className="shrink-0 w-10 h-10 rounded-full bg-white border border-[var(--color-border-default)] flex items-center justify-center hover:border-[var(--color-business-blue)] hover:text-[var(--color-business-blue)]"
     >
       <svg
@@ -83,7 +83,7 @@ export function CellDialog({
   return (
     <Modal open={!!cell} onClose={onClose} labelledBy="cj-cell-title">
       {cell && (
-        <div lang="sv">
+        <div>
           <header className="bg-[var(--beige-light)] px-6 md:px-8 pt-6 md:pt-8 pb-6">
             <div className="flex items-start justify-between gap-6 mb-4">
               <p className={label}>{cell.phase}</p>
@@ -129,10 +129,10 @@ export function CellDialog({
 }
 
 const LEVEL_TONE: Record<Insight["effort"], string> = {
-  Låg: "bg-[var(--color-feedback-success-bg)] text-[var(--color-feedback-success-fg)]",
-  Medel:
+  Low: "bg-[var(--color-feedback-success-bg)] text-[var(--color-feedback-success-fg)]",
+  Medium:
     "bg-[var(--color-feedback-warning-bg)] text-[var(--color-feedback-warning-fg)]",
-  Hög: "bg-[var(--color-feedback-error-bg)] text-[var(--color-feedback-error-fg)]",
+  High: "bg-[var(--color-feedback-error-bg)] text-[var(--color-feedback-error-fg)]",
 };
 
 export function InsightsDialog({
@@ -150,7 +150,7 @@ export function InsightsDialog({
 }) {
   return (
     <Modal open={open} onClose={onClose} labelledBy="cj-insights-title" drawer>
-      <div lang="sv" className="flex h-full flex-col">
+      <div className="flex h-full flex-col">
         <header className="flex items-start justify-between gap-6 border-b border-[var(--color-border-default)] px-6 md:px-8 py-6">
           <div>
             <h2
@@ -158,7 +158,7 @@ export function InsightsDialog({
               className="font-extrabold text-[var(--color-business-blue)] leading-[1.15] tracking-[var(--letter-spacing-tight)]"
               style={{ fontSize: "clamp(1.4rem, 2.6vw, 1.75rem)" }}
             >
-              Insights & prioritering
+              Insights & priorities
             </h2>
             <p className="mt-1 text-sm font-light text-[var(--color-text-muted)]">
               {subtitle}
@@ -171,10 +171,10 @@ export function InsightsDialog({
             className="text-sm font-light text-[var(--color-text-secondary)] mb-8"
             style={{ lineHeight: 1.7 }}
           >
-            De tre tyngst vägande problemområdena för valt segment, rangordnade
-            efter kundpåverkan, effort och risk.
+            The three heaviest problem areas for the chosen segment, ranked by
+            customer impact, effort and risk.
           </p>
-          <h3 className={`${label} mb-4`}>Prioriterade fokusområden</h3>
+          <h3 className={`${label} mb-4`}>Priority focus areas</h3>
           <ol className="space-y-4 mb-10">
             {insights.map((ins, i) => (
               <li
@@ -206,7 +206,7 @@ export function InsightsDialog({
                   style={{ lineHeight: 1.7 }}
                 >
                   <span className="font-extrabold text-[var(--color-text-primary)]">
-                    Rekommenderad åtgärd:
+                    Recommended action:
                   </span>{" "}
                   {ins.action}
                 </p>
@@ -227,7 +227,7 @@ export function InsightsDialog({
                 </ul>
                 <div className="rounded-xl bg-[var(--beige-light)] p-4">
                   <p className="text-xs font-extrabold mb-2">
-                    Estimerad förflyttning, 6 månader
+                    Estimated shift, 6 months
                   </p>
                   <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
                     {ins.forecast.map((f) => (
@@ -246,7 +246,7 @@ export function InsightsDialog({
               </li>
             ))}
           </ol>
-          <h3 className={`${label} mb-4`}>Bevaka, inte kritiskt nu</h3>
+          <h3 className={`${label} mb-4`}>Watch, not critical yet</h3>
           <ul
             className="space-y-3 rounded-2xl bg-[var(--blue-50)] p-5 text-sm font-light text-[var(--color-text-primary)]"
             style={{ lineHeight: 1.7 }}

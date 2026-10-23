@@ -14,32 +14,35 @@ import {
   visibleGroups,
 } from "@/lib/customer-journey/engine";
 import type { IndustryId, MatrixCell, MatrixRow } from "@/lib/customer-journey/types";
+import { ROW_STEP, SECTION_STEP, inStep, type Step } from "@/lib/customer-journey/levels";
 import type { Consultant } from "@/lib/cases";
 import { CJ_CASE_DEFAULTS } from "@/lib/customer-journey/case";
 import { EmotionChart, GapChart } from "./charts";
 import { AskBar } from "./AskBar";
 import { CellDialog, InsightsDialog, type CellDetail } from "./dialogs";
 import { FilterBar, ROLES, type PersonaChoice } from "./FilterBar";
+import { LaterStep, Roadmap, StepTag } from "./steps";
 import { BLUE, OPPORTUNITY, SENTIMENT, label, pad2, personaColor, personaTint } from "./theme";
 
 // The Customer Journey Intelligence demo as a case page. Rebuilt in React from
 // the stand-alone demo (customer-journey-demo/index.html) in the site's brand:
-// filters in one panel at the top, then the gap analysis, then the journey
-// instrument (emotion curve, touchpoints and the metrics matrix). All data is
-// synthetic. The tool is in Swedish, so it carries lang="sv".
+// filters at the top, the complexity roadmap, then the gap analysis and the
+// journey instrument (emotion curve, touchpoints and the metrics matrix). The
+// complexity filter shows what each step of the roadmap gives you. All data
+// is synthetic.
 
 const LIST = Object.values(INDUSTRIES);
 const STAT_LABELS: Record<string, string> = {
-  customers: "Kunder",
+  customers: "Customers",
   nps: "NPS median",
-  retention: "12-mån retention",
-  interviews: "Djupintervjuer",
+  retention: "12-month retention",
+  interviews: "Interviews",
   appstore: "App Store",
 };
 const KIND = {
-  quant: { name: "Kvantitativ", color: BLUE },
-  qual: { name: "Kvalitativ", color: "var(--color-chart-2)" },
-  behaviour: { name: "Beteende", color: "var(--color-chart-4)" },
+  quant: { name: "Quantitative", color: BLUE },
+  qual: { name: "Qualitative", color: "var(--color-chart-2)" },
+  behaviour: { name: "Behaviour", color: "var(--color-chart-4)" },
 } as const;
 const TREND = { up: "↑", down: "↓", flat: "→" } as const;
 
@@ -66,6 +69,9 @@ export function CustomerJourney({
   const [closed, setClosed] = useState<Record<string, boolean>>({});
   const [cell, setCell] = useState<CellDetail | null>(null);
   const [insightsOpen, setInsightsOpen] = useState(false);
+  const [step, setStep] = useState<Step | null>(null);
+  const gapOn = inStep(SECTION_STEP.gap, step);
+  const askOn = inStep(SECTION_STEP.ask, step);
 
   const compareAll = personaChoice === "all";
   const persona = ind.personas.find((p) => p.id === personaChoice) ?? null;
@@ -73,7 +79,7 @@ export function CustomerJourney({
   const segLabel = ind.segments.find((s) => s.id === seg)?.label ?? "";
   const ranked = rankOpportunities(ind.opportunities, gapPhase);
   const markers = rankOpportunities(ind.opportunities, null);
-  const groups = visibleGroups(role);
+  const groups = visibleGroups(role, step);
 
   const changeIndustry = (id: IndustryId) => {
     setIndustryId(id);
@@ -88,7 +94,7 @@ export function CustomerJourney({
   const openCell = (row: MatrixRow, c: MatrixCell, i: number) =>
     setCell({
       title: c.headline || row.name,
-      phase: `Fas ${i + 1} · ${ind.phases[i].name}`,
+      phase: `Phase ${i + 1} · ${ind.phases[i].name}`,
       quote: c.quote,
       details: c.details ?? [],
     });
@@ -123,7 +129,7 @@ export function CustomerJourney({
           ))}
         </header>
 
-        <div lang="sv">
+        <div>
           <FilterBar
             industries={LIST}
             industry={industryId}
@@ -137,6 +143,9 @@ export function CustomerJourney({
             role={role}
             onRole={setRole}
             onInsights={() => setInsightsOpen(true)}
+            insightsOn={inStep(SECTION_STEP.insights, step)}
+            step={step}
+            onStep={setStep}
           />
 
           {persona && (
@@ -156,7 +165,7 @@ export function CustomerJourney({
                 ))}
               </ul>
               <button type="button" onClick={() => setPersonaChoice(null)} className="text-sm font-light underline underline-offset-4 hover:text-[var(--color-business-blue)]">
-                Rensa persona
+                Clear persona
               </button>
             </div>
           )}
@@ -164,12 +173,12 @@ export function CustomerJourney({
           {/* Industry overview */}
           <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
-              <p className={`${label} mb-3`}>{ind.industry} · Kundreseöversikt</p>
+              <p className={`${label} mb-3`}>{ind.industry} · Journey overview</p>
               <h2 className="font-extrabold leading-[1.1] tracking-[var(--letter-spacing-tight)] max-w-3xl" style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)" }}>
-                Kundens resa med <span className="text-[var(--color-business-blue)]">{ind.name}</span>
+                The customer journey at <span className="text-[var(--color-business-blue)]">{ind.name}</span>
               </h2>
               <p className="mt-4 max-w-2xl font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>
-                {ind.description} Kvalitativa och kvantitativa signaler i ett sammanhängande instrument. Välj en fas för att låsa fokus.
+                {ind.description} Qualitative and quantitative signals in one instrument. Pick a phase to focus on it.
               </p>
             </div>
             <dl className="grid grid-cols-2 sm:grid-cols-5 gap-x-8 gap-y-4">
@@ -184,36 +193,46 @@ export function CustomerJourney({
             </dl>
           </div>
 
-          <AskBar
-            key={industryId}
-            examples={[
-              `Churnrisk för ${ind.personas[1].name}`,
-              "Vilka faser har störst gap mellan förväntning och leverans?",
-              `Jämför NPS och retention mellan ${ind.personas[0].name} och ${ind.personas[3].name}`,
-              "Vad driver support-ärenden i onboarding-fasen?",
-              "Topp 3 quick wins med låg effort",
-            ]}
-          />
+          <Roadmap step={step} onStep={setStep} />
+
+          <div className="mt-12">
+            {askOn ? (
+              <AskBar
+                key={industryId}
+                examples={[
+                  `Churn risk for ${ind.personas[1].name}`,
+                  "Which phases have the biggest gap between expectation and delivery?",
+                  `Compare NPS and retention for ${ind.personas[0].name} and ${ind.personas[3].name}`,
+                  "What drives support tickets in onboarding?",
+                  "Top 3 low-effort quick wins",
+                ]}
+              />
+            ) : (
+              <LaterStep step={SECTION_STEP.ask} what="AI analysis of the data" onShow={() => setStep(SECTION_STEP.ask)} />
+            )}
+          </div>
 
           {/* Gap analysis */}
           <section aria-labelledby="cj-gap" className="mt-16 border-t-4 border-[var(--color-business-blue)] pt-6">
             <div className="flex flex-wrap items-end justify-between gap-6 mb-8">
               <div className="max-w-2xl">
                 <h2 id="cj-gap" className="font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-2" style={{ fontSize: "clamp(1.4rem, 2.4vw, 2rem)" }}>
-                  Gap: förväntning mot upplevelse
+                  Gap: expectation against experience
                 </h2>
+                <p className="mb-3"><StepTag step={SECTION_STEP.gap} /></p>
                 <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>
-                  Vad kunden förväntar sig längs resan (heldragen linje) mot vad {ind.name} levererar (streckad). Ytan mellan kurvorna visar var möjligheterna finns. Välj en touchpoint för effort och reward.
+                  What customers expect along the journey (solid line) against what {ind.name} delivers (dashed). The area between the curves shows where the opportunities are. Pick a touchpoint for effort and reward.
                 </p>
               </div>
+              {gapOn && (
               <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-light">
                 <li className="flex items-center gap-2">
                   <span aria-hidden="true" className="h-[3px] w-6 rounded" style={{ background: compareAll ? "var(--color-text-muted)" : persona ? personaColor(persona.color) : BLUE }} />
-                  Förväntning
+                  Expectation
                 </li>
                 <li className="flex items-center gap-2">
                   <span aria-hidden="true" className="w-6 border-t-2 border-dashed border-[var(--color-text-primary)]" />
-                  Leverans
+                  Delivery
                 </li>
                 {(["crit", "quick", "watch"] as const).map((t) => (
                   <li key={t} className="flex items-center gap-2">
@@ -222,8 +241,10 @@ export function CustomerJourney({
                   </li>
                 ))}
               </ul>
+              )}
             </div>
 
+            {gapOn ? (
             <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
               <div className="min-w-0 rounded-2xl bg-[var(--beige-light)] p-4 md:p-6">
                 <GapChart
@@ -237,7 +258,7 @@ export function CustomerJourney({
                   onSelect={(i) => setSelected((s) => (s === i ? null : i))}
                   moments={persona ? { persona } : undefined}
                 />
-                <div role="group" aria-label="Visa möjligheter för en fas" className="mt-4 ml-12 grid grid-cols-3 sm:grid-cols-6">
+                <div role="group" aria-label="Show opportunities for a phase" className="mt-4 ml-12 grid grid-cols-3 sm:grid-cols-6">
                   {ind.phases.map((p, i) => (
                     <button
                       key={p.name}
@@ -267,13 +288,13 @@ export function CustomerJourney({
               </div>
 
               <div className="min-w-0">
-                <h3 className={`${label} mb-1`}>Möjligheter</h3>
+                <h3 className={`${label} mb-1`}>Opportunities</h3>
                 <p className="text-sm font-light text-[var(--color-text-muted)] mb-4">
-                  Rankade efter reward per effort{gapPhase !== null && ` · ${ind.phases[gapPhase].name}`}
+                  Ranked by reward per effort{gapPhase !== null && ` · ${ind.phases[gapPhase].name}`}
                 </p>
                 {ranked.length === 0 ? (
                   <p className="rounded-2xl border border-dashed border-[var(--color-border-default)] p-6 text-center text-sm font-light text-[var(--color-text-secondary)]">
-                    Inga möjligheter i den här fasen.
+                    No opportunities in this phase.
                   </p>
                 ) : (
                   <ul className="max-h-[480px] lg:max-h-[300px] space-y-3 overflow-y-auto pr-1">
@@ -314,16 +335,19 @@ export function CustomerJourney({
                 )}
               </div>
             </div>
+            ) : (
+              <LaterStep step={SECTION_STEP.gap} what="The gap analysis" onShow={() => setStep(SECTION_STEP.gap)} />
+            )}
           </section>
 
           {/* Journey instrument */}
           <section aria-labelledby="cj-journey" className="mt-20 border-t-4 border-[var(--color-business-blue)] pt-6">
             <div className="max-w-2xl mb-8">
               <h2 id="cj-journey" className="font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-2" style={{ fontSize: "clamp(1.4rem, 2.4vw, 2rem)" }}>
-                Kundreseinstrument
+                Journey instrument
               </h2>
               <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>
-                Emotionskurva, touchpoints och metrics per fas. Välj en fas för att lyfta fram den, och en cell för detaljer. Vyn styr vilka rader som visas.
+                The emotion curve, touchpoints and metrics per phase. Pick a phase to highlight it and a cell for details. The view and the complexity step decide which rows you see.
               </p>
             </div>
 
@@ -348,8 +372,9 @@ export function CustomerJourney({
 
                 <div className={`${GRID} border-b border-[var(--color-border-default)]`}>
                   <div className="px-4 py-4">
-                    <p className="font-extrabold text-sm">Emotionskurva</p>
-                    <p className="text-xs font-light text-[var(--color-text-muted)]">Sentiment 0–100 · NPS och intervjuer</p>
+                    <p className="font-extrabold text-sm">Emotion curve</p>
+                    <p className="text-xs font-light text-[var(--color-text-muted)]">Sentiment 0–100 · NPS and interviews</p>
+                    <p className="mt-2"><StepTag step={SECTION_STEP.journey} /></p>
                   </div>
                   <div className="col-span-6 px-0 py-4">
                     <EmotionChart
@@ -390,14 +415,17 @@ export function CustomerJourney({
                   onClick={() => setTpOpen((o) => !o)}
                   className="flex w-full items-center justify-between border-b border-[var(--color-border-default)] px-4 py-3 text-left text-sm hover:bg-[var(--color-bg-subtle)]"
                 >
-                  <span className={label}>Touchpoints</span>
+                  <span className="flex items-center gap-4">
+                    <span className={label}>Touchpoints</span>
+                    <StepTag step={SECTION_STEP.touchpoints} />
+                  </span>
                   <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={`transition-transform ${tpOpen ? "rotate-180" : ""}`}>
                     <path d="m6 9 6 6 6-6" />
                   </svg>
                 </button>
                 {tpOpen && (
                   <div className={`${GRID} border-b border-[var(--color-border-default)]`}>
-                    <div className="px-4 py-4 text-xs font-light text-[var(--color-text-muted)]">Per fas · nöjdhet och notering</div>
+                    <div className="px-4 py-4 text-xs font-light text-[var(--color-text-muted)]">Per phase · satisfaction and notes</div>
                     {ind.touchpoints.map((list, i) => (
                       <ul key={i} className={`space-y-2 border-l border-[var(--color-border-default)] p-3 ${focus === i ? "bg-[var(--blue-50)]" : ""}`}>
                         {list.map((t) => {
@@ -407,7 +435,7 @@ export function CustomerJourney({
                               <p className="font-extrabold text-sm leading-snug">{t.name}</p>
                               <p className="mt-1 font-light text-[var(--color-text-secondary)]">
                                 {t.sat !== "–" && (
-                                  <span className={`mr-2 font-extrabold ${low ? "text-[var(--color-feedback-error-fg)]" : "text-[var(--color-text-primary)]"}`}>Nöjdhet {t.sat}</span>
+                                  <span className={`mr-2 font-extrabold ${low ? "text-[var(--color-feedback-error-fg)]" : "text-[var(--color-text-primary)]"}`}>Satisfaction {t.sat}</span>
                                 )}
                                 {t.note}
                               </p>
@@ -433,7 +461,7 @@ export function CustomerJourney({
                           <path d="m6 9 6 6 6-6" />
                         </svg>
                         <span className={label}>{g.label}</span>
-                        <span className="text-xs font-light text-[var(--color-text-muted)]">{g.rows.length} rader</span>
+                        <span className="text-xs font-light text-[var(--color-text-muted)]">{g.rows.length} {g.rows.length === 1 ? "row" : "rows"}</span>
                       </button>
                       {isOpen &&
                         g.rows.map((row) => (
@@ -445,6 +473,7 @@ export function CustomerJourney({
                                 <span className="sr-only">{KIND[row.kind].name}: </span>
                                 {row.source}
                               </p>
+                              <p className="mt-1.5"><StepTag step={ROW_STEP[row.id]} /></p>
                             </div>
                             {row.cells.map((c, i) => {
                               const base = `min-w-0 border-l border-[var(--color-border-default)] p-3 text-left text-sm ${focus === i ? "bg-[var(--blue-50)]" : ""}`;
@@ -509,7 +538,7 @@ export function CustomerJourney({
           </section>
 
           <p className="font-light text-sm text-[var(--color-text-muted)] max-w-[70ch] mt-16 pt-5 border-t border-[var(--color-border-default)]">
-            All data i verktyget är syntetisk och visar hur ett kundreseinstrument kan se ut. Branscherna, personas och siffrorna är exempel, inte riktiga kunder.
+            All data in the tool is synthetic and shows what a customer journey instrument can look like. The industries, personas and figures are examples, not real customers.
           </p>
         </div>
       </div>

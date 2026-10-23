@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { CustomerJourney } from "./CustomerJourney";
 import { INDUSTRIES } from "@/lib/customer-journey/datasets";
 import { MATRIX_ROWS } from "@/lib/customer-journey/matrix";
+import { ROW_STEP } from "@/lib/customer-journey/levels";
 import { CJ_CASE_DEFAULTS } from "@/lib/customer-journey/case";
 
 // jsdom has no <dialog> methods; enough of them for open/close.
@@ -20,28 +21,35 @@ beforeAll(() => {
 const finance = INDUSTRIES.finance;
 const openFilters = () => userEvent.click(screen.getByRole("button", { name: /^Filter/ }));
 const filterPanel = () => screen.getByRole("region", { name: "Filter" });
+const complexity = () => screen.getByRole("group", { name: "Complexity" });
 
 describe("CustomerJourney", () => {
-  it("one h1 with the case defaults, and the finance journey to start with", () => {
+  it("one h1 with the case defaults, and the bank journey to start with", () => {
     render(<CustomerJourney />);
     expect(screen.getAllByRole("heading", { level: 1 }).map((h) => h.textContent)).toEqual([CJ_CASE_DEFAULTS.title]);
-    expect(screen.getByRole("heading", { level: 2, name: `Kundens resa med ${finance.name}` })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Finance|Storbank/, pressed: true })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: `The customer journey at ${finance.name}` })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: new RegExp(finance.name), pressed: true })).toBeInTheDocument();
     for (const p of finance.phases) expect(screen.getAllByText(p.name).length).toBeGreaterThan(0);
+  });
+
+  it("is in English", () => {
+    const { container } = render(<CustomerJourney />);
+    expect(container.textContent).not.toMatch(/[åäöÅÄÖ]/);
+    expect(container.querySelector("[lang]")).toBeNull();
   });
 
   it("switching industry shows its phases and resets the filters", async () => {
     render(<CustomerJourney />);
     await openFilters();
     await userEvent.selectOptions(within(filterPanel()).getByLabelText("Segment"), "premium");
-    expect(screen.getByRole("list", { name: "Aktiva filter" })).toHaveTextContent("Private / Premium");
+    expect(screen.getByRole("list", { name: "Active filters" })).toHaveTextContent("Private / Premium");
 
     const grocery = INDUSTRIES.grocery;
     await userEvent.click(screen.getByRole("button", { name: new RegExp(grocery.name) }));
-    expect(screen.getByRole("heading", { level: 2, name: `Kundens resa med ${grocery.name}` })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: `The customer journey at ${grocery.name}` })).toBeInTheDocument();
     expect(screen.getAllByText(grocery.phases[0].name).length).toBeGreaterThan(0);
-    expect(screen.queryByRole("list", { name: "Aktiva filter" })).not.toBeInTheDocument();
-    expect(screen.getByText("Inga filter valda")).toBeInTheDocument();
+    expect(screen.queryByRole("list", { name: "Active filters" })).not.toBeInTheDocument();
+    expect(screen.getByText("No filters selected")).toBeInTheDocument();
   });
 
   it("the filter panel opens from the top, shows chips, and closes on Esc", async () => {
@@ -56,29 +64,29 @@ describe("CustomerJourney", () => {
     const p = finance.personas[1];
     await userEvent.click(within(filterPanel()).getByRole("button", { name: new RegExp(p.name) }));
 
-    const chips = screen.getByRole("list", { name: "Aktiva filter" });
+    const chips = screen.getByRole("list", { name: "Active filters" });
     expect(within(chips).getAllByRole("listitem")).toHaveLength(2);
-    expect(toggle).toHaveAccessibleName(/aktiva: 2/);
+    expect(toggle).toHaveAccessibleName(/active: 2/);
 
     await userEvent.keyboard("{Escape}");
     expect(screen.queryByRole("region", { name: "Filter" })).not.toBeInTheDocument();
     expect(toggle).toHaveFocus();
   });
 
-  it("a chip's remove button clears just that filter, Återställ clears all", async () => {
+  it("a chip's remove button clears just that filter, Reset clears all", async () => {
     render(<CustomerJourney />);
     await openFilters();
     await userEvent.click(within(filterPanel()).getByRole("button", { name: "CX" }));
-    await userEvent.click(within(filterPanel()).getByRole("button", { name: "Jämför alla" }));
-    await userEvent.click(within(filterPanel()).getByRole("button", { name: "Klar" }));
+    await userEvent.click(within(filterPanel()).getByRole("button", { name: "Compare all" }));
+    await userEvent.click(within(filterPanel()).getByRole("button", { name: "Done" }));
 
-    await userEvent.click(screen.getByRole("button", { name: "Ta bort filtret Vy" }));
-    const chips = screen.getByRole("list", { name: "Aktiva filter" });
-    expect(chips).toHaveTextContent("Jämför alla");
+    await userEvent.click(screen.getByRole("button", { name: "Remove the View filter" }));
+    const chips = screen.getByRole("list", { name: "Active filters" });
+    expect(chips).toHaveTextContent("Compare all");
     expect(chips).not.toHaveTextContent("CX");
 
-    await userEvent.click(screen.getByRole("button", { name: "Återställ" }));
-    expect(screen.getByText("Inga filter valda")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Reset" }));
+    expect(screen.getByText("No filters selected")).toBeInTheDocument();
   });
 
   it("a persona shows its strip and its moments in the gap chart", async () => {
@@ -89,18 +97,17 @@ describe("CustomerJourney", () => {
     expect(screen.getByText(p.desc)).toBeInTheDocument();
     for (const m of p.moments) expect(screen.getByRole("button", { name: `${p.name}, ${finance.phases[m.phase].name}: ${m.insight}` })).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: "Rensa persona" }));
+    await userEvent.click(screen.getByRole("button", { name: "Clear persona" }));
     expect(screen.queryByText(p.desc)).not.toBeInTheDocument();
   });
 
   it("the role filter limits the matrix rows", async () => {
     render(<CustomerJourney />);
-    expect(screen.getByText("Förmågor")).toBeInTheDocument();
+    expect(screen.getByText("Capabilities")).toBeInTheDocument();
     await openFilters();
     await userEvent.click(within(filterPanel()).getByRole("button", { name: "Designer" }));
-    expect(screen.queryByText("Förmågor")).not.toBeInTheDocument();
-    const designerRows = MATRIX_ROWS.filter((r) => r.roles.includes("designer"));
-    for (const r of designerRows) expect(screen.getByText(r.name)).toBeInTheDocument();
+    expect(screen.queryByText("Capabilities")).not.toBeInTheDocument();
+    for (const r of MATRIX_ROWS.filter((r) => r.roles.includes("designer"))) expect(screen.getByText(r.name)).toBeInTheDocument();
   });
 
   it("a matrix group folds away", async () => {
@@ -109,19 +116,19 @@ describe("CustomerJourney", () => {
     expect(group).toHaveAttribute("aria-expanded", "true");
     await userEvent.click(group);
     expect(group).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByText("Förmågor")).not.toBeInTheDocument();
+    expect(screen.queryByText("Capabilities")).not.toBeInTheDocument();
   });
 
   it("choosing a phase in the gap chart lists only its opportunities", async () => {
     render(<CustomerJourney />);
-    const phaseGroup = screen.getByRole("group", { name: "Visa möjligheter för en fas" });
-    await userEvent.click(within(phaseGroup).getByRole("button", { name: /Bankbehov/ }));
-    expect(screen.getByText("Inga möjligheter i den här fasen.")).toBeInTheDocument();
-    const kyc = finance.opportunities.find((o) => o.name === "KYC-process")!;
+    const phaseGroup = screen.getByRole("group", { name: "Show opportunities for a phase" });
+    await userEvent.click(within(phaseGroup).getByRole("button", { name: new RegExp(finance.phases[0].name) }));
+    expect(screen.getByText("No opportunities in this phase.")).toBeInTheDocument();
+    const kyc = finance.opportunities.find((o) => o.name === "KYC process")!;
     await userEvent.click(within(phaseGroup).getByRole("button", { name: new RegExp(finance.phases[kyc.phase].name) }));
     const items = screen.getAllByRole("button", { name: /Reward/ });
     expect(items.every((b) => b.textContent?.includes(finance.phases[kyc.phase].name))).toBe(true);
-    const item = items.find((b) => b.textContent?.includes("KYC-process"))!;
+    const item = items.find((b) => b.textContent?.includes("KYC process"))!;
     await userEvent.click(item);
     expect(item).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText(kyc.desc)).toBeInTheDocument();
@@ -131,39 +138,80 @@ describe("CustomerJourney", () => {
     render(<CustomerJourney />);
     const first = finance.touchpoints[0][0].name;
     expect(screen.queryByText(first)).not.toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Touchpoints" }));
+    await userEvent.click(screen.getByRole("button", { name: /Touchpoints/ }));
     expect(screen.getByText(first)).toBeInTheDocument();
   });
 
   it("a matrix cell opens its details", async () => {
     render(<CustomerJourney />);
-    const row = MATRIX_ROWS.find((r) => r.id === "mindset")!;
-    const c = row.cells[0]!;
+    const c = MATRIX_ROWS.find((r) => r.id === "mindset")!.cells[0]!;
     await userEvent.click(screen.getByRole("button", { name: new RegExp(c.headline!) }));
     const dialog = screen.getByRole("dialog");
     expect(within(dialog).getByRole("heading", { name: c.headline })).toBeInTheDocument();
-    expect(within(dialog).getByText(`Fas 1 · ${finance.phases[0].name}`)).toBeInTheDocument();
-    await userEvent.click(within(dialog).getByRole("button", { name: "Stäng" }));
+    expect(within(dialog).getByText(`Phase 1 · ${finance.phases[0].name}`)).toBeInTheDocument();
+    await userEvent.click(within(dialog).getByRole("button", { name: "Close" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("Insights opens the prioritised focus areas for the segment", async () => {
+  it("Insights opens the priority focus areas for the segment", async () => {
     render(<CustomerJourney />);
     await userEvent.click(screen.getByRole("button", { name: "Insights" }));
-    const dialog = screen.getByRole("dialog", { name: "Insights & prioritering" });
-    expect(within(dialog).getByText(`${finance.name} · Alla kunder · Alla`)).toBeInTheDocument();
+    const dialog = screen.getByRole("dialog", { name: "Insights & priorities" });
+    expect(within(dialog).getByText(`${finance.name} · All customers · All`)).toBeInTheDocument();
     expect(within(dialog).getAllByRole("listitem").length).toBeGreaterThan(1);
   });
 
-  it("the Analysera field takes a question and says the analysis isn't on yet", async () => {
+  it("the Analyse field takes a question and says the analysis is not on yet", async () => {
     render(<CustomerJourney />);
-    const examples = screen.getByRole("list", { name: "Exempelfrågor" });
-    const first = within(examples).getAllByRole("button")[0];
+    const first = within(screen.getByRole("list", { name: "Example questions" })).getAllByRole("button")[0];
     expect(first).toHaveTextContent(finance.personas[1].name);
     await userEvent.click(first);
-    expect(screen.getByRole("textbox", { name: "Analysera" })).toHaveValue(first.textContent);
-    expect(screen.getByRole("status")).toHaveTextContent("AI-analysen är inte aktiverad än");
-    await userEvent.click(within(screen.getByRole("status")).getByRole("button", { name: "Rensa" }));
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Analyse" })).toHaveValue(first.textContent);
+    const status = screen.getAllByRole("status").find((s) => s.textContent?.includes("AI analysis"))!;
+    expect(status).toHaveTextContent("AI analysis is not switched on yet");
+    await userEvent.click(within(status).getByRole("button", { name: "Clear" }));
+    expect(screen.queryAllByRole("status").some((s) => s.textContent?.includes("AI analysis"))).toBe(false);
+  });
+});
+
+describe("complexity filter", () => {
+  it("is always visible with all steps, and starts on All", () => {
+    render(<CustomerJourney />);
+    const g = complexity();
+    expect(within(g).getAllByRole("button").map((b) => b.textContent)).toEqual(["All", "Step 1 · Easy", "Step 2 · Medium", "Step 3 · Advanced"]);
+    expect(within(g).getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("step 1 shows only the easy rows, and the gap analysis, AI and Insights wait for later steps", async () => {
+    render(<CustomerJourney />);
+    await userEvent.click(within(complexity()).getByRole("button", { name: /Step 1/ }));
+    for (const r of MATRIX_ROWS) {
+      if (ROW_STEP[r.id] === 1) expect(screen.getByText(r.name)).toBeInTheDocument();
+      else expect(screen.queryByText(r.name)).not.toBeInTheDocument();
+    }
+    expect(screen.getByText(/The gap analysis comes in step 2/)).toBeInTheDocument();
+    expect(screen.getByText(/AI analysis of the data comes in step 3/)).toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "Show opportunities for a phase" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Insights/ })).toBeDisabled();
+  });
+
+  it("is cumulative: step 2 adds its rows and the gap analysis", async () => {
+    render(<CustomerJourney />);
+    await userEvent.click(within(complexity()).getByRole("button", { name: /Step 2/ }));
+    for (const r of MATRIX_ROWS) {
+      if (ROW_STEP[r.id] <= 2) expect(screen.getByText(r.name)).toBeInTheDocument();
+      else expect(screen.queryByText(r.name)).not.toBeInTheDocument();
+    }
+    expect(screen.getByRole("group", { name: "Show opportunities for a phase" })).toBeInTheDocument();
+    expect(screen.getByText("Showing steps 1 to 2")).toBeInTheDocument();
+  });
+
+  it("a roadmap card and a Show step button switch the step too", async () => {
+    render(<CustomerJourney />);
+    const roadmap = screen.getByRole("region", { name: /Roadmap/ });
+    await userEvent.click(within(roadmap).getByRole("button", { name: /Map the journey/ }));
+    expect(within(complexity()).getByRole("button", { name: /Step 1/ })).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(screen.getByRole("button", { name: "Show step 2" }));
+    expect(within(complexity()).getByRole("button", { name: /Step 2/ })).toHaveAttribute("aria-pressed", "true");
   });
 });

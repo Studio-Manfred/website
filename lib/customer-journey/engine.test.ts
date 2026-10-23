@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { INDUSTRIES } from "./datasets";
+import { ROW_STEP, STEPS } from "./levels";
 import { MATRIX_GROUPS, MATRIX_ROWS } from "./matrix";
 import {
   buildInsights,
@@ -34,9 +35,15 @@ describe("customer journey data", () => {
     }
   });
 
-  it("names no real client", () => {
-    const text = JSON.stringify([INDUSTRIES, MATRIX_ROWS]);
+  it("names no real client and is in English", () => {
+    const text = JSON.stringify([INDUSTRIES, MATRIX_ROWS, MATRIX_GROUPS]);
     expect(text).not.toMatch(/lysa/i);
+    expect(text).not.toMatch(/[åäöÅÄÖ]/);
+  });
+
+  it("every matrix row has a complexity step", () => {
+    for (const r of MATRIX_ROWS) expect([1, 2, 3]).toContain(ROW_STEP[r.id]);
+    expect(STEPS.map((s) => s.step)).toEqual([1, 2, 3]);
   });
 
   it("every matrix row has six cells and belongs to a group", () => {
@@ -126,14 +133,24 @@ describe("opportunities", () => {
   });
 });
 
-describe("matrix by role", () => {
-  it("shows every row for all roles", () => {
-    const n = visibleGroups("all").reduce((s, g) => s + g.rows.length, 0);
-    expect(n).toBe(MATRIX_ROWS.length);
+describe("matrix by role and step", () => {
+  const count = (gs: ReturnType<typeof visibleGroups>) => gs.reduce((s, g) => s + g.rows.length, 0);
+
+  it("shows every row for all roles and every step", () => {
+    expect(count(visibleGroups("all", null))).toBe(MATRIX_ROWS.length);
+  });
+
+  it("a step shows its rows and the steps before it", () => {
+    const step1 = visibleGroups("all", 1);
+    for (const g of step1) for (const r of g.rows) expect(ROW_STEP[r.id]).toBe(1);
+    const step2 = count(visibleGroups("all", 2));
+    expect(step2).toBe(MATRIX_ROWS.filter((r) => ROW_STEP[r.id] <= 2).length);
+    expect(count(step1)).toBeLessThan(step2);
+    expect(visibleGroups("all", 1).map((g) => g.label)).not.toContain("Internal Services");
   });
 
   it("only rows for the role, and no empty groups", () => {
-    const groups = visibleGroups("arkitekt");
+    const groups = visibleGroups("arkitekt", null);
     expect(groups.map((g) => g.label)).toContain("Internal Services");
     for (const g of groups) {
       expect(g.rows.length).toBeGreaterThan(0);
@@ -148,13 +165,14 @@ describe("insights", () => {
     expect(list.length).toBeGreaterThan(0);
     expect(list.length).toBeLessThanOrEqual(3);
     expect(list[0].title).toMatch(/Churn/);
+    expect(JSON.stringify(list)).not.toMatch(/[åäöÅÄÖ]/);
     expect(list[0].problem).toContain(finance.name);
   });
 
   it("the support insight is always there when nothing else applies", () => {
     const calm = { ...finance.metrics.lojal, churn: "2%", nps: "80", csat: "4.8", ob: "4.5", dep: "90%" };
     const list = buildInsights(calm, finance);
-    expect(list.map((i) => i.title)).toEqual(["Support: pre-churn support-cost är ett varningstecken"]);
+    expect(list.map((i) => i.title)).toEqual(["Support: pre-churn support cost is a warning sign"]);
   });
 
   it("watch points compare the loyal and churn-risk segments", () => {

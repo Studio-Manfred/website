@@ -2,15 +2,17 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import type { Industry, IndustryId, Persona } from "@/lib/customer-journey/types";
+import type { Step } from "@/lib/customer-journey/levels";
+import { StepBars, StepFilter } from "./steps";
 import { label, personaColor, pill } from "./theme";
 
 export const ROLES = [
-  { id: "all", name: "Alla" },
+  { id: "all", name: "All" },
   { id: "designer", name: "Designer" },
   { id: "pm", name: "PM" },
   { id: "cx", name: "CX" },
   { id: "leadership", name: "Leadership" },
-  { id: "arkitekt", name: "Systemarkitekt" },
+  { id: "arkitekt", name: "Architect" },
 ] as const;
 
 /** null = no persona, "all" = compare every persona, else a persona id. */
@@ -29,6 +31,10 @@ type Props = {
   role: string;
   onRole: (id: string) => void;
   onInsights: () => void;
+  /** Insights belongs to step 3; before that the button is off. */
+  insightsOn: boolean;
+  step: Step | null;
+  onStep: (s: Step | null) => void;
 };
 
 function Chip({ name, value, onClear }: { name: string; value: string; onClear: () => void }) {
@@ -39,7 +45,7 @@ function Chip({ name, value, onClear }: { name: string; value: string; onClear: 
       <button
         type="button"
         onClick={onClear}
-        aria-label={`Ta bort filtret ${name}`}
+        aria-label={`Remove the ${name} filter`}
         className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-white hover:text-[var(--color-business-blue)]"
       >
         <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -51,7 +57,7 @@ function Chip({ name, value, onClear }: { name: string; value: string; onClear: 
 }
 
 export function FilterBar(props: Props) {
-  const { industries, industry, onIndustry, segments, seg, onSeg, personas, persona, onPersona, role, onRole, onInsights } = props;
+  const { industries, industry, onIndustry, segments, seg, onSeg, personas, persona, onPersona, role, onRole, onInsights, insightsOn, step, onStep } = props;
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
@@ -81,9 +87,9 @@ export function FilterBar(props: Props) {
   const chosen = persona && persona !== "all" ? personas.find((p) => p.id === persona) : null;
   const chips: { name: string; value: string; clear: () => void }[] = [];
   if (seg !== segments[0]?.id) chips.push({ name: "Segment", value: segLabel, clear: () => onSeg(segments[0].id) });
-  if (persona === "all") chips.push({ name: "Persona", value: "Jämför alla", clear: () => onPersona(null) });
+  if (persona === "all") chips.push({ name: "Persona", value: "Compare all", clear: () => onPersona(null) });
   if (chosen) chips.push({ name: "Persona", value: `${chosen.emoji} ${chosen.name}`, clear: () => onPersona(null) });
-  if (role !== "all") chips.push({ name: "Vy", value: ROLES.find((r) => r.id === role)?.name ?? role, clear: () => onRole("all") });
+  if (role !== "all") chips.push({ name: "View", value: ROLES.find((r) => r.id === role)?.name ?? role, clear: () => onRole("all") });
   const reset = () => {
     onSeg(segments[0].id);
     onPersona(null);
@@ -93,7 +99,7 @@ export function FilterBar(props: Props) {
   return (
     <div className="sticky top-0 z-30 -mx-6 md:-mx-12 lg:-mx-8 border-y border-[var(--color-border-default)] bg-white/95 px-6 md:px-12 lg:px-8 py-3 backdrop-blur">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <div role="group" aria-label="Bransch" className="flex flex-wrap gap-2">
+        <div role="group" aria-label="Industry" className="flex flex-wrap gap-2">
           {industries.map((ind) => (
             <button key={ind.id} type="button" aria-pressed={industry === ind.id} onClick={() => onIndustry(ind.id)} className={pill(industry === ind.id)}>
               <span aria-hidden="true" className="mr-1.5">{ind.emoji}</span>
@@ -117,7 +123,7 @@ export function FilterBar(props: Props) {
             Filter
             {chips.length > 0 && (
               <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-business-blue)] px-1.5 text-xs font-extrabold text-white">
-                <span className="sr-only">, aktiva: </span>
+                <span className="sr-only">, active: </span>
                 {chips.length}
               </span>
             )}
@@ -128,17 +134,17 @@ export function FilterBar(props: Props) {
 
           {chips.length > 0 ? (
             <>
-              <ul aria-label="Aktiva filter" className="flex min-w-0 gap-2 overflow-x-auto [scrollbar-width:none]">
+              <ul aria-label="Active filters" className="flex min-w-0 gap-2 overflow-x-auto [scrollbar-width:none]">
                 {chips.map((c) => (
                   <Chip key={c.name} name={c.name} value={c.value} onClear={c.clear} />
                 ))}
               </ul>
               <button type="button" onClick={reset} className="shrink-0 text-sm font-light underline underline-offset-4 hover:text-[var(--color-business-blue)]">
-                Återställ
+                Reset
               </button>
             </>
           ) : (
-            <p className="text-sm font-light text-[var(--color-text-muted)]">Inga filter valda</p>
+            <p className="text-sm font-light text-[var(--color-text-muted)]">No filters selected</p>
           )}
 
           {open && (
@@ -169,7 +175,7 @@ export function FilterBar(props: Props) {
                 <p id={`${panelId}-p`} className={`${label} mb-3`}>Persona</p>
                 <div role="group" aria-labelledby={`${panelId}-p`} className="flex flex-wrap gap-2">
                   <button type="button" aria-pressed={persona === null} onClick={() => onPersona(null)} className={pill(persona === null)}>
-                    Ingen
+                    None
                   </button>
                   {personas.map((p) => (
                     <button key={p.id} type="button" aria-pressed={persona === p.id} onClick={() => onPersona(p.id)} className={`${pill(persona === p.id)} inline-flex items-center gap-2`}>
@@ -179,12 +185,12 @@ export function FilterBar(props: Props) {
                     </button>
                   ))}
                   <button type="button" aria-pressed={persona === "all"} onClick={() => onPersona("all")} className={pill(persona === "all")}>
-                    Jämför alla
+                    Compare all
                   </button>
                 </div>
               </div>
               <div className="border-b border-[var(--color-border-default)] p-5">
-                <p id={`${panelId}-r`} className={`${label} mb-3`}>Vy</p>
+                <p id={`${panelId}-r`} className={`${label} mb-3`}>View</p>
                 <div role="group" aria-labelledby={`${panelId}-r`} className="flex flex-wrap gap-2">
                   {ROLES.map((r) => (
                     <button key={r.id} type="button" aria-pressed={role === r.id} onClick={() => onRole(r.id)} className={pill(role === r.id)}>
@@ -195,7 +201,7 @@ export function FilterBar(props: Props) {
               </div>
               <div className="flex items-center justify-between p-5">
                 <button type="button" onClick={reset} className="text-sm font-light underline underline-offset-4 hover:text-[var(--color-business-blue)]">
-                  Återställ alla
+                  Reset all
                 </button>
                 <button
                   type="button"
@@ -205,7 +211,7 @@ export function FilterBar(props: Props) {
                   }}
                   className="rounded-full bg-[var(--color-business-blue)] px-5 py-2 text-sm text-white hover:bg-[var(--color-interactive-brand-bg-hover)]"
                 >
-                  Klar
+                  Done
                 </button>
               </div>
             </div>
@@ -215,13 +221,24 @@ export function FilterBar(props: Props) {
         <button
           type="button"
           onClick={onInsights}
-          className="flex shrink-0 items-center gap-2 rounded-full bg-[var(--color-business-blue)] px-4 py-2 text-sm text-white hover:bg-[var(--color-interactive-brand-bg-hover)]"
+          disabled={!insightsOn}
+          title={insightsOn ? undefined : "Insights comes in step 3"}
+          className="flex shrink-0 items-center gap-2 rounded-full bg-[var(--color-business-blue)] px-4 py-2 text-sm text-white hover:bg-[var(--color-interactive-brand-bg-hover)] disabled:cursor-not-allowed disabled:bg-[var(--color-bg-muted)] disabled:text-[var(--color-text-secondary)]"
         >
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z" />
           </svg>
           Insights
+          {!insightsOn && (
+            <span className="inline-flex items-center gap-1.5 text-xs">
+              <StepBars step={3} />
+              <span>Step 3</span>
+            </span>
+          )}
         </button>
+      </div>
+      <div className="mt-3 border-t border-[var(--color-border-default)] pt-3">
+        <StepFilter step={step} onStep={onStep} />
       </div>
     </div>
   );

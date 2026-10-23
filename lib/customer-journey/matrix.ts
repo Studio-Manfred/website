@@ -6,70 +6,70 @@ import type { MatrixGroup, MatrixRow } from "./types";
 export const MATRIX_ROWS: MatrixRow[] = [
   {
     "id": "mindset",
-    "name": "Tankesätt & mål",
+    "name": "Mindset & goals",
     "kind": "qual",
-    "source": "Djupintervjuer",
+    "source": "In-depth interviews",
     "roles": [
       "designer",
       "pm"
     ],
     "cells": [
       {
-        "headline": "Viljan finns — vägen saknas",
-        "quote": "\"Vet att jag borde spara men vet inte hur.\"",
+        "headline": "The will is there, the way isn't",
+        "quote": "\"I know I should save, but I don't know how.\"",
         "details": [
           {
-            "label": "Primärt mål",
-            "value": "Pension 34%, Bostad 28%"
+            "label": "Main goal",
+            "value": "Pension 34%, home 28%"
           }
         ]
       },
       {
-        "headline": "Avgiften är deal-breaker",
-        "quote": "\"Tröttnade på höga avgifter hos banken.\"",
+        "headline": "Fees are the deal-breaker",
+        "quote": "\"I got tired of high fees at the bank.\"",
         "details": [
           {
             "label": "Trigger",
-            "value": "Hög avgift / vänners tips"
+            "value": "High fees / tips from friends"
           },
           {
-            "label": "Tid till beslut",
-            "value": "Median 8 dagar"
+            "label": "Time to decide",
+            "value": "Median 8 days"
           }
         ]
       },
       {
-        "headline": "Positivt överraskad",
-        "quote": "\"Snabbare än jag trodde. BankID var smidigt.\"",
+        "headline": "Pleasantly surprised",
+        "quote": "\"Faster than I thought. The digital ID was smooth.\"",
         "details": [
           {
-            "label": "Vanligaste friction",
-            "value": "Förvirring kring risknivå"
+            "label": "Most common friction",
+            "value": "Confusion about risk level"
           },
           {
-            "label": "Tid",
+            "label": "Time",
             "value": "Median 8 min"
           }
         ]
       },
       {
-        "headline": "Lättnad — nu rullar det",
-        "quote": "\"Satte igång autogiro direkt.\""
+        "headline": "Relief: now it's running",
+        "quote": "\"I set up direct debit straight away.\""
       },
       {
-        "headline": "Passiv tillit — inte ointresse",
-        "quote": "\"Loggar in en gång i månaden. Gillar att det sköter sig.\""
+        "headline": "Passive trust, not lack of interest",
+        "quote": "\"I log in once a month. I like that it takes care of itself.\""
       },
       {
-        "headline": "Livshändelse, sällan ilska",
-        "quote": "\"Inte missnöjd — behövde bara likviditeten.\"",
+        "headline": "A life event, rarely anger",
+        "quote": "\"Not unhappy. I just needed the cash.\"",
         "details": [
           {
-            "label": "Känsla vid exit",
-            "value": "Neutral, inte bitter"
+            "label": "Feeling at exit",
+            "value": "Neutral, not bitter"
           },
           {
-            "label": "Skulle återvända",
+            "label": "Would come back",
             "value": "42%"
           }
         ]
@@ -80,7 +80,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "id": "nps",
     "name": "NPS",
     "kind": "quant",
-    "source": "Kvartalsvisa enkäter",
+    "source": "Quarterly surveys",
     "roles": [
       "pm"
     ],
@@ -95,13 +95,13 @@ export const MATRIX_ROWS: MatrixRow[] = [
       },
       {
         "value": "64",
-        "label": "NPS vid first deposit",
+        "label": "NPS at first deposit",
         "trend": "up",
         "trendText": "+2"
       },
       {
         "value": "SEG_NPS",
-        "label": "Löpande NPS",
+        "label": "Ongoing NPS",
         "trend": "up",
         "trendText": "+6 YoY"
       },
@@ -109,7 +109,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
         "value": "22",
         "label": "Exit NPS",
         "trend": "down",
-        "trendText": "−40 vs aktiv"
+        "trendText": "−40 vs active"
       }
     ]
   },
@@ -117,7 +117,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "id": "csat",
     "name": "CSAT",
     "kind": "quant",
-    "source": "Löpande enkäter",
+    "source": "Ongoing surveys",
     "roles": [
       "pm"
     ],
@@ -134,11 +134,11 @@ export const MATRIX_ROWS: MatrixRow[] = [
         "value": "4.1",
         "label": "First experience /5",
         "trend": "flat",
-        "trendText": "stabil"
+        "trendText": "stable"
       },
       {
         "value": "SEG_CSAT",
-        "label": "Löpande CSAT /5",
+        "label": "Ongoing CSAT /5",
         "trend": "up",
         "trendText": "+0.1"
       },
@@ -154,7 +154,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "id": "onb_met",
     "name": "Onboarding metrics",
     "kind": "quant",
-    "source": "Onboarding-enkäter",
+    "source": "Onboarding surveys",
     "roles": [
       "pm"
     ],
@@ -162,9 +162,9 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "8",
-        "label": "Median sign-up tid (min)",
+        "label": "Median sign-up time (min)",
         "trend": "flat",
-        "trendText": "mål: 7"
+        "trendText": "target: 7"
       },
       {
         "value": "SEG_OB",
@@ -174,7 +174,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
       },
       {
         "value": "82%",
-        "label": "Rekommenderar onboardingen",
+        "label": "Would recommend onboarding",
         "trend": "up",
         "trendText": "+3%"
       },
@@ -196,19 +196,19 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "92%",
-        "label": "Dag-30 retention",
+        "label": "Day-30 retention",
         "trend": "up",
         "trendText": "+1%"
       },
       {
         "value": "88%",
-        "label": "Dag-90 retention",
+        "label": "Day-90 retention",
         "trend": "flat",
-        "trendText": "stabil"
+        "trendText": "stable"
       },
       {
         "value": "SEG_RET",
-        "label": "12-mån retention",
+        "label": "12-month retention",
         "trend": "up",
         "trendText": "+2%"
       },
@@ -222,7 +222,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "aum",
-    "name": "AUM per kund (SEK)",
+    "name": "Assets per customer (SEK)",
     "kind": "quant",
     "source": "Business metrics",
     "roles": [
@@ -236,27 +236,27 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "SEG_AUM",
-        "label": "Median AUM vid aktivering",
+        "label": "Median assets at activation",
         "trend": "up",
         "trendText": "+8k YoY"
       },
       {
         "value": "SEG_AUM",
-        "label": "Median AUM aktiv kund",
+        "label": "Median assets, active customer",
         "trend": "up",
         "trendText": "+12% YoY"
       },
       {
         "value": "SEG_AUM",
-        "label": "AUM vid exit",
+        "label": "Assets at exit",
         "trend": "down",
-        "trendText": "−22% vs aktiv"
+        "trendText": "−22% vs active"
       }
     ]
   },
   {
     "id": "rev",
-    "name": "Intäkt per kund (SEK/år)",
+    "name": "Revenue per customer (SEK/year)",
     "kind": "quant",
     "source": "Business metrics",
     "roles": [
@@ -270,12 +270,12 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "SEG_REV",
-        "label": "Intäkt år 1",
+        "label": "Revenue year 1",
         "trend": "up"
       },
       {
         "value": "SEG_REV",
-        "label": "Intäkt aktiv kund/år",
+        "label": "Revenue per active customer/year",
         "trend": "up",
         "trendText": "+9% YoY"
       },
@@ -286,7 +286,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "id": "churnscore",
     "name": "Churn risk-score",
     "kind": "quant",
-    "source": "Prediktiv modell",
+    "source": "Predictive model",
     "roles": [
       "leadership",
       "cx",
@@ -298,18 +298,18 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "12%",
-        "label": "Hög-risk dag 90",
+        "label": "High risk at day 90",
         "trend": "flat"
       },
       {
         "value": "SEG_CHURN",
-        "label": "Aktiva med hög risk",
+        "label": "Active customers at high risk",
         "trend": "down",
         "trendText": "−2pp YoY"
       },
       {
         "value": "100%",
-        "label": "Per definition churnad",
+        "label": "Churned by definition",
         "trend": "flat"
       }
     ]
@@ -328,18 +328,18 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "2.1",
-        "label": "Funktioner dag 1",
+        "label": "Features on day 1",
         "trend": "flat",
-        "trendText": "av 10"
+        "trendText": "of 10"
       },
       {
         "value": "3.8",
-        "label": "Funktioner månad 1",
+        "label": "Features in month 1",
         "trend": "up"
       },
       {
         "value": "SEG_ADOPT",
-        "label": "Funktioner median aktiv",
+        "label": "Features, median active",
         "trend": "up",
         "trendText": "+0.4 YoY"
       },
@@ -365,7 +365,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "SEG_SCOST",
-        "label": "Kostnad per onboarding-ärende",
+        "label": "Cost per onboarding ticket",
         "trend": "down",
         "trendText": "−8% YoY"
       },
@@ -380,13 +380,13 @@ export const MATRIX_ROWS: MatrixRow[] = [
         "value": "SEG_SCOST",
         "label": "Support cost pre-churn",
         "trend": "up",
-        "trendText": "+31% vs snitt"
+        "trendText": "+31% vs average"
       }
     ]
   },
   {
     "id": "sessions",
-    "name": "Appsessioner",
+    "name": "App sessions",
     "kind": "behaviour",
     "source": "App usage data",
     "roles": [
@@ -397,23 +397,23 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "3.1",
-        "label": "Sessioner vecka 1",
+        "label": "Sessions in week 1",
         "trend": "flat"
       },
       {
         "value": "11",
-        "label": "Sessioner månad 1",
+        "label": "Sessions in month 1",
         "trend": "up"
       },
       {
         "value": "SEG_SESS",
-        "label": "Sessioner/mån (median)",
+        "label": "Sessions/month (median)",
         "trend": "flat",
         "trendText": "iOS 62%"
       },
       {
         "value": "1.8",
-        "label": "Sessioner/mån pre-churn",
+        "label": "Sessions/month pre-churn",
         "trend": "down",
         "trendText": "−78%"
       }
@@ -421,7 +421,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "deposit",
-    "name": "Insättningsbeteende",
+    "name": "Deposit behaviour",
     "kind": "behaviour",
     "source": "App + adoption",
     "roles": [
@@ -432,24 +432,24 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "68%",
-        "label": "Insättning dag 1–7",
+        "label": "Deposit on day 1–7",
         "trend": "flat"
       },
       {
         "value": "SEG_DEP",
-        "label": "Autogiro uppsatt",
+        "label": "Direct debit set up",
         "trend": "up",
         "trendText": "+5% YoY"
       },
       {
         "value": "84%",
-        "label": "Aktiva insättningar",
+        "label": "Active deposits",
         "trend": "up",
         "trendText": "+3%"
       },
       {
         "value": "38%",
-        "label": "Insättning 60 dgr pre-churn",
+        "label": "Deposits 60 days pre-churn",
         "trend": "down",
         "trendText": "−46%"
       }
@@ -457,7 +457,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "appstore",
-    "name": "App Store betyg",
+    "name": "App Store rating",
     "kind": "quant",
     "source": "App Store & Play",
     "roles": [
@@ -468,32 +468,32 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "4.3",
-        "label": "Snittbetyg (600 reviews)",
+        "label": "Average rating (600 reviews)",
         "trend": "up",
         "trendText": "+0.2 vs 2024"
       },
       {
         "value": "4.5",
-        "label": "Betyg: onboarding-kommentarer",
+        "label": "Rating: onboarding comments",
         "trend": "up"
       },
       null,
       {
         "value": "SEG_APP",
-        "label": "Löpande betyg",
+        "label": "Ongoing rating",
         "trend": "flat",
         "trendText": "iOS 4.4 / Android 4.2"
       },
       {
         "value": "3.1",
-        "label": "Betyg churnade kunder",
+        "label": "Rating from churned customers",
         "trend": "down"
       }
     ]
   },
   {
     "id": "support",
-    "name": "Support & ärenden",
+    "name": "Support & tickets",
     "kind": "quant",
     "source": "Tickets + CSAT",
     "roles": [
@@ -505,13 +505,13 @@ export const MATRIX_ROWS: MatrixRow[] = [
       null,
       {
         "value": "12%",
-        "label": "Kunder med ärende i onboarding",
+        "label": "Customers with a ticket in onboarding",
         "trend": "down",
         "trendText": "−3% YoY"
       },
       {
         "value": "8%",
-        "label": "Ärenden inom 30 dgr",
+        "label": "Tickets within 30 days",
         "trend": "down"
       },
       {
@@ -522,7 +522,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
       },
       {
         "value": "18%",
-        "label": "Churnkunder stötte på support",
+        "label": "Churned customers who contacted support",
         "trend": "up",
         "trendText": "+5%"
       }
@@ -530,9 +530,9 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "support_qual",
-    "name": "Support — kundröster",
+    "name": "Support: customer voices",
     "kind": "qual",
-    "source": "Fritext + sentiment",
+    "source": "Free text + sentiment",
     "roles": [
       "cx",
       "designer",
@@ -541,70 +541,70 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "cells": [
       null,
       {
-        "headline": "Förvirring kring produktval",
-        "quote": "\"Förstår inte skillnaden på ISK och kapitalförsäkring.\"",
+        "headline": "Confusion about which product",
+        "quote": "\"I don't understand the difference between the account types.\"",
         "sentiment": "mixed",
-        "sentimentLabel": "Neutral 58% · Negativ 28%",
+        "sentimentLabel": "Neutral 58% · Negative 28%",
         "details": [
           {
-            "label": "Vanligaste ämne",
-            "value": "Kontoform (ISK vs KF)"
+            "label": "Most common topic",
+            "value": "Account type"
           }
         ]
       },
       {
-        "headline": "BankID-problem och risknivå-osäkerhet",
-        "quote": "\"Fastnade på risknivå-steget. Kan jag ändra sen?\"",
+        "headline": "Digital ID problems and unsure about risk level",
+        "quote": "\"I got stuck on the risk level step. Can I change it later?\"",
         "sentiment": "neg",
-        "sentimentLabel": "Negativ 44% · Neutral 41%",
+        "sentimentLabel": "Negative 44% · Neutral 41%",
         "details": [
           {
-            "label": "Top 2 ämnen",
-            "value": "BankID-fel (31%) + Risknivå (29%)"
+            "label": "Top 2 topics",
+            "value": "Digital ID errors (31%) + risk level (29%)"
           },
           {
-            "label": "CSAT efter",
+            "label": "CSAT after",
             "value": "3.8/5"
           }
         ]
       },
       {
-        "headline": "Insättning — osäkerhet kring timing",
-        "quote": "\"Har skickat bankgiro för 3 dagar sen. Är det normalt?\"",
+        "headline": "Deposits: unsure about timing",
+        "quote": "\"I sent a transfer 3 days ago. Is that normal?\"",
         "sentiment": "neg",
-        "sentimentLabel": "Negativ 52% · Neutral 35%",
+        "sentimentLabel": "Negative 52% · Neutral 35%",
         "details": [
           {
-            "label": "Vanligaste fråga",
-            "value": "Var är mina pengar?"
+            "label": "Most common question",
+            "value": "Where is my money?"
           }
         ]
       },
       {
-        "headline": "Navigering och skattefrågor",
-        "quote": "\"Hur hittar jag skatterapporten?\"",
+        "headline": "Navigation and tax questions",
+        "quote": "\"How do I find the tax report?\"",
         "sentiment": "pos",
-        "sentimentLabel": "Positiv 41% · Neutral 45%",
+        "sentimentLabel": "Positive 41% · Neutral 45%",
         "details": [
           {
-            "label": "Top ämnen",
-            "value": "Skatt (28%) + Riskändring (24%)"
+            "label": "Top topics",
+            "value": "Tax (28%) + changing risk (24%)"
           },
           {
-            "label": "CSAT efter",
+            "label": "CSAT after",
             "value": "4.0/5"
           }
         ]
       },
       {
-        "headline": "Avslut — outnyttjat fönster",
-        "quote": "\"Ingen hörde av sig efteråt.\"",
+        "headline": "Closing: a missed window",
+        "quote": "\"Nobody got in touch afterwards.\"",
         "sentiment": "neg",
-        "sentimentLabel": "Negativ 61% · Neutral 31%",
+        "sentimentLabel": "Negative 61% · Neutral 31%",
         "details": [
           {
             "label": "Outreach post-churn",
-            "value": "0% idag"
+            "value": "0% today"
           }
         ]
       }
@@ -612,9 +612,9 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "qualimpr",
-    "name": "Förbättringsinsikter",
+    "name": "Improvement insights",
     "kind": "qual",
-    "source": "Intervjuer + enkäter",
+    "source": "Interviews + surveys",
     "roles": [
       "designer",
       "pm"
@@ -622,40 +622,40 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "cells": [
       null,
       {
-        "headline": "Bygg ett interaktivt jämförelseverktyg",
-        "quote": "Lägg till \"Jämför din nuvarande fond\" på webbplatsen.",
+        "headline": "Build an interactive comparison tool",
+        "quote": "Add \"Compare with what you have today\" to the website.",
         "details": [
           {
             "label": "Effort",
-            "value": "Medel"
+            "value": "Medium"
           },
           {
             "label": "Reward",
-            "value": "Hög konverteringseffekt"
+            "value": "Strong effect on conversion"
           }
         ]
       },
       {
-        "headline": "Gör risknivå-steget scenario-baserat",
-        "quote": "\"Om du investerat 100 000 kr med denna risknivå 2019–2024...\"",
+        "headline": "Make the risk level step scenario-based",
+        "quote": "\"If you had invested 100,000 kr at this risk level in 2019–2024...\"",
         "details": [
           {
             "label": "Effort",
-            "value": "Medel"
+            "value": "Medium"
           },
           {
             "label": "Reward",
-            "value": "22% lägre drop-off"
+            "value": "22% less drop-off"
           }
         ]
       },
       {
-        "headline": "Flytta autogiro till onboarding",
-        "quote": "Autogiro-kunder churnar 40% mindre. Gör det obligatoriskt.",
+        "headline": "Move direct debit into onboarding",
+        "quote": "Customers with direct debit churn 40% less. Make it a required step.",
         "details": [
           {
             "label": "Effort",
-            "value": "Låg"
+            "value": "Low"
           },
           {
             "label": "Reward",
@@ -664,12 +664,12 @@ export const MATRIX_ROWS: MatrixRow[] = [
         ]
       },
       {
-        "headline": "Synliggör \"Ändra risknivå\"",
-        "quote": "Tar i snitt 5 min att hitta. Tydlig länk på portföljskärmen.",
+        "headline": "Make \"Change risk level\" visible",
+        "quote": "Takes 5 minutes on average to find. Add a clear link on the portfolio screen.",
         "details": [
           {
             "label": "Effort",
-            "value": "Låg"
+            "value": "Low"
           },
           {
             "label": "Reward",
@@ -678,12 +678,12 @@ export const MATRIX_ROWS: MatrixRow[] = [
         ]
       },
       {
-        "headline": "Starta post-churn outreach",
-        "quote": "42% kan tänka sig återvända. Automatiserad sekvens dag 30/90.",
+        "headline": "Start post-churn outreach",
+        "quote": "42% would consider coming back. An automated sequence on day 30 and 90.",
         "details": [
           {
             "label": "Effort",
-            "value": "Låg"
+            "value": "Low"
           },
           {
             "label": "Reward",
@@ -695,7 +695,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "capabilities",
-    "name": "Förmågor",
+    "name": "Capabilities",
     "kind": "quant",
     "source": "Service Blueprint",
     "roles": [
@@ -703,86 +703,86 @@ export const MATRIX_ROWS: MatrixRow[] = [
     ],
     "cells": [
       {
-        "headline": "Innehållsleverans & SEO",
-        "quote": "CMS, landningssidor, A/B-testramverk, SEO-pipeline. Ingen inloggning krävs.",
+        "headline": "Content delivery & SEO",
+        "quote": "CMS, landing pages, A/B testing, SEO pipeline. No login needed.",
         "details": [
           {
-            "label": "Systemnivå",
+            "label": "System level",
             "value": "Public / CDN"
           },
           {
-            "label": "Kritiska förmågor",
-            "value": "Snabb rendering, personalisering, spårning"
+            "label": "Critical capabilities",
+            "value": "Fast rendering, personalisation, tracking"
           }
         ]
       },
       {
-        "headline": "Identitets- & konverteringshantering",
-        "quote": "Registreringsflöde, BankID-integration, cookie consent, GA4-spårning.",
+        "headline": "Identity & conversion",
+        "quote": "Sign-up flow, digital ID integration, cookie consent, GA4 tracking.",
         "details": [
           {
-            "label": "Systemnivå",
+            "label": "System level",
             "value": "Auth + Analytics"
           },
           {
-            "label": "Kritiska förmågor",
-            "value": "BankID OAuth, funnel tracking, GDPR consent"
+            "label": "Critical capabilities",
+            "value": "Digital ID OAuth, funnel tracking, GDPR consent"
           }
         ]
       },
       {
-        "headline": "KYC, riskprofil & kontoskapande",
-        "quote": "KYC-motor, riskklassificeringsalgoritm, kontoöppning mot depåsystem.",
+        "headline": "KYC, risk profile & account creation",
+        "quote": "KYC engine, risk classification, account opening in the core system.",
         "details": [
           {
-            "label": "Systemnivå",
+            "label": "System level",
             "value": "Core Banking + KYC"
           },
           {
-            "label": "Kritiska förmågor",
-            "value": "Realtids-KYC, riskpoängsättning, depåöppning"
+            "label": "Critical capabilities",
+            "value": "Real-time KYC, risk scoring, account opening"
           }
         ]
       },
       {
-        "headline": "Betalningsinfrastruktur & onboarding-automation",
-        "quote": "Bankgirokoppling, autogiro-API, välkomstflöde-triggers, portföljsättning.",
+        "headline": "Payments infrastructure & onboarding automation",
+        "quote": "Bank transfer integration, direct debit API, welcome flow triggers, portfolio set-up.",
         "details": [
           {
-            "label": "Systemnivå",
+            "label": "System level",
             "value": "Payment + Core"
           },
           {
-            "label": "Kritiska förmågor",
-            "value": "Bankgiro API, autogiro Bankgirot, portfolio engine"
+            "label": "Critical capabilities",
+            "value": "Transfer API, direct debit, portfolio engine"
           }
         ]
       },
       {
-        "headline": "Portfölj, handel & skatteberäkning",
-        "quote": "Rebalansering, fondhandel, skatterapport-generering, NAV-uppdateringar.",
+        "headline": "Portfolio, trading & tax",
+        "quote": "Rebalancing, fund trading, tax reports, NAV updates.",
         "details": [
           {
-            "label": "Systemnivå",
+            "label": "System level",
             "value": "Investment Engine"
           },
           {
-            "label": "Kritiska förmågor",
-            "value": "Daglig rebalansering, skatteberäkning, NAV-feed"
+            "label": "Critical capabilities",
+            "value": "Daily rebalancing, tax calculation, NAV feed"
           }
         ]
       },
       {
-        "headline": "Avslut, portabilitet & retention",
-        "quote": "Uttagsflöde, kapitalöverföring, exit-triggers, win-back automationer.",
+        "headline": "Closing, switching & retention",
+        "quote": "Withdrawal flow, transfers out, exit triggers, win-back automation.",
         "details": [
           {
-            "label": "Systemnivå",
+            "label": "System level",
             "value": "CRM + Core Banking"
           },
           {
-            "label": "Kritiska förmågor",
-            "value": "Avslutningsprocess, portabilitets-API, CRM-automation"
+            "label": "Critical capabilities",
+            "value": "Closing process, switching API, CRM automation"
           }
         ]
       }
@@ -790,7 +790,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "dataevents",
-    "name": "Data & händelser",
+    "name": "Data & events",
     "kind": "quant",
     "source": "Service Blueprint",
     "roles": [
@@ -798,21 +798,21 @@ export const MATRIX_ROWS: MatrixRow[] = [
     ],
     "cells": [
       {
-        "headline": "Sidvisning, kampanjdata",
-        "quote": "PageView, UTM-parametrar, scroll-djup, kampanjattribuering.",
+        "headline": "Page views, campaign data",
+        "quote": "Page views, UTM parameters, scroll depth, campaign attribution.",
         "details": [
           {
             "label": "Events",
             "value": "page_view, campaign_click"
           },
           {
-            "label": "Lagring",
+            "label": "Storage",
             "value": "GA4, BigQuery"
           }
         ]
       },
       {
-        "headline": "Registreringsstart, BankID-initiation",
+        "headline": "Sign-up start, digital ID started",
         "quote": "registration_start, bankid_initiated, bankid_completed, form_field_interaction.",
         "details": [
           {
@@ -820,13 +820,13 @@ export const MATRIX_ROWS: MatrixRow[] = [
             "value": "registration_start, bankid_*"
           },
           {
-            "label": "Lagring",
+            "label": "Storage",
             "value": "PostgreSQL + event stream"
           }
         ]
       },
       {
-        "headline": "KYC-status, riskprofil, kontoöppnat",
+        "headline": "KYC status, risk profile, account opened",
         "quote": "kyc_submitted, kyc_approved, risk_score_set, account_created.",
         "details": [
           {
@@ -834,13 +834,13 @@ export const MATRIX_ROWS: MatrixRow[] = [
             "value": "kyc_*, account_created"
           },
           {
-            "label": "Lagring",
+            "label": "Storage",
             "value": "Core DB + audit log"
           }
         ]
       },
       {
-        "headline": "Insättning, autogiro-setup, portföljsättning",
+        "headline": "Deposit, direct debit set-up, portfolio set-up",
         "quote": "deposit_initiated, deposit_confirmed, autogiro_created, portfolio_allocated.",
         "details": [
           {
@@ -848,13 +848,13 @@ export const MATRIX_ROWS: MatrixRow[] = [
             "value": "deposit_*, autogiro_created"
           },
           {
-            "label": "Lagring",
-            "value": "Transaktionslogg + event bus"
+            "label": "Storage",
+            "value": "Transaction log + event bus"
           }
         ]
       },
       {
-        "headline": "Session, handel, rebalansering, skatt",
+        "headline": "Sessions, trading, rebalancing, tax",
         "quote": "session_start, rebalance_triggered, trade_executed, tax_report_generated.",
         "details": [
           {
@@ -862,13 +862,13 @@ export const MATRIX_ROWS: MatrixRow[] = [
             "value": "session_*, trade_*, rebalance_*"
           },
           {
-            "label": "Lagring",
+            "label": "Storage",
             "value": "Data warehouse (BigQuery)"
           }
         ]
       },
       {
-        "headline": "Uttagsbegäran, avslut, churn-signal",
+        "headline": "Withdrawal request, closing, churn signal",
         "quote": "withdrawal_requested, account_closed, churn_risk_flagged, winback_email_sent.",
         "details": [
           {
@@ -876,7 +876,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
             "value": "withdrawal_*, account_closed, churn_*"
           },
           {
-            "label": "Lagring",
+            "label": "Storage",
             "value": "CRM + event stream"
           }
         ]
@@ -885,7 +885,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "systemdeps",
-    "name": "Systemberoenden",
+    "name": "System dependencies",
     "kind": "quant",
     "source": "Service Blueprint",
     "roles": [
@@ -897,82 +897,82 @@ export const MATRIX_ROWS: MatrixRow[] = [
         "quote": "Cloudflare CDN · Contentful CMS · Google Analytics 4 · Hotjar.",
         "details": [
           {
-            "label": "Kritiskt",
+            "label": "Critical",
             "value": "CDN uptime, CMS publish pipeline"
           },
           {
             "label": "SLA",
-            "value": "99.9% tillgänglighet"
+            "value": "99.9% availability"
           }
         ]
       },
       {
-        "headline": "BankID, Auth, Consent",
-        "quote": "BankID (Finansiell ID-Teknik) · Auth0 / intern IAM · OneTrust consent.",
+        "headline": "Digital ID, auth, consent",
+        "quote": "Digital ID provider · Auth0 / internal IAM · OneTrust consent.",
         "details": [
           {
-            "label": "Kritiskt",
-            "value": "BankID-tillgänglighet"
+            "label": "Critical",
+            "value": "Digital ID availability"
           },
           {
             "label": "Fallback",
-            "value": "Manuell identifiering"
+            "value": "Manual identification"
           }
         ]
       },
       {
-        "headline": "KYC-leverantör, Depåsystem, Fondbörs",
-        "quote": "Trapets KYC · Euroclear depå · Nasdaq fondbörs · Skatteverket TIN-validering.",
+        "headline": "KYC provider, custody system, fund exchange",
+        "quote": "KYC provider · Euroclear custody · Nasdaq funds · tax ID validation.",
         "details": [
           {
-            "label": "Kritiskt",
-            "value": "KYC-motor, Euroclear API"
+            "label": "Critical",
+            "value": "KYC engine, Euroclear API"
           },
           {
             "label": "SLA",
-            "value": "< 30s KYC-svar"
+            "value": "< 30s KYC response"
           }
         ]
       },
       {
-        "headline": "Bankgirot, Autogiro, Portfolio Engine",
-        "quote": "Bankgirot API · Autogiro Bankgirot · Intern portfolio allocation engine.",
+        "headline": "Transfers, direct debit, portfolio engine",
+        "quote": "Transfer API · direct debit · internal portfolio allocation engine.",
         "details": [
           {
-            "label": "Kritiskt",
-            "value": "Bankgirot tillgänglighet"
+            "label": "Critical",
+            "value": "Transfer system availability"
           },
           {
             "label": "SLA",
-            "value": "T+1 insättning"
+            "value": "T+1 deposit"
           }
         ]
       },
       {
-        "headline": "Fondhandel, NAV-feed, Skattemotor",
-        "quote": "Nasdaq fondbörs · Bloomberg NAV-feed · Intern skattemotor · Notifikationstjänst.",
+        "headline": "Fund trading, NAV feed, tax engine",
+        "quote": "Nasdaq funds · Bloomberg NAV feed · internal tax engine · notification service.",
         "details": [
           {
-            "label": "Kritiskt",
-            "value": "NAV-feed, fondhandel"
+            "label": "Critical",
+            "value": "NAV feed, fund trading"
           },
           {
             "label": "SLA",
-            "value": "Daglig rebalansering 09:00"
+            "value": "Daily rebalancing at 09:00"
           }
         ]
       },
       {
-        "headline": "CRM, Bankgiro uttag, Portabilitet",
-        "quote": "Salesforce CRM · Bankgirot uttag · Intern portabilitets-API · Sendgrid mail.",
+        "headline": "CRM, withdrawals, switching",
+        "quote": "Salesforce CRM · transfer withdrawals · internal switching API · SendGrid email.",
         "details": [
           {
-            "label": "Kritiskt",
-            "value": "Uttagsprocessering"
+            "label": "Critical",
+            "value": "Withdrawal processing"
           },
           {
             "label": "SLA",
-            "value": "T+2 uttag"
+            "value": "T+2 withdrawal"
           }
         ]
       }
@@ -980,7 +980,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "automation",
-    "name": "Automationsgrad",
+    "name": "Level of automation",
     "kind": "quant",
     "source": "Service Blueprint",
     "roles": [
@@ -989,44 +989,44 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "cells": [
       {
         "value": "–",
-        "label": "Ej tillämpbart",
+        "label": "Not applicable",
         "trend": "flat"
       },
       {
         "value": "85%",
-        "label": "Automatiserat",
+        "label": "Automated",
         "trend": "up",
-        "trendText": "A/B-test, targeting, spårning"
+        "trendText": "A/B tests, targeting, tracking"
       },
       {
         "value": "72%",
-        "label": "Delvis auto",
+        "label": "Partly automated",
         "trend": "up",
-        "trendText": "KYC manuell review: 28%"
+        "trendText": "KYC manual review: 28%"
       },
       {
         "value": "91%",
-        "label": "Hög automation",
+        "label": "Highly automated",
         "trend": "up",
-        "trendText": "Autogiro + portföljsättning"
+        "trendText": "Direct debit + portfolio set-up"
       },
       {
         "value": "96%",
-        "label": "Fullt automatiserat",
+        "label": "Fully automated",
         "trend": "up",
-        "trendText": "Daglig rebalansering, NAV, skatt"
+        "trendText": "Daily rebalancing, NAV, tax"
       },
       {
         "value": "18%",
-        "label": "Nästan manuellt",
+        "label": "Mostly manual",
         "trend": "down",
-        "trendText": "Win-back saknar automation ⚠️"
+        "trendText": "Win-back has no automation ⚠️"
       }
     ]
   },
   {
     "id": "failscenarios",
-    "name": "Felscenarier",
+    "name": "Failure scenarios",
     "kind": "qual",
     "source": "Service Blueprint",
     "roles": [
@@ -1035,72 +1035,72 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "cells": [
       null,
       {
-        "headline": "BankID-timeout",
-        "quote": "BankID svarar inte → fallback till manuell identifiering. Drabbar 2-4% av sessioner.",
+        "headline": "Digital ID timeout",
+        "quote": "Digital ID doesn't respond → fall back to manual identification. Affects 2–4% of sessions.",
         "details": [
           {
-            "label": "Frekvens",
-            "value": "2–4% av registreringar"
+            "label": "Frequency",
+            "value": "2–4% of sign-ups"
           },
           {
             "label": "Fallback",
-            "value": "Manuell ID-verifiering"
+            "value": "Manual ID check"
           }
         ]
       },
       {
-        "headline": "KYC-avslag & timeout",
-        "quote": "KYC-motor timeout → köprocess. KYC-avslag → manuell review. Vanligaste friction-punkt.",
+        "headline": "KYC rejection & timeout",
+        "quote": "KYC engine timeout → queue. KYC rejection → manual review. The most common friction point.",
         "details": [
           {
-            "label": "Frekvens",
-            "value": "8% KYC-avslag"
+            "label": "Frequency",
+            "value": "8% KYC rejections"
           },
           {
-            "label": "Hantering",
-            "value": "Manuell review inom 24h"
+            "label": "Handling",
+            "value": "Manual review within 24h"
           }
         ]
       },
       {
-        "headline": "Bankgiro-fördröjning",
-        "quote": "Bankgiro-insättning fördröjd → kunderna ser \"väntande\" i 1–2 dgr. Vanligaste support-ärende.",
+        "headline": "Transfer delay",
+        "quote": "Transfer deposit delayed → customers see \"pending\" for 1–2 days. The most common support ticket.",
         "details": [
           {
-            "label": "Frekvens",
-            "value": "5% av insättningar"
+            "label": "Frequency",
+            "value": "5% of deposits"
           },
           {
-            "label": "Lösning",
-            "value": "Status-notis dag 1"
+            "label": "Fix",
+            "value": "Status notification on day 1"
           }
         ]
       },
       {
-        "headline": "NAV-feed-avbrott",
-        "quote": "Om Bloomberg NAV-feed faller → portföljvärden fryser. Hanteras med cached värden + banner.",
+        "headline": "NAV feed outage",
+        "quote": "If the NAV feed goes down → portfolio values freeze. Handled with cached values + a banner.",
         "details": [
           {
-            "label": "Frekvens",
-            "value": "< 0.1% / år"
+            "label": "Frequency",
+            "value": "< 0.1% / year"
           },
           {
             "label": "Fallback",
-            "value": "Senaste kända NAV + UI-banner"
+            "value": "Last known NAV + a banner"
           }
         ]
       },
       {
-        "headline": "Uttag fastnar i clearing",
-        "quote": "Uttag i Bankgirot cleara inte inom T+2 → manuell intervention. Förstärker churn-beslutet.",
+        "headline": "Withdrawal stuck in clearing",
+        "quote": "Withdrawals that don't clear within T+2 → manual intervention. Reinforces the decision to leave.",
         "details": [
           {
-            "label": "Frekvens",
-            "value": "1% av uttag"
+            "label": "Frequency",
+            "value": "1% of withdrawals"
           },
           {
-            "label": "Lösning",
-            "value": "Manuell eskalering + kundkommunikation"
+            "label": "Fix",
+            "value": "Manual escalation + customer communication"
           }
         ]
       }
@@ -1108,7 +1108,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
   },
   {
     "id": "sla",
-    "name": "SLA & latens",
+    "name": "SLA & latency",
     "kind": "quant",
     "source": "Service Blueprint",
     "roles": [
@@ -1118,38 +1118,38 @@ export const MATRIX_ROWS: MatrixRow[] = [
     "cells": [
       {
         "value": "–",
-        "label": "Ej tillämpbart",
+        "label": "Not applicable",
         "trend": "flat"
       },
       {
         "value": "< 2s",
-        "label": "Sidladdning P95",
+        "label": "Page load P95",
         "trend": "up",
-        "trendText": "CDN-cachad, 99.9% uptime"
+        "trendText": "CDN cached, 99.9% uptime"
       },
       {
         "value": "< 30s",
-        "label": "KYC-svar P95",
+        "label": "KYC response P95",
         "trend": "flat",
-        "trendText": "Mål: < 10s"
+        "trendText": "Target: < 10s"
       },
       {
         "value": "T+1",
-        "label": "Insättning bekräftad",
+        "label": "Deposit confirmed",
         "trend": "flat",
-        "trendText": "Bankgirot standard"
+        "trendText": "Standard transfer time"
       },
       {
         "value": "09:00",
-        "label": "Daglig rebalansering",
+        "label": "Daily rebalancing",
         "trend": "up",
-        "trendText": "99.8% on-time senaste 12 mån"
+        "trendText": "99.8% on time in the last 12 months"
       },
       {
         "value": "T+2",
-        "label": "Uttag processat",
+        "label": "Withdrawal processed",
         "trend": "flat",
-        "trendText": "Bankgirot standard"
+        "trendText": "Standard transfer time"
       }
     ]
   }
@@ -1157,7 +1157,7 @@ export const MATRIX_ROWS: MatrixRow[] = [
 
 export const MATRIX_GROUPS: MatrixGroup[] = [
   {
-    "label": "Kvalitativ",
+    "label": "Qualitative",
     "rows": [
       "mindset",
       "qualimpr"
@@ -1174,7 +1174,7 @@ export const MATRIX_GROUPS: MatrixGroup[] = [
     ]
   },
   {
-    "label": "Kvantitativ",
+    "label": "Quantitative",
     "rows": [
       "nps",
       "csat",
@@ -1186,7 +1186,7 @@ export const MATRIX_GROUPS: MatrixGroup[] = [
     ]
   },
   {
-    "label": "Beteende",
+    "label": "Behaviour",
     "rows": [
       "sessions",
       "deposit"

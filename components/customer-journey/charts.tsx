@@ -104,7 +104,7 @@ export function EmotionChart({
     <div className="relative h-[190px]">
       <svg
         role="img"
-        aria-label={`Emotionskurva 0 till 100 per fas: ${summary}`}
+        aria-label={`Emotion curve, 0 to 100 per phase: ${summary}`}
         viewBox={`0 0 ${W} 100`}
         preserveAspectRatio="none"
         className="absolute inset-0 h-full w-full overflow-visible"
@@ -165,7 +165,7 @@ export function EmotionChart({
               key={i}
               type="button"
               aria-pressed={focus === i}
-              aria-label={`${phases[i].name}: ${cards[i].emotion}, ${Math.round(v)} av 100. ${cards[i].moment}.`}
+              aria-label={`${phases[i].name}: ${cards[i].emotion}, ${Math.round(v)} of 100. ${cards[i].moment}.`}
               onClick={() => onFocus(i)}
               onMouseEnter={() => setHover(i)}
               onMouseLeave={() => setHover(null)}
@@ -278,7 +278,7 @@ export function GapChart({
   const summary = phases
     .map(
       (p, i) =>
-        `${p.name}: förväntning ${Math.round(expect[i])}, leverans ${Math.round(delivery[i])}`,
+        `${p.name}: expectation ${Math.round(expect[i])}, delivery ${Math.round(delivery[i])}`,
     )
     .join("; ");
   const gapText = (e: number, d: number) => {
@@ -307,7 +307,7 @@ export function GapChart({
         </span>
       ) : (
         <span className="mt-1 block">
-          Förväntning {Math.round(expect[i])} · Leverans{" "}
+          Expectation {Math.round(expect[i])} · Delivery{" "}
           {Math.round(delivery[i])} · Gap{" "}
           <strong className="font-extrabold">
             {gapText(expect[i], delivery[i])}
@@ -321,9 +321,9 @@ export function GapChart({
     <div className="flex h-[260px]">
       <div aria-hidden="true" className="relative w-12 shrink-0">
         {[
-          [100, "Hög"],
-          [50, "Medel"],
-          [0, "Låg"],
+          [100, "High"],
+          [50, "Medium"],
+          [0, "Low"],
         ].map(([v, t]) => (
           <span
             key={t}
@@ -347,7 +347,7 @@ export function GapChart({
         ))}
         <svg
           role="img"
-          aria-label={`Förväntning mot leverans per fas. ${summary}`}
+          aria-label={`Expectation against delivery per phase. ${summary}`}
           viewBox={`0 0 ${W} 100`}
           preserveAspectRatio="none"
           className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"

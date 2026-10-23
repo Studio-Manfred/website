@@ -1,17 +1,17 @@
 // Synthetic data for the Customer Journey Intelligence case. Moved from the
-// stand-alone demo (customer-journey-demo/index.html); nothing here is real
-// customer data. Content is Swedish.
+// stand-alone demo (customer-journey-demo/index.html) and translated to
+// English; nothing here is real customer data.
 import type { Industry, IndustryId } from "./types";
 
 export const INDUSTRIES: Record<IndustryId, Industry> = {
   "finance": {
     "id": "finance",
-    "name": "Storbank",
+    "name": "Retail Bank",
     "industry": "Finance · Retail Banking",
     "emoji": "🏦",
-    "description": "Digital bankupplevelse för privatkunder — konto, kort, lån och sparande.",
+    "description": "Digital banking for personal customers: accounts, cards, loans and savings.",
     "stats": {
-      "customers": "8 200",
+      "customers": "8,200",
       "nps": "34",
       "retention": "91%",
       "interviews": "120",
@@ -19,72 +19,72 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
     },
     "phases": [
       {
-        "name": "Bankbehov",
-        "sub": "Privatliv & event"
+        "name": "Banking need",
+        "sub": "Life events"
       },
       {
-        "name": "Jämförelse",
-        "sub": "Söker alternativ"
+        "name": "Comparison",
+        "sub": "Looking at options"
       },
       {
-        "name": "Öppna konto",
-        "sub": "Bli kund"
+        "name": "Open account",
+        "sub": "Becoming a customer"
       },
       {
-        "name": "Aktivering",
-        "sub": "Kort, Swish, BankID"
+        "name": "Activation",
+        "sub": "Card, payments, ID"
       },
       {
-        "name": "Vardagsbank",
-        "sub": "Löpande användning"
+        "name": "Everyday banking",
+        "sub": "Ongoing use"
       },
       {
-        "name": "Byte av bank",
+        "name": "Switching bank",
         "sub": "Risk & exit"
       }
     ],
     "emotionCards": [
       {
-        "emotion": "Frustrerad på nuvarande bank",
+        "emotion": "Frustrated with current bank",
         "sentiment": "neg",
         "quote": "\"Sick of hidden fees and 1-hour queues.\"",
-        "moment": "Switchingbeslutet"
+        "moment": "Decision to switch"
       },
       {
-        "emotion": "Hoppfull men skeptisk",
+        "emotion": "Hopeful but sceptical",
         "sentiment": "mixed",
-        "quote": "\"De lovar allt men jag tror dem inte riktigt.\"",
-        "moment": "Banken väljs"
+        "quote": "\"They promise everything, but I don't really believe them.\"",
+        "moment": "Bank chosen"
       },
       {
-        "emotion": "Irriterad på pappersarbete",
+        "emotion": "Annoyed by paperwork",
         "sentiment": "mixed",
-        "quote": "\"KYC-formulären tog 3 dagar — varför kan de inte se mitt BankID?\"",
-        "moment": "Konto öppnat"
+        "quote": "\"The KYC forms took 3 days. Why can't they just use my digital ID?\"",
+        "moment": "Account opened"
       },
       {
-        "emotion": "Lättad men inte imponerad",
+        "emotion": "Relieved but not impressed",
         "sentiment": "mixed",
-        "quote": "\"OK, kortet funkar i alla fall.\"",
-        "moment": "Första transaktion"
+        "quote": "\"OK, at least the card works.\"",
+        "moment": "First transaction"
       },
       {
-        "emotion": "Neutral — banken är osynlig",
+        "emotion": "Neutral: the bank is invisible",
         "sentiment": "mixed",
-        "quote": "\"Jag märker knappt att jag har den. Bra eller dåligt?\"",
-        "moment": "Månadslön in"
+        "quote": "\"I barely notice I have it. Good or bad?\"",
+        "moment": "Salary paid in"
       },
       {
-        "emotion": "Besviken, byter till neobank",
+        "emotion": "Disappointed, moving to a neobank",
         "sentiment": "neg",
-        "quote": "\"Revolut ger mig det jag ville ha från dem från dag ett.\"",
-        "moment": "Portabilitetsbeslut"
+        "quote": "\"Revolut gives me what I wanted from them from day one.\"",
+        "moment": "Decision to move"
       }
     ],
     "segments": [
       {
         "id": "alla",
-        "label": "Alla kunder"
+        "label": "All customers"
       },
       {
         "id": "premium",
@@ -92,15 +92,15 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
       },
       {
         "id": "ung",
-        "label": "Unga (<30 år)"
+        "label": "Young (<30)"
       },
       {
         "id": "lojal",
-        "label": "Lojal 5+ år"
+        "label": "Loyal 5+ years"
       },
       {
         "id": "risk",
-        "label": "Hög churn-risk"
+        "label": "High churn risk"
       }
     ],
     "metrics": {
@@ -123,7 +123,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "3.8",
         "sup": "3.4",
         "aum": "245k",
-        "rev": "1 840",
+        "rev": "1,840",
         "adopt": "4.1",
         "scost": "92"
       },
@@ -146,7 +146,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.0",
         "sup": "3.9",
         "aum": "820k",
-        "rev": "6 200",
+        "rev": "6,200",
         "adopt": "5.8",
         "scost": "65"
       },
@@ -192,7 +192,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "3.7",
         "sup": "4.1",
         "aum": "580k",
-        "rev": "4 100",
+        "rev": "4,100",
         "adopt": "6.2",
         "scost": "48"
       },
@@ -223,16 +223,16 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
     "personas": [
       {
         "id": "bekvamlighetsbanker",
-        "name": "Bekvämlighetsbankar",
+        "name": "The Convenience Banker",
         "emoji": "📱",
         "color": 0,
         "share": 42,
-        "tagline": "Banken ska vara osynlig och funka",
-        "desc": "Vill att banken ska synas så lite som möjligt. Hanterar allt i appen.",
+        "tagline": "The bank should be invisible and just work",
+        "desc": "Wants the bank to be as invisible as possible. Does everything in the app.",
         "tags": [
-          "Swish",
-          "Mobil BankID",
-          "Autogiro"
+          "Mobile payments",
+          "Mobile ID",
+          "Direct debit"
         ],
         "nps": "44",
         "csat": "3.8",
@@ -257,35 +257,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 3,
-            "insight": "\"Swish och BankID — resten spelar ingen roll.\""
+            "insight": "\"Mobile payments and digital ID. Nothing else matters.\""
           },
           {
             "phase": 4,
-            "insight": "Märker knappt att de har banken. Det är bra."
+            "insight": "Barely notices the bank. That's a good thing."
           },
           {
             "phase": 5,
-            "insight": "\"Revolut var enklare på dag ett.\""
+            "insight": "\"Revolut was easier on day one.\""
           }
         ],
         "friction": [
-          "Lång KYC-process",
-          "Ingen 24/7 chat-support"
+          "Long KYC process",
+          "No 24/7 chat support"
         ],
-        "opportunity": "Friktionsfri digital onboarding. App-first."
+        "opportunity": "Frictionless digital onboarding. App first."
       },
       {
         "id": "planeringsentusiasten",
-        "name": "Planeraren",
+        "name": "The Planner",
         "emoji": "📊",
         "color": 1,
         "share": 18,
-        "tagline": "Vill ha koll på varje krona",
-        "desc": "Använder bankens budgetverktyg aktivt. Jämför räntor och sparformer.",
+        "tagline": "Wants to keep track of every penny",
+        "desc": "Actively uses the bank's budgeting tool. Compares rates and ways to save.",
         "tags": [
-          "Budgetverktyg",
-          "Sparplaner",
-          "Låneräknare"
+          "Budgeting tool",
+          "Savings plans",
+          "Loan calculator"
         ],
         "nps": "52",
         "csat": "4.0",
@@ -310,35 +310,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 1,
-            "insight": "\"Deras ränteerbjudande var bäst. Jag räknade.\""
+            "insight": "\"Their rate was the best. I did the maths.\""
           },
           {
             "phase": 4,
-            "insight": "Budgetappen är okej men saknar kategorisering."
+            "insight": "The budgeting app is OK but lacks categorisation."
           },
           {
             "phase": 4,
-            "insight": "\"Klarna hade bättre insikter. Det stör mig.\""
+            "insight": "\"Klarna had better insights. That bothers me.\""
           }
         ],
         "friction": [
-          "Budgetverktyget är undermåligt",
-          "Ingen automatisk kategorisering"
+          "The budgeting tool is weak",
+          "No automatic categorisation"
         ],
-        "opportunity": "Finansinsikter + AI-driven budgetcoach."
+        "opportunity": "Financial insights + an AI budgeting coach."
       },
       {
         "id": "trygghetsokaren",
-        "name": "Trygghetssökaren",
+        "name": "The Security Seeker",
         "emoji": "🛡️",
         "color": 2,
         "share": 25,
-        "tagline": "Väljer stabilitet och trygghet",
-        "desc": "Har haft samma bank i 20 år. Ringer hellre än att använda appen.",
+        "tagline": "Chooses stability and security",
+        "desc": "Has had the same bank for 20 years. Would rather call than use the app.",
         "tags": [
-          "Föredrar telefon",
-          "Lång lojalitet",
-          "Sparar traditionellt"
+          "Prefers the phone",
+          "Long-term loyalty",
+          "Saves the traditional way"
         ],
         "nps": "58",
         "csat": "4.2",
@@ -363,35 +363,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 0,
-            "insight": "\"Jag byter inte bank. Har haft dem sedan 1998.\""
+            "insight": "\"I don't switch banks. I've been with them since 1998.\""
           },
           {
             "phase": 3,
-            "insight": "Det tar tid men jag förstår varför de kontrollerar."
+            "insight": "It takes time, but I understand why they check."
           },
           {
             "phase": 4,
-            "insight": "\"Rådgivaren kände igen mig direkt.\""
+            "insight": "\"The adviser recognised me straight away.\""
           }
         ],
         "friction": [
-          "Digitala tjänster för komplexa",
-          "App kräver för mycket"
+          "Digital services too complex",
+          "The app asks too much"
         ],
-        "opportunity": "Hybridmodell: digital + mänsklig rådgivning."
+        "opportunity": "Hybrid model: digital + human advice."
       },
       {
         "id": "neobank_hoppar",
-        "name": "Neobank-hopparen",
+        "name": "The Neobank Hopper",
         "emoji": "🔄",
         "color": 3,
         "share": 15,
-        "tagline": "Alltid redo att byta till bättre",
-        "desc": "Har 3–4 appar parallellt. Byter snabbt om ett erbjudande är bättre.",
+        "tagline": "Always ready to switch to something better",
+        "desc": "Uses 3–4 banking apps at once. Switches fast if an offer is better.",
         "tags": [
           "Revolut",
           "Klarna",
-          "Jämförelsesajter"
+          "Comparison sites"
         ],
         "nps": "18",
         "csat": "2.9",
@@ -416,150 +416,150 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 1,
-            "insight": "\"De hade 0% i utlandsavgift. Klart jag testade.\""
+            "insight": "\"They had 0% foreign fees. Of course I tried them.\""
           },
           {
             "phase": 4,
-            "insight": "\"Appen är sämre än Revolut. Redan besviken.\""
+            "insight": "\"The app is worse than Revolut. Already disappointed.\""
           },
           {
             "phase": 5,
-            "insight": "\"Tog 10 minuter att avsluta. Hade kunnat vara 1.\""
+            "insight": "\"Took 10 minutes to close. Could have been 1.\""
           }
         ],
         "friction": [
-          "Onboarding för långsam",
-          "Räntor inte konkurrenskraftiga"
+          "Onboarding too slow",
+          "Rates not competitive"
         ],
-        "opportunity": "Instant onboarding. Transparenta erbjudanden."
+        "opportunity": "Instant onboarding. Transparent offers."
       }
     ],
     "touchpoints": [
       [
         {
-          "name": "Google/jämförelsesajter",
+          "name": "Google / comparison sites",
           "sat": "–",
-          "note": "Extern research"
+          "note": "External research"
         },
         {
-          "name": "Vänner & familj",
+          "name": "Friends & family",
           "sat": "–",
-          "note": "Rekommendation"
+          "note": "Recommendation"
         },
         {
-          "name": "Bankens landningssida",
+          "name": "Bank landing page",
           "sat": "3.8",
           "note": "42% bounce rate ⚠️"
         }
       ],
       [
         {
-          "name": "Räntejämförelse sida",
+          "name": "Rate comparison page",
           "sat": "3.6",
-          "note": "Primär beslutspunkt"
+          "note": "Main decision point"
         },
         {
-          "name": "App Store-sida",
+          "name": "App Store page",
           "sat": "3.8",
-          "note": "Förhandsgranskning"
+          "note": "Preview"
         },
         {
-          "name": "Kundrecensioner",
+          "name": "Customer reviews",
           "sat": "–",
-          "note": "Trustpilot m.fl."
+          "note": "Trustpilot and others"
         }
       ],
       [
         {
-          "name": "KYC-process",
+          "name": "KYC process",
           "sat": "2.9",
-          "note": "Tar 3–5 dgr ⚠️"
+          "note": "Takes 3–5 days ⚠️"
         },
         {
-          "name": "BankID-verifiering",
+          "name": "Digital ID check",
           "sat": "4.1",
-          "note": "Snabbaste steget"
+          "note": "Fastest step"
         },
         {
-          "name": "Kortbeställning",
+          "name": "Card order",
           "sat": "3.4",
-          "note": "7–10 dgr väntan"
+          "note": "7–10 day wait"
         },
         {
-          "name": "Swish-koppling",
+          "name": "Mobile payments setup",
           "sat": "4.0",
-          "note": "Viktigaste steget"
+          "note": "Most important step"
         }
       ],
       [
         {
-          "name": "Aktivera kort",
+          "name": "Activate card",
           "sat": "3.8",
-          "note": "68% gör dag 1"
+          "note": "68% on day 1"
         },
         {
-          "name": "Koppla Swish",
+          "name": "Connect mobile payments",
           "sat": "4.2",
-          "note": "82% dag 1"
+          "note": "82% on day 1"
         },
         {
-          "name": "BankID-setup",
+          "name": "Digital ID setup",
           "sat": "4.4",
-          "note": "Smidigaste momentet"
+          "note": "Smoothest moment"
         },
         {
-          "name": "Autogiroprofil",
+          "name": "Direct debit setup",
           "sat": "3.6",
-          "note": "54% dag 7"
+          "note": "54% by day 7"
         }
       ],
       [
         {
-          "name": "Visa saldo / transaktioner",
+          "name": "Check balance / transactions",
           "sat": "4.0",
-          "note": "22 sess/mån"
+          "note": "22 sessions/month"
         },
         {
-          "name": "Swisha",
+          "name": "Send a payment",
           "sat": "4.5",
-          "note": "Daglig användning"
+          "note": "Daily use"
         },
         {
-          "name": "Budgetverktyg",
+          "name": "Budgeting tool",
           "sat": "3.1",
-          "note": "Underskattat ⚠️"
+          "note": "Underrated ⚠️"
         },
         {
-          "name": "Kontakta support",
+          "name": "Contact support",
           "sat": "3.0",
-          "note": "38 min väntetid ⚠️"
+          "note": "38 min wait ⚠️"
         },
         {
-          "name": "Ränteerbjudanden",
+          "name": "Rate offers",
           "sat": "3.4",
-          "note": "Sällan proaktivt"
+          "note": "Rarely proactive"
         }
       ],
       [
         {
-          "name": "Jämför konkurrent",
+          "name": "Compare competitor",
           "sat": "–",
-          "note": "Trigger: bättre ränta"
+          "note": "Trigger: better rate"
         },
         {
-          "name": "Portabilitetsprocess",
+          "name": "Switching process",
           "sat": "2.8",
-          "note": "3 dgr + blankett ⚠️"
+          "note": "3 days + a form ⚠️"
         },
         {
-          "name": "Exit-enkät",
+          "name": "Exit survey",
           "sat": "–",
-          "note": "22% svarar"
+          "note": "22% respond"
         },
         {
-          "name": "Behåll-erbjudande",
+          "name": "Retention offer",
           "sat": "3.2",
-          "note": "Reaktivt, inte proaktivt"
+          "note": "Reactive, not proactive"
         }
       ]
     ],
@@ -617,103 +617,103 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
       {
         "phase": 1,
         "pos": 0.5,
-        "name": "Bankens landningssida",
+        "name": "Bank landing page",
         "gap": -14,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "42% bounce rate. Landningssidan konverterar inte jämförande kunder."
+        "desc": "42% bounce rate. The landing page doesn't convert customers who are comparing."
       },
       {
         "phase": 2,
         "pos": 0.3,
-        "name": "Räntejämförelse sida",
+        "name": "Rate comparison page",
         "gap": -16,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "Kunder hittar bättre räntor hos konkurrenter. Proaktiv jämförelsevy behövs."
+        "desc": "Customers find better rates elsewhere. A proactive comparison view is needed."
       },
       {
         "phase": 2,
         "pos": 0.7,
-        "name": "App Store-sida",
+        "name": "App Store page",
         "gap": -10,
         "type": "watch",
         "effort": 1,
         "reward": 2,
-        "desc": "3.8 i snitt. Negativa recensioner om KYC dominerar."
+        "desc": "3.8 on average. Negative reviews about KYC dominate."
       },
       {
         "phase": 3,
         "pos": 0.3,
-        "name": "KYC-process",
+        "name": "KYC process",
         "gap": -26,
         "type": "crit",
         "effort": 3,
         "reward": 5,
-        "desc": "3–5 dagars väntan. Störst negativt gap. Digital KYC via BankID är lösningen."
+        "desc": "A 3–5 day wait. The biggest negative gap. Digital KYC with digital ID solves it."
       },
       {
         "phase": 3,
         "pos": 0.7,
-        "name": "Kortbeställning",
+        "name": "Card order",
         "gap": -18,
         "type": "crit",
         "effort": 3,
         "reward": 4,
-        "desc": "7–10 dagar är oacceptabelt. Digitalt kort dag 1 + fysiskt dag 3."
+        "desc": "7–10 days is unacceptable. Digital card on day 1, physical card on day 3."
       },
       {
         "phase": 4,
         "pos": 0.5,
-        "name": "Koppla Swish",
+        "name": "Connect mobile payments",
         "gap": 8,
         "type": "quick",
         "effort": 1,
         "reward": 3,
-        "desc": "Swish-kopplingen överpresterar. Tydlig prioritet i aktiveringsflödet."
+        "desc": "Mobile payments setup over-delivers. Make it a clear priority in activation."
       },
       {
         "phase": 4,
         "pos": 0.7,
-        "name": "Budgetverktyg",
+        "name": "Budgeting tool",
         "gap": -20,
         "type": "crit",
         "effort": 3,
         "reward": 5,
-        "desc": "3.1 i nöjdhet. Konkurrenter (Klarna, Revolut) har bättre insikter."
+        "desc": "3.1 in satisfaction. Competitors (Klarna, Revolut) offer better insights."
       },
       {
         "phase": 4,
         "pos": 0.9,
-        "name": "Support (38 min väntan)",
+        "name": "Support (38 min wait)",
         "gap": -24,
         "type": "crit",
         "effort": 3,
         "reward": 4,
-        "desc": "38 minuters väntetid är branschens svagaste punkt. AI-chatt löser 60%."
+        "desc": "A 38-minute wait is the industry's weakest point. AI chat solves 60%."
       },
       {
         "phase": 5,
         "pos": 0.4,
-        "name": "Portabilitetsprocess",
+        "name": "Switching process",
         "gap": -22,
         "type": "crit",
         "effort": 3,
         "reward": 3,
-        "desc": "3 dagar + blankett för att byta. Instant portabilitet är hygien 2026."
+        "desc": "3 days and a form to switch. Instant switching is table stakes in 2026."
       }
     ]
   },
   "insurance": {
     "id": "insurance",
-    "name": "Försäkring",
+    "name": "Insurer",
     "industry": "Insurance · P&C",
     "emoji": "🛡️",
-    "description": "Sakförsäkring för privatkunder — hem, bil, resa och hälsa.",
+    "description": "Property and casualty insurance for personal customers: home, car, travel and health.",
     "stats": {
-      "customers": "12 400",
+      "customers": "12,400",
       "nps": "28",
       "retention": "78%",
       "interviews": "95",
@@ -721,88 +721,88 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
     },
     "phases": [
       {
-        "name": "Försäkringsbehov",
-        "sub": "Livshändelse"
+        "name": "Insurance need",
+        "sub": "Life event"
       },
       {
         "name": "Research",
-        "sub": "Jämför & väljer"
+        "sub": "Compare & choose"
       },
       {
-        "name": "Teckna försäkring",
-        "sub": "Bli kund"
+        "name": "Buy a policy",
+        "sub": "Becoming a customer"
       },
       {
-        "name": "Aktivering",
-        "sub": "Bekräftelse & app"
+        "name": "Activation",
+        "sub": "Confirmation & app"
       },
       {
-        "name": "Skadeanmälan",
-        "sub": "Sanningens moment"
+        "name": "Claim",
+        "sub": "Moment of truth"
       },
       {
-        "name": "Förnyelse / Churn",
-        "sub": "Årsförnyelse"
+        "name": "Renewal / churn",
+        "sub": "Annual renewal"
       }
     ],
     "emotionCards": [
       {
-        "emotion": "Stressad och osäker",
+        "emotion": "Stressed and unsure",
         "sentiment": "neg",
-        "quote": "\"Vad täcker den egentligen? Läste inte det finstilta.\"",
-        "moment": "Behov uppstår"
+        "quote": "\"What does it actually cover? I didn't read the small print.\"",
+        "moment": "Need arises"
       },
       {
-        "emotion": "Överväldigad av alternativ",
+        "emotion": "Overwhelmed by options",
         "sentiment": "mixed",
-        "quote": "\"Alla ser likadana ut. Hur ska jag veta?\"",
-        "moment": "Försäkringen väljs"
+        "quote": "\"They all look the same. How am I supposed to know?\"",
+        "moment": "Policy chosen"
       },
       {
-        "emotion": "Skeptisk — för enkelt?",
+        "emotion": "Sceptical: too easy?",
         "sentiment": "mixed",
-        "quote": "\"Det gick för snabbt. Är jag verkligen täckt?\"",
-        "moment": "Tecknad online"
+        "quote": "\"That was too quick. Am I really covered?\"",
+        "moment": "Bought online"
       },
       {
-        "emotion": "Lättad men passiv",
+        "emotion": "Relieved but passive",
         "sentiment": "mixed",
-        "quote": "\"Har appen men öppnar den aldrig. Borde jag det?\"",
-        "moment": "Försäkringsbeviset"
+        "quote": "\"I have the app but never open it. Should I?\"",
+        "moment": "Policy document"
       },
       {
-        "emotion": "Frustrerad och sårbar",
+        "emotion": "Frustrated and vulnerable",
         "sentiment": "neg",
-        "quote": "\"Tre veckor och fyra samtal. Fortfarande inget besked.\"",
-        "moment": "Skadeanmälan"
+        "quote": "\"Three weeks and four calls. Still no answer.\"",
+        "moment": "Claim"
       },
       {
-        "emotion": "Priskänslig och trött",
+        "emotion": "Price-sensitive and tired",
         "sentiment": "neg",
-        "quote": "\"Premien höjdes 18%. Ringer Trygg-Hansa imorgon.\"",
-        "moment": "Förnyelsebrevet"
+        "quote": "\"My premium went up 18%. I'm calling a competitor tomorrow.\"",
+        "moment": "Renewal letter"
       }
     ],
     "segments": [
       {
         "id": "alla",
-        "label": "Alla kunder"
+        "label": "All customers"
       },
       {
         "id": "premium",
-        "label": "Premiumpaket"
+        "label": "Premium plan"
       },
       {
         "id": "ny",
-        "label": "Ny kund <1 år"
+        "label": "New customer <1 year"
       },
       {
         "id": "lojal",
-        "label": "Lojal 5+ år"
+        "label": "Loyal 5+ years"
       },
       {
         "id": "risk",
-        "label": "Hög churn-risk"
+        "label": "High churn risk"
       }
     ],
     "metrics": {
@@ -825,7 +825,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "3.5",
         "sup": "2.9",
         "aum": "–",
-        "rev": "4 200",
+        "rev": "4,200",
         "adopt": "2.8",
         "scost": "145"
       },
@@ -848,7 +848,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "3.7",
         "sup": "3.6",
         "aum": "–",
-        "rev": "8 900",
+        "rev": "8,900",
         "adopt": "3.9",
         "scost": "98"
       },
@@ -871,7 +871,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "3.6",
         "sup": "2.8",
         "aum": "–",
-        "rev": "2 800",
+        "rev": "2,800",
         "adopt": "2.4",
         "scost": "168"
       },
@@ -894,7 +894,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "3.4",
         "sup": "3.8",
         "aum": "–",
-        "rev": "5 400",
+        "rev": "5,400",
         "adopt": "3.2",
         "scost": "82"
       },
@@ -917,7 +917,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "2.8",
         "sup": "2.1",
         "aum": "–",
-        "rev": "3 100",
+        "rev": "3,100",
         "adopt": "1.8",
         "scost": "280"
       }
@@ -925,16 +925,16 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
     "personas": [
       {
         "id": "prisjagaren",
-        "name": "Prisjägaren",
+        "name": "The Price Hunter",
         "emoji": "💰",
         "color": 0,
         "share": 38,
-        "tagline": "Alltid redo att byta om det är billigare",
-        "desc": "Jämför varje år på Compricer. Byter om premien höjs mer än 5%.",
+        "tagline": "Always ready to switch if it's cheaper",
+        "desc": "Compares every year on comparison sites. Switches if the premium rises more than 5%.",
         "tags": [
-          "Compricer",
-          "Årsvis byte",
-          "Prissensitiv"
+          "Comparison sites",
+          "Switches yearly",
+          "Price-sensitive"
         ],
         "nps": "14",
         "csat": "2.8",
@@ -959,35 +959,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 1,
-            "insight": "\"Compricer visade 800 kr billigare. Självklart.\""
+            "insight": "\"The comparison site showed one 800 kr cheaper. Obviously.\""
           },
           {
             "phase": 5,
-            "insight": "\"Tog 3 veckor att få ersättning. Aldrig igen.\""
+            "insight": "\"Took 3 weeks to get paid out. Never again.\""
           },
           {
             "phase": 5,
-            "insight": "\"Premien höjdes. Bytte nästa dag.\""
+            "insight": "\"The premium went up. I switched the next day.\""
           }
         ],
         "friction": [
-          "Premieökningar utan förklaring",
-          "Lång skadehantering"
+          "Premium increases without explanation",
+          "Slow claims handling"
         ],
-        "opportunity": "Prisgaranti + instant skadeersättning."
+        "opportunity": "Price guarantee + instant claim payouts."
       },
       {
         "id": "trygghetsmotorn",
-        "name": "Trygghetssökaren",
+        "name": "The Security Seeker",
         "emoji": "🏠",
         "color": 1,
         "share": 28,
-        "tagline": "Vill sova gott om natten",
-        "desc": "Köper det bredaste alternativet. Byter sällan men kräver snabb support vid skada.",
+        "tagline": "Wants to sleep well at night",
+        "desc": "Buys the broadest cover. Rarely switches but expects fast support with a claim.",
         "tags": [
-          "Heltäckande",
-          "Värderar tillgänglighet",
-          "Lojal"
+          "Full cover",
+          "Values availability",
+          "Loyal"
         ],
         "nps": "46",
         "csat": "3.8",
@@ -1012,35 +1012,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 3,
-            "insight": "\"Valde dyraste — vill inte chansa.\""
+            "insight": "\"I chose the most expensive one. I don't want to take chances.\""
           },
           {
             "phase": 4,
-            "insight": "\"Försäkringsbeviset var tydligt. Lugnade mig.\""
+            "insight": "\"The policy document was clear. It reassured me.\""
           },
           {
             "phase": 4,
-            "insight": "\"Skadan tog 4 veckor. Förstörde allt förtroende.\""
+            "insight": "\"The claim took 4 weeks. It destroyed all my trust.\""
           }
         ],
         "friction": [
-          "Lång skadehantering förstör lojaliteten",
-          "Support inte tillgänglig kvällar"
+          "Slow claims handling destroys loyalty",
+          "Support not available in the evening"
         ],
-        "opportunity": "24/7 support + snabb skadehantering."
+        "opportunity": "24/7 support + fast claims handling."
       },
       {
         "id": "digitala_nativa",
-        "name": "Digitala native",
+        "name": "The Digital Native",
         "emoji": "📱",
         "color": 2,
         "share": 20,
-        "tagline": "Allt ska gå att göra i appen",
-        "desc": "Förväntar sig att allt sköts digitalt. Frustreras av papper och långa handläggningstider.",
+        "tagline": "Everything should be doable in the app",
+        "desc": "Expects everything to be digital. Frustrated by paper and long handling times.",
         "tags": [
-          "Inga papper",
-          "Snabb onboarding",
-          "Push-notiser"
+          "No paper",
+          "Fast onboarding",
+          "Push notifications"
         ],
         "nps": "32",
         "csat": "3.4",
@@ -1065,35 +1065,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 2,
-            "insight": "\"Tecknade på 4 min i appen. Imponerad.\""
+            "insight": "\"Bought it in 4 minutes in the app. Impressed.\""
           },
           {
             "phase": 3,
-            "insight": "\"Skadeanmälan kräver att jag ringer. 2026?!\""
+            "insight": "\"Making a claim means I have to call. In 2026?!\""
           },
           {
             "phase": 5,
-            "insight": "\"Ville förnya i appen men kunde inte.\""
+            "insight": "\"I wanted to renew in the app but couldn't.\""
           }
         ],
         "friction": [
-          "Skadeanmälan kräver telefonsamtal",
-          "Förnyelse inte digital"
+          "Claims need a phone call",
+          "Renewal not digital"
         ],
-        "opportunity": "Fulldigital skadeprocess + app-förnyelse."
+        "opportunity": "Fully digital claims + renewal in the app."
       },
       {
         "id": "familjeplaneraren",
-        "name": "Familjeplaneraren",
+        "name": "The Family Planner",
         "emoji": "👨‍👩‍👧",
         "color": 3,
         "share": 14,
-        "tagline": "Vill skydda familjen rätt",
-        "desc": "Vill ha ett paket som täcker hela familjen. Värdesätter rådgivning och bundles.",
+        "tagline": "Wants the right protection for the family",
+        "desc": "Wants one package that covers the whole family. Values advice and bundles.",
         "tags": [
-          "Kombinationsförsäkring",
-          "Barnförsäkring",
-          "Rådgivning"
+          "Bundled insurance",
+          "Child insurance",
+          "Advice"
         ],
         "nps": "52",
         "csat": "4.1",
@@ -1118,130 +1118,130 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 0,
-            "insight": "\"Fick barn. Bestämde mig för att se över allt.\""
+            "insight": "\"We had a baby. I decided to review everything.\""
           },
           {
             "phase": 2,
-            "insight": "\"Rådgivaren hjälpte mig välja rätt paket.\""
+            "insight": "\"The adviser helped me pick the right package.\""
           },
           {
             "phase": 4,
-            "insight": "\"Skadan på cykeln tog längre tid än förväntat.\""
+            "insight": "\"The bike claim took longer than expected.\""
           }
         ],
         "friction": [
-          "Inget familjpaket tydligt i appen",
-          "Rådgivning svår att boka digitalt"
+          "No clear family package in the app",
+          "Advice hard to book online"
         ],
-        "opportunity": "Familjepaket + rådgivningsbokning i app."
+        "opportunity": "Family package + booking advice in the app."
       }
     ],
     "touchpoints": [
       [
         {
-          "name": "Google 'hemförsäkring'",
+          "name": "Google 'home insurance'",
           "sat": "–",
-          "note": "Extern sök"
+          "note": "External search"
         },
         {
-          "name": "Jämförelsesajt (Compricer)",
+          "name": "Comparison site",
           "sat": "–",
-          "note": "Primär kanal"
+          "note": "Main channel"
         },
         {
-          "name": "Vänner/arbetsgivare tips",
+          "name": "Tips from friends / employer",
           "sat": "–",
           "note": "Word of mouth"
         }
       ],
       [
         {
-          "name": "Produktsida / villkor",
+          "name": "Product page / terms",
           "sat": "3.2",
-          "note": "Svårläst ⚠️"
+          "note": "Hard to read ⚠️"
         },
         {
-          "name": "Räkna ut premie",
+          "name": "Premium calculator",
           "sat": "3.8",
-          "note": "Viktig konvertering"
+          "note": "Key conversion"
         },
         {
-          "name": "Jämförelse tabell",
+          "name": "Comparison table",
           "sat": "3.4",
-          "note": "Ofta för komplex"
+          "note": "Often too complex"
         }
       ],
       [
         {
-          "name": "Online-teckningsflöde",
+          "name": "Online purchase flow",
           "sat": "3.6",
           "note": "Drop-off: 28% ⚠️"
         },
         {
-          "name": "BankID-signering",
+          "name": "Digital ID signing",
           "sat": "4.2",
-          "note": "Snabbaste steget"
+          "note": "Fastest step"
         },
         {
-          "name": "Täckningsval",
+          "name": "Choosing cover",
           "sat": "3.0",
-          "note": "Förvirring kring tillägg ⚠️"
+          "note": "Confusion about add-ons ⚠️"
         }
       ],
       [
         {
-          "name": "Försäkringsbevis (mail)",
+          "name": "Policy document (email)",
           "sat": "3.5",
-          "note": "Ofta oläst"
+          "note": "Often unread"
         },
         {
-          "name": "App-nedladdning",
+          "name": "App download",
           "sat": "3.4",
-          "note": "42% laddar ned"
+          "note": "42% download it"
         },
         {
-          "name": "Digital försäkringsbok",
+          "name": "Digital policy folder",
           "sat": "3.6",
-          "note": "Underskattat"
+          "note": "Underrated"
         }
       ],
       [
         {
-          "name": "Skadeanmälan (telefon)",
+          "name": "Claim (phone)",
           "sat": "2.4",
-          "note": "38 min väntetid ⚠️"
+          "note": "38 min wait ⚠️"
         },
         {
-          "name": "Skadeanmälan (app)",
+          "name": "Claim (app)",
           "sat": "3.2",
-          "note": "Bara 28% använder"
+          "note": "Only 28% use it"
         },
         {
-          "name": "Handläggning",
+          "name": "Claims handling",
           "sat": "2.6",
-          "note": "Median 18 dgr ⚠️"
+          "note": "Median 18 days ⚠️"
         },
         {
-          "name": "Utbetalning",
+          "name": "Payout",
           "sat": "3.0",
-          "note": "Ofta otydlig timing"
+          "note": "Timing often unclear"
         }
       ],
       [
         {
-          "name": "Förnyelsebrev",
+          "name": "Renewal letter",
           "sat": "2.8",
-          "note": "Premieökning ej förklarad ⚠️"
+          "note": "Premium increase not explained ⚠️"
         },
         {
-          "name": "Förnya online",
+          "name": "Renew online",
           "sat": "3.2",
-          "note": "Bara 54% kan"
+          "note": "Only 54% can"
         },
         {
-          "name": "Behåll-samtal",
+          "name": "Retention call",
           "sat": "3.4",
-          "note": "Reaktivt, för sent"
+          "note": "Reactive, too late"
         }
       ]
     ],
@@ -1299,93 +1299,93 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
       {
         "phase": 1,
         "pos": 0.5,
-        "name": "Produktsida / villkor",
+        "name": "Product page / terms",
         "gap": -18,
         "type": "crit",
         "effort": 3,
         "reward": 4,
-        "desc": "Villkoren är oläsbara. Plain language + interaktiv täckningsjämförelse."
+        "desc": "The terms are unreadable. Plain language + an interactive cover comparison."
       },
       {
         "phase": 2,
         "pos": 0.4,
-        "name": "Online-teckningsflöde",
+        "name": "Online purchase flow",
         "gap": -16,
         "type": "crit",
         "effort": 2,
         "reward": 5,
-        "desc": "28% drop-off. Förenkla val + spara progress."
+        "desc": "28% drop-off. Simplify choices + save progress."
       },
       {
         "phase": 2,
         "pos": 0.8,
-        "name": "Täckningsval",
+        "name": "Choosing cover",
         "gap": -20,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "Förvirring kring tillägg. Interaktiv guide: 'Vad händer om...'"
+        "desc": "Confusion about add-ons. An interactive 'What happens if...' guide."
       },
       {
         "phase": 3,
         "pos": 0.5,
-        "name": "App-nedladdning",
+        "name": "App download",
         "gap": -14,
         "type": "watch",
         "effort": 1,
         "reward": 3,
-        "desc": "58% laddar aldrig ned appen. Push-notis dag 1 med onboarding-guide."
+        "desc": "58% never download the app. A day-1 notification with an onboarding guide."
       },
       {
         "phase": 4,
         "pos": 0.2,
-        "name": "Skadeanmälan (telefon)",
+        "name": "Claim (phone)",
         "gap": -28,
         "type": "crit",
         "effort": 3,
         "reward": 5,
-        "desc": "38 minuters väntetid. Störst gap i hela resan. App-baserad FNOL löser."
+        "desc": "A 38-minute wait. The biggest gap in the whole journey. App-based first notice of loss solves it."
       },
       {
         "phase": 4,
         "pos": 0.5,
-        "name": "Handläggningstid (18 dgr)",
+        "name": "Handling time (18 days)",
         "gap": -24,
         "type": "crit",
         "effort": 3,
         "reward": 5,
-        "desc": "Branschens sämsta punkt. Realtids-statusspårning minskar frustration med 40%."
+        "desc": "The industry's worst point. Real-time status tracking cuts frustration by 40%."
       },
       {
         "phase": 5,
         "pos": 0.3,
-        "name": "Förnyelsebrev",
+        "name": "Renewal letter",
         "gap": -22,
         "type": "crit",
         "effort": 2,
         "reward": 5,
-        "desc": "Premieökning utan förklaring triggar 60% av churnen. Proaktiv kommunikation."
+        "desc": "Unexplained premium increases trigger 60% of churn. Communicate proactively."
       },
       {
         "phase": 5,
         "pos": 0.7,
-        "name": "Förnya online",
+        "name": "Renew online",
         "gap": -16,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "46% kan inte förnya digitalt. Kräver telefon 2026."
+        "desc": "46% can't renew online. Still needs a phone call in 2026."
       }
     ]
   },
   "grocery": {
     "id": "grocery",
-    "name": "Dagligvaruhandel",
+    "name": "Grocery",
     "industry": "Grocery · Retail",
     "emoji": "🛒",
-    "description": "Kundresa i dagligvaruhandeln — butik, app, hemleverans och kundklubb.",
+    "description": "The grocery customer journey: store, app, home delivery and loyalty club.",
     "stats": {
-      "customers": "245 000",
+      "customers": "245,000",
       "nps": "45",
       "retention": "82%",
       "interviews": "140",
@@ -1393,88 +1393,88 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
     },
     "phases": [
       {
-        "name": "Planering",
-        "sub": "Inköpslista & recept"
+        "name": "Planning",
+        "sub": "Shopping list & recipes"
       },
       {
-        "name": "Kanalval",
-        "sub": "Butik vs online"
+        "name": "Choosing a channel",
+        "sub": "Store vs online"
       },
       {
-        "name": "Handel",
-        "sub": "Butik eller leverans"
+        "name": "Shopping",
+        "sub": "Store or delivery"
       },
       {
-        "name": "Kassa/Leverans",
-        "sub": "Betala & få varan"
+        "name": "Checkout / delivery",
+        "sub": "Pay & receive"
       },
       {
-        "name": "Lojalitet",
-        "sub": "Kundklubb & erbjudanden"
+        "name": "Loyalty",
+        "sub": "Loyalty club & offers"
       },
       {
-        "name": "Byte av butik",
-        "sub": "Tappat kund"
+        "name": "Switching store",
+        "sub": "Lost customer"
       }
     ],
     "emotionCards": [
       {
-        "emotion": "Stressad och planlös",
+        "emotion": "Stressed and without a plan",
         "sentiment": "mixed",
-        "quote": "\"Vad ska vi äta den här veckan? Ingen aning.\"",
-        "moment": "Inköpsbehovet"
+        "quote": "\"What are we eating this week? No idea.\"",
+        "moment": "Need to shop"
       },
       {
-        "emotion": "Vanedriven rutinmässighet",
+        "emotion": "Creature of habit",
         "sentiment": "mixed",
-        "quote": "\"Åker alltid till ICA:n på torget. Vet inte varför.\"",
-        "moment": "Kanalen väljs"
+        "quote": "\"I always go to the supermarket on the square. Not sure why.\"",
+        "moment": "Channel chosen"
       },
       {
-        "emotion": "Frustrerad på köer",
+        "emotion": "Frustrated by queues",
         "sentiment": "neg",
-        "quote": "\"20 minuter i kö för 8 varor. Aldrig igen på fredagar.\"",
-        "moment": "I butiken"
+        "quote": "\"20 minutes in the queue for 8 items. Never again on a Friday.\"",
+        "moment": "In the store"
       },
       {
-        "emotion": "Lättad eller besviken",
+        "emotion": "Relieved or disappointed",
         "sentiment": "mixed",
-        "quote": "\"Kassan gick snabbt men tre varor fattades i leveransen.\"",
-        "moment": "Kassa / Leverans"
+        "quote": "\"Checkout was quick, but three items were missing from the delivery.\"",
+        "moment": "Checkout / delivery"
       },
       {
-        "emotion": "Ouppmärksam på poäng",
+        "emotion": "Not paying attention to points",
         "sentiment": "mixed",
-        "quote": "\"Samlar poäng men vet inte riktigt hur mycket jag har.\"",
-        "moment": "Kundklubben"
+        "quote": "\"I collect points but don't really know how many I have.\"",
+        "moment": "Loyalty club"
       },
       {
-        "emotion": "Lockad av konkurrentens deal",
+        "emotion": "Tempted by a competitor's deal",
         "sentiment": "neg",
-        "quote": "\"Coop hade 20% på kött hela veckan. Svårt att motstå.\"",
-        "moment": "Byte av butik"
+        "quote": "\"The other chain had 20% off meat all week. Hard to resist.\"",
+        "moment": "Switching store"
       }
     ],
     "segments": [
       {
         "id": "alla",
-        "label": "Alla kunder"
+        "label": "All customers"
       },
       {
         "id": "premium",
-        "label": "Premiummedlem"
+        "label": "Premium member"
       },
       {
         "id": "digital",
-        "label": "Onlineshoppers"
+        "label": "Online shoppers"
       },
       {
         "id": "lojal",
-        "label": "Stamkund 3+ år"
+        "label": "Regular 3+ years"
       },
       {
         "id": "risk",
-        "label": "Hög churn-risk"
+        "label": "High churn risk"
       }
     ],
     "metrics": {
@@ -1497,7 +1497,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.1",
         "sup": "3.6",
         "aum": "–",
-        "rev": "2 840",
+        "rev": "2,840",
         "adopt": "3.8",
         "scost": "28"
       },
@@ -1520,7 +1520,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.3",
         "sup": "4.0",
         "aum": "–",
-        "rev": "5 200",
+        "rev": "5,200",
         "adopt": "5.2",
         "scost": "18"
       },
@@ -1543,7 +1543,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.4",
         "sup": "3.4",
         "aum": "–",
-        "rev": "3 100",
+        "rev": "3,100",
         "adopt": "4.4",
         "scost": "32"
       },
@@ -1566,7 +1566,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.0",
         "sup": "4.2",
         "aum": "–",
-        "rev": "6 800",
+        "rev": "6,800",
         "adopt": "5.8",
         "scost": "14"
       },
@@ -1589,7 +1589,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "3.4",
         "sup": "3.0",
         "aum": "–",
-        "rev": "1 200",
+        "rev": "1,200",
         "adopt": "2.1",
         "scost": "68"
       }
@@ -1597,16 +1597,16 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
     "personas": [
       {
         "id": "rutinhandlaren",
-        "name": "Rutinhandlaren",
+        "name": "The Routine Shopper",
         "emoji": "🔄",
         "color": 0,
         "share": 44,
-        "tagline": "Samma butik, samma dag, varje vecka",
-        "desc": "Handlar alltid i samma butik på samma dag. Använder sällan app. Lojal om ingen friction.",
+        "tagline": "Same store, same day, every week",
+        "desc": "Always shops in the same store on the same day. Rarely uses the app. Loyal as long as there's no friction.",
         "tags": [
-          "Stamkund",
-          "Fredagshandlar",
-          "Ingen app"
+          "Regular",
+          "Friday shopper",
+          "No app"
         ],
         "nps": "62",
         "csat": "4.2",
@@ -1631,35 +1631,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 1,
-            "insight": "\"Skriver alltid lista i notepad. Funkar.\""
+            "insight": "\"I always write a list in my notes app. It works.\""
           },
           {
             "phase": 2,
-            "insight": "\"Åker dit för att jag alltid åkt dit.\""
+            "insight": "\"I go there because I always have.\""
           },
           {
             "phase": 4,
-            "insight": "\"Personalen känner mig. Det är värt mycket.\""
+            "insight": "\"The staff know me. That's worth a lot.\""
           }
         ],
         "friction": [
-          "Köer fredagar",
-          "Tomma hyllor på populära varor"
+          "Friday queues",
+          "Empty shelves for popular items"
         ],
-        "opportunity": "Reservera varor + boka kassatid för stamkunder."
+        "opportunity": "Reserve items + book a checkout slot for regulars."
       },
       {
         "id": "digitala_handlaren",
-        "name": "Digitala handlaren",
+        "name": "The Digital Shopper",
         "emoji": "📱",
         "color": 1,
         "share": 26,
-        "tagline": "Handlar helst i appen eller online",
-        "desc": "Handlar 70% online. Vill ha smidig app, receptsuggestions och snabb leverans.",
+        "tagline": "Prefers to shop in the app or online",
+        "desc": "Shops 70% online. Wants a smooth app, recipe suggestions and fast delivery.",
         "tags": [
-          "Hemkörning",
-          "Matplanering",
-          "Receptbaserat"
+          "Home delivery",
+          "Meal planning",
+          "Recipe-based"
         ],
         "nps": "48",
         "csat": "3.9",
@@ -1684,35 +1684,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 1,
-            "insight": "\"Appen föreslår recept. Sparar tid varje vecka.\""
+            "insight": "\"The app suggests recipes. Saves me time every week.\""
           },
           {
             "phase": 3,
-            "insight": "\"3 varor fattades. Fick inte notis.\""
+            "insight": "\"3 items were missing. No notification.\""
           },
           {
             "phase": 3,
-            "insight": "\"Leveransen var 40 min sen och ingen svarade.\""
+            "insight": "\"The delivery was 40 minutes late and nobody answered.\""
           }
         ],
         "friction": [
-          "Substitutioner utan notis",
-          "Leveransförseningar utan kommunikation"
+          "Substitutions without notice",
+          "Late deliveries without communication"
         ],
-        "opportunity": "Realtidsspårning + proaktiva substitutionsnotiser."
+        "opportunity": "Real-time tracking + proactive substitution alerts."
       },
       {
         "id": "dealjakaren",
-        "name": "Dealjakaren",
+        "name": "The Deal Hunter",
         "emoji": "🏷️",
         "color": 2,
         "share": 18,
-        "tagline": "Byter butik efter veckans erbjudanden",
-        "desc": "Har ICA-appen, Coop-appen och Willys-appen. Byter varje vecka beroende på erbjudanden.",
+        "tagline": "Switches store based on the week's offers",
+        "desc": "Has three supermarket apps. Switches every week depending on the offers.",
         "tags": [
-          "Matcharbjudanden",
-          "Kupongsamlare",
-          "Prisjämföring"
+          "Matches offers",
+          "Coupon collector",
+          "Price comparison"
         ],
         "nps": "28",
         "csat": "3.2",
@@ -1737,35 +1737,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 0,
-            "insight": "\"Kollar alltid torsdagsreklamen. Bestämmer sen.\""
+            "insight": "\"I always check Thursday's flyers. Then I decide.\""
           },
           {
             "phase": 4,
-            "insight": "\"Poängbonusen räknades inte. Fick ringa support.\""
+            "insight": "\"My bonus points weren't counted. Had to call support.\""
           },
           {
             "phase": 5,
-            "insight": "\"Coop hade 20% på kött hela veckan.\""
+            "insight": "\"The other chain had 20% off meat all week.\""
           }
         ],
         "friction": [
-          "Erbjudanden inte tillräckligt personaliserade",
-          "Poängproblem i kassan"
+          "Offers not personalised enough",
+          "Points problems at checkout"
         ],
-        "opportunity": "Personaliserade erbjudanden + garanterad poängsättning."
+        "opportunity": "Personalised offers + guaranteed points."
       },
       {
         "id": "halsokonnaren",
-        "name": "Hälsokönnaren",
+        "name": "The Health Enthusiast",
         "emoji": "🥗",
         "color": 3,
         "share": 12,
-        "tagline": "Handlar ekologiskt och hälsosamt",
-        "desc": "Handlar nästan uteslutande ekologiskt. Hög spend per besök. Värdesätter transparens.",
+        "tagline": "Shops organic and healthy",
+        "desc": "Buys almost only organic. High spend per visit. Values transparency.",
         "tags": [
-          "Ekologiskt",
-          "Allergifilter",
-          "Hög spend"
+          "Organic",
+          "Allergy filter",
+          "High spend"
         ],
         "nps": "58",
         "csat": "4.1",
@@ -1790,135 +1790,135 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 1,
-            "insight": "\"Skannar alltid Krav-märket. Nyckeln.\""
+            "insight": "\"I always look for the organic label. That's key.\""
           },
           {
             "phase": 4,
-            "insight": "\"Ekologiska alternativ alltid i lager. Bra.\""
+            "insight": "\"Organic options always in stock. Good.\""
           },
           {
             "phase": 4,
-            "insight": "\"Ville se CO2-avtryck per vara. Finns inte.\""
+            "insight": "\"I wanted to see the carbon footprint per item. It isn't there.\""
           }
         ],
         "friction": [
-          "CO2-märkning saknas",
-          "Svårt filtrera ekologiskt i appen"
+          "No carbon labelling",
+          "Hard to filter for organic in the app"
         ],
-        "opportunity": "Hållbarhetsfilter i app + CO2-märkning per vara."
+        "opportunity": "Sustainability filter in the app + carbon label per item."
       }
     ],
     "touchpoints": [
       [
         {
-          "name": "Recept-inspiration (app/webb)",
+          "name": "Recipe inspiration (app/web)",
           "sat": "3.8",
-          "note": "34% börjar här"
+          "note": "34% start here"
         },
         {
-          "name": "Veckans erbjudanden",
+          "name": "Weekly offers",
           "sat": "4.0",
-          "note": "Viktig konvertering"
+          "note": "Key conversion"
         },
         {
-          "name": "Inköpslista i app",
+          "name": "Shopping list in the app",
           "sat": "3.6",
-          "note": "42% digitaliserar"
+          "note": "42% go digital"
         }
       ],
       [
         {
-          "name": "Butik vs hemleverans-val",
+          "name": "Store vs home delivery",
           "sat": "3.4",
-          "note": "44% väljer butik"
+          "note": "44% choose the store"
         },
         {
-          "name": "Bokningsflöde leverans",
+          "name": "Delivery booking flow",
           "sat": "3.8",
           "note": "Drop-off: 18%"
         },
         {
           "name": "Click & Collect",
           "sat": "4.0",
-          "note": "Snabbast växande"
+          "note": "Fastest growing"
         }
       ],
       [
         {
-          "name": "Butikslayout & skyltning",
+          "name": "Store layout & signage",
           "sat": "3.6",
-          "note": "Hitta rätt = frustration"
+          "note": "Finding things = frustration"
         },
         {
-          "name": "Produktinformation",
+          "name": "Product information",
           "sat": "3.4",
-          "note": "Allergi/eko info saknas ⚠️"
+          "note": "Allergy / organic info missing ⚠️"
         },
         {
-          "name": "Tillgänglighet",
+          "name": "Availability",
           "sat": "3.2",
-          "note": "Tomma hyllor ⚠️"
+          "note": "Empty shelves ⚠️"
         }
       ],
       [
         {
-          "name": "Självscanning",
+          "name": "Self-scanning",
           "sat": "4.2",
-          "note": "Populärast 65%"
+          "note": "Most popular, 65%"
         },
         {
-          "name": "Leveransprecision",
+          "name": "Delivery accuracy",
           "sat": "3.0",
-          "note": "Substitutioner ⚠️"
+          "note": "Substitutions ⚠️"
         },
         {
-          "name": "Digitalt kvitto",
+          "name": "Digital receipt",
           "sat": "4.1",
-          "note": "78% föredrar"
+          "note": "78% prefer it"
         },
         {
-          "name": "Poängregistrering",
+          "name": "Points registration",
           "sat": "3.4",
-          "note": "Fel vid 12% ⚠️"
+          "note": "Errors in 12% ⚠️"
         }
       ],
       [
         {
-          "name": "Poäng-appen",
+          "name": "Points app",
           "sat": "3.8",
-          "note": "68% aktiva"
+          "note": "68% active"
         },
         {
-          "name": "Personaliserade erbjudanden",
+          "name": "Personalised offers",
           "sat": "3.2",
-          "note": "Ofta irrelevanta ⚠️"
+          "note": "Often irrelevant ⚠️"
         },
         {
-          "name": "Premiummedlemskap",
+          "name": "Premium membership",
           "sat": "4.2",
-          "note": "Hög NPS bland premium"
+          "note": "High NPS among premium"
         },
         {
-          "name": "Kommunikation (mail/push)",
+          "name": "Communication (email/push)",
           "sat": "3.0",
-          "note": "För hög frekvens ⚠️"
+          "note": "Too frequent ⚠️"
         }
       ],
       [
         {
-          "name": "Konkurrentens erbjudande",
+          "name": "Competitor's offer",
           "sat": "–",
-          "note": "Primär churn-trigger"
+          "note": "Main churn trigger"
         },
         {
-          "name": "Kundservice vid problem",
+          "name": "Customer service when things go wrong",
           "sat": "2.8",
-          "note": "Lång väntetid ⚠️"
+          "note": "Long wait ⚠️"
         },
         {
-          "name": "Reaktivt behåll-erbjudande",
+          "name": "Reactive retention offer",
           "sat": "3.0",
-          "note": "Kommer för sent"
+          "note": "Comes too late"
         }
       ]
     ],
@@ -1976,83 +1976,83 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
       {
         "phase": 2,
         "pos": 0.3,
-        "name": "Produktinformation (allergi/eko)",
+        "name": "Product information (allergy/organic)",
         "gap": -18,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "28% missar viktig produktinfo. Strukturerad data + allergifilter i app."
+        "desc": "28% miss important product information. Structured data + an allergy filter in the app."
       },
       {
         "phase": 2,
         "pos": 0.7,
-        "name": "Tillgänglighet / Tomma hyllor",
+        "name": "Availability / empty shelves",
         "gap": -16,
         "type": "crit",
         "effort": 3,
         "reward": 4,
-        "desc": "12% av shoppingtillfällena har en tom hylla. Realtidsinventarier minskar frustration."
+        "desc": "12% of shopping trips hit an empty shelf. Real-time stock data cuts frustration."
       },
       {
         "phase": 3,
         "pos": 0.3,
-        "name": "Leveransprecision (substitut.)",
+        "name": "Delivery accuracy (substitutions)",
         "gap": -22,
         "type": "crit",
         "effort": 2,
         "reward": 5,
-        "desc": "Substitutioner utan förhandsnotis är störst negativt gap online."
+        "desc": "Substitutions without notice are the biggest negative gap online."
       },
       {
         "phase": 3,
         "pos": 0.7,
-        "name": "Poängregistrering (12% fel)",
+        "name": "Points registration (12% errors)",
         "gap": -14,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "12% av kvittona har poängfel. Underminar lojalitetsprogrammets trovärdighet."
+        "desc": "12% of receipts have points errors. It undermines trust in the loyalty programme."
       },
       {
         "phase": 4,
         "pos": 0.4,
-        "name": "Personaliserade erbjudanden",
+        "name": "Personalised offers",
         "gap": -20,
         "type": "crit",
         "effort": 3,
         "reward": 5,
-        "desc": "Erbjudanden upplevs generiska. ML-baserad personalisering ger +18% inlösen."
+        "desc": "Offers feel generic. ML-based personalisation gives +18% redemption."
       },
       {
         "phase": 4,
         "pos": 0.7,
-        "name": "Kommunikationsfrekvens",
+        "name": "Communication frequency",
         "gap": -14,
         "type": "watch",
         "effort": 1,
         "reward": 3,
-        "desc": "För många pushnotiser. Preferenscentrum + smart timing minskar opt-outs."
+        "desc": "Too many push notifications. A preference centre + smart timing reduce opt-outs."
       },
       {
         "phase": 3,
         "pos": 0.5,
-        "name": "Självscanning",
+        "name": "Self-scanning",
         "gap": 10,
         "type": "quick",
         "effort": 1,
         "reward": 3,
-        "desc": "Självscanning överpresterar. Tydligare promotion + first-time guide."
+        "desc": "Self-scanning over-delivers. Promote it more + add a first-time guide."
       }
     ]
   },
   "ehandel": {
     "id": "ehandel",
-    "name": "E-handel",
+    "name": "E-commerce",
     "industry": "E-commerce · Fashion & Lifestyle",
     "emoji": "📦",
-    "description": "Digital shoppingresa för mode och lifestyle — discovery, köp, leverans och retur.",
+    "description": "The online shopping journey for fashion and lifestyle: discovery, purchase, delivery and returns.",
     "stats": {
-      "customers": "82 000",
+      "customers": "82,000",
       "nps": "38",
       "retention": "52%",
       "interviews": "110",
@@ -2065,67 +2065,67 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
       },
       {
         "name": "Research",
-        "sub": "Jämföra & välja"
+        "sub": "Compare & choose"
       },
       {
-        "name": "Köp",
+        "name": "Purchase",
         "sub": "Cart & checkout"
       },
       {
-        "name": "Leverans",
-        "sub": "Väntan & mottagning"
+        "name": "Delivery",
+        "sub": "Waiting & receiving"
       },
       {
-        "name": "Retur & behåll",
+        "name": "Return or keep",
         "sub": "Post-purchase"
       },
       {
-        "name": "Sover",
-        "sub": "Inaktiv kund"
+        "name": "Dormant",
+        "sub": "Inactive customer"
       }
     ],
     "emotionCards": [
       {
-        "emotion": "Inspirerad och upprymd",
+        "emotion": "Inspired and excited",
         "sentiment": "pos",
-        "quote": "\"Såg den på Instagram. Måste ha den.\"",
+        "quote": "\"Saw it on Instagram. Have to have it.\"",
         "moment": "Trigger"
       },
       {
-        "emotion": "Ambivalent och tveksam",
+        "emotion": "Torn and hesitant",
         "sentiment": "mixed",
-        "quote": "\"Storlekstabellen stämmer aldrig. Ska jag chansa?\"",
-        "moment": "Köpbeslut"
+        "quote": "\"The size chart is never right. Should I risk it?\"",
+        "moment": "Purchase decision"
       },
       {
-        "emotion": "Tillfredsställd men nervös",
+        "emotion": "Satisfied but nervous",
         "sentiment": "mixed",
-        "quote": "\"Lagt ordern. Nu hoppas jag att det stämmer med bilden.\"",
+        "quote": "\"Order placed. Now I hope it looks like the picture.\"",
         "moment": "Checkout"
       },
       {
-        "emotion": "Otålig och orolig",
+        "emotion": "Impatient and worried",
         "sentiment": "mixed",
-        "quote": "\"Paketet är på väg men trackingen uppdateras inte.\"",
-        "moment": "Leveransväntan"
+        "quote": "\"The parcel is on its way but tracking isn't updating.\"",
+        "moment": "Waiting for delivery"
       },
       {
-        "emotion": "Besviken eller glad",
+        "emotion": "Disappointed or happy",
         "sentiment": "mixed",
-        "quote": "\"Passade inte alls. Returen var enkel i alla fall.\"",
-        "moment": "Öppnar paketet"
+        "quote": "\"It didn't fit at all. At least the return was easy.\"",
+        "moment": "Opening the parcel"
       },
       {
-        "emotion": "Glömmer bort varumärket",
+        "emotion": "Forgets the brand",
         "sentiment": "neg",
-        "quote": "\"Har inte shoppat på 4 månader. Tar vad som är billigast.\"",
-        "moment": "Inaktivitet"
+        "quote": "\"Haven't shopped in 4 months. I'll take whatever's cheapest.\"",
+        "moment": "Inactivity"
       }
     ],
     "segments": [
       {
         "id": "alla",
-        "label": "Alla kunder"
+        "label": "All customers"
       },
       {
         "id": "premium",
@@ -2133,15 +2133,15 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
       },
       {
         "id": "ny",
-        "label": "Ny kund <3 mån"
+        "label": "New customer <3 months"
       },
       {
         "id": "lojal",
-        "label": "Lojal 2+ år"
+        "label": "Loyal 2+ years"
       },
       {
         "id": "risk",
-        "label": "Inaktiv 90+ dgr"
+        "label": "Inactive 90+ days"
       }
     ],
     "metrics": {
@@ -2164,7 +2164,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.0",
         "sup": "3.4",
         "aum": "–",
-        "rev": "2 200",
+        "rev": "2,200",
         "adopt": "3.6",
         "scost": "42"
       },
@@ -2187,7 +2187,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.3",
         "sup": "4.0",
         "aum": "–",
-        "rev": "6 800",
+        "rev": "6,800",
         "adopt": "5.2",
         "scost": "28"
       },
@@ -2210,7 +2210,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.2",
         "sup": "3.2",
         "aum": "–",
-        "rev": "1 100",
+        "rev": "1,100",
         "adopt": "2.8",
         "scost": "58"
       },
@@ -2233,7 +2233,7 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "app": "4.1",
         "sup": "4.2",
         "aum": "–",
-        "rev": "8 200",
+        "rev": "8,200",
         "adopt": "5.8",
         "scost": "22"
       },
@@ -2264,16 +2264,16 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
     "personas": [
       {
         "id": "trendjakaren",
-        "name": "Trendjägaren",
+        "name": "The Trend Hunter",
         "emoji": "✨",
         "color": 0,
         "share": 32,
         "tagline": "First to wear, first to return",
-        "desc": "Shoppar 2–3 gånger/månad. Hög returgrad (45%). Drivs av sociala medier och trender.",
+        "desc": "Shops 2–3 times a month. High return rate (45%). Driven by social media and trends.",
         "tags": [
           "Instagram-driven",
-          "Hög returgrad",
-          "Impulsköp"
+          "High return rate",
+          "Impulse buys"
         ],
         "nps": "34",
         "csat": "3.6",
@@ -2298,35 +2298,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 0,
-            "insight": "\"Såg den på TikTok. Köpte inom 10 min.\""
+            "insight": "\"Saw it on TikTok. Bought it within 10 minutes.\""
           },
           {
             "phase": 3,
-            "insight": "\"Paketet kom nästa dag! Älskar det.\""
+            "insight": "\"The parcel came the next day! Love it.\""
           },
           {
             "phase": 4,
-            "insight": "\"Passade inte alls. Returen var enkel dock.\""
+            "insight": "\"It didn't fit at all. The return was easy, though.\""
           }
         ],
         "friction": [
-          "Storleksguiden stämmer sällan",
-          "Returer drar ner marginalen"
+          "The size guide is rarely right",
+          "Returns eat into the margin"
         ],
-        "opportunity": "AI-storleksguide + lönsamhet på retur-mönster."
+        "opportunity": "AI size guide + profitability by return pattern."
       },
       {
         "id": "kvalitetsjakaren",
-        "name": "Kvalitetssökaren",
+        "name": "The Quality Seeker",
         "emoji": "🏆",
         "color": 1,
         "share": 22,
-        "tagline": "Köper sällan men rätt",
-        "desc": "Köper 4–6 gånger/år men stor ordervalue. Läser alla recensioner. Lojal till bra märken.",
+        "tagline": "Buys rarely but well",
+        "desc": "Buys 4–6 times a year with a high order value. Reads every review. Loyal to good brands.",
         "tags": [
-          "Läser reviews",
-          "Jämför material",
-          "Lojal till märke"
+          "Reads reviews",
+          "Compares materials",
+          "Brand loyal"
         ],
         "nps": "62",
         "csat": "4.3",
@@ -2351,35 +2351,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 1,
-            "insight": "\"Läste 40 recensioner. Köpte till slut.\""
+            "insight": "\"Read 40 reviews. Bought it in the end.\""
           },
           {
             "phase": 2,
-            "insight": "\"Storleksguiden var exakt korrekt. Imponerad.\""
+            "insight": "\"The size guide was spot on. Impressed.\""
           },
           {
             "phase": 4,
-            "insight": "\"Leveransen var försenad 3 dagar utan kommunikation.\""
+            "insight": "\"The delivery was 3 days late without a word.\""
           }
         ],
         "friction": [
-          "Otydliga materialbeskrivningar",
-          "Leveransförseningar utan proaktiv kommunikation"
+          "Unclear material descriptions",
+          "Late deliveries without proactive communication"
         ],
-        "opportunity": "Detaljerade produktattribut + proaktiva leveransnotiser."
+        "opportunity": "Detailed product attributes + proactive delivery alerts."
       },
       {
         "id": "bekvamlighetskoparen",
-        "name": "Bekvämlighetsköparen",
+        "name": "The Convenience Shopper",
         "emoji": "🛋️",
         "color": 2,
         "share": 28,
-        "tagline": "Vill ha rätt sak snabbt och smärtfritt",
-        "desc": "Shoppar samma märken och storlekar. Vill ha snabbt checkout. Värdesätter convenience.",
+        "tagline": "Wants the right thing, fast and painless",
+        "desc": "Buys the same brands and sizes. Wants a fast checkout. Values convenience.",
         "tags": [
-          "Sparade storlekar",
+          "Saved sizes",
           "One-click checkout",
-          "Snabb leverans"
+          "Fast delivery"
         ],
         "nps": "54",
         "csat": "4.1",
@@ -2404,35 +2404,35 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 1,
-            "insight": "\"Sökte direkt på min favoritjacka. Köpte på 2 min.\""
+            "insight": "\"Searched for my favourite jacket. Bought it in 2 minutes.\""
           },
           {
             "phase": 2,
-            "insight": "\"Sparad storlek och betalning — supersmidigt.\""
+            "insight": "\"Saved size and payment. Super smooth.\""
           },
           {
             "phase": 3,
-            "insight": "\"Leveransen var 2 dagar sen. Störande.\""
+            "insight": "\"The delivery was 2 days late. Annoying.\""
           }
         ],
         "friction": [
-          "Sparade preferenser uppdateras inte",
-          "Leveranser inte konsekvent snabba"
+          "Saved preferences don't update",
+          "Deliveries not consistently fast"
         ],
         "opportunity": "Persistent cart + guaranteed delivery windows."
       },
       {
         "id": "halbbara_shopparen",
-        "name": "Hållbarhetsdrivna",
+        "name": "The Sustainability-Driven",
         "emoji": "🌿",
         "color": 3,
         "share": 18,
-        "tagline": "Mode utan samvetskval",
-        "desc": "Köper bara om produktionen är transparent. Väljer secondhand-funktioner och hållbara linjer.",
+        "tagline": "Fashion without the guilt",
+        "desc": "Only buys when production is transparent. Chooses second-hand and sustainable lines.",
         "tags": [
-          "Secondhand",
-          "Hållbara material",
-          "Transparens"
+          "Second-hand",
+          "Sustainable materials",
+          "Transparency"
         ],
         "nps": "46",
         "csat": "3.9",
@@ -2457,22 +2457,22 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "moments": [
           {
             "phase": 0,
-            "insight": "\"Hittade dem via deras hållbarhetsrapport.\""
+            "insight": "\"Found them through their sustainability report.\""
           },
           {
             "phase": 1,
-            "insight": "\"CO2-footprint per produkt — det vill jag se.\""
+            "insight": "\"A carbon footprint per product. That's what I want to see.\""
           },
           {
             "phase": 5,
-            "insight": "\"Secondhand-sektionen är för liten.\""
+            "insight": "\"The second-hand section is too small.\""
           }
         ],
         "friction": [
-          "Hållbarhetsinfo per produkt saknas",
-          "Secondhand-sektion undervälvad"
+          "No sustainability info per product",
+          "Second-hand section too small"
         ],
-        "opportunity": "CO2-märkning + utbyggd secondhand-plattform."
+        "opportunity": "Carbon labelling + a bigger second-hand platform."
       }
     ],
     "touchpoints": [
@@ -2480,39 +2480,39 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         {
           "name": "Instagram / TikTok",
           "sat": "–",
-          "note": "42% av trafiken"
+          "note": "42% of traffic"
         },
         {
-          "name": "Startsida / kampanj",
+          "name": "Home page / campaign",
           "sat": "3.8",
-          "note": "Personalisering nyckel"
+          "note": "Personalisation is key"
         },
         {
-          "name": "E-mail nyhetsbrev",
+          "name": "Email newsletter",
           "sat": "3.4",
           "note": "22% CTR"
         }
       ],
       [
         {
-          "name": "Produktsida",
+          "name": "Product page",
           "sat": "3.6",
-          "note": "Bilder viktigast"
+          "note": "Images matter most"
         },
         {
-          "name": "Storleksguide",
+          "name": "Size guide",
           "sat": "2.8",
-          "note": "Störst pain point ⚠️"
+          "note": "Biggest pain point ⚠️"
         },
         {
-          "name": "Kundrecensioner",
+          "name": "Customer reviews",
           "sat": "4.2",
-          "note": "84% läser dem"
+          "note": "84% read them"
         },
         {
-          "name": "Zoom / 360 bild",
+          "name": "Zoom / 360° image",
           "sat": "3.8",
-          "note": "Minskar returer 18%"
+          "note": "Cuts returns by 18%"
         }
       ],
       [
@@ -2522,80 +2522,80 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
           "note": "Drop-off: 34% ⚠️"
         },
         {
-          "name": "Checkout-flöde",
+          "name": "Checkout flow",
           "sat": "3.8",
-          "note": "One-click populärast"
+          "note": "One-click most popular"
         },
         {
-          "name": "Betalningsalternativ",
+          "name": "Payment options",
           "sat": "4.3",
-          "note": "Klarna viktigast"
+          "note": "Klarna matters most"
         },
         {
-          "name": "Orderbekräftelse",
+          "name": "Order confirmation",
           "sat": "4.1",
-          "note": "Viktigt för trygghet"
+          "note": "Important for reassurance"
         }
       ],
       [
         {
-          "name": "Leveransnotiser",
+          "name": "Delivery alerts",
           "sat": "3.2",
-          "note": "Otillräckliga ⚠️"
+          "note": "Not enough ⚠️"
         },
         {
-          "name": "Spårning",
+          "name": "Tracking",
           "sat": "3.4",
-          "note": "Uppdateras sällan"
+          "note": "Rarely updated"
         },
         {
-          "name": "Leveransprecision",
+          "name": "Delivery accuracy",
           "sat": "3.6",
-          "note": "88% i tid"
+          "note": "88% on time"
         },
         {
-          "name": "Paketeringen",
+          "name": "Packaging",
           "sat": "4.2",
-          "note": "Unboxing-moment"
+          "note": "Unboxing moment"
         }
       ],
       [
         {
-          "name": "Retururlabel",
+          "name": "Return label",
           "sat": "4.0",
-          "note": "Enkel process"
+          "note": "Simple process"
         },
         {
-          "name": "Retur-tracking",
+          "name": "Return tracking",
           "sat": "3.2",
-          "note": "Sällan uppdaterad"
+          "note": "Rarely updated"
         },
         {
-          "name": "Återbetalning",
+          "name": "Refund",
           "sat": "3.6",
-          "note": "Median 5 dgr"
+          "note": "Median 5 days"
         },
         {
           "name": "Post-purchase mail",
           "sat": "3.4",
-          "note": "Styling-tips underskattat"
+          "note": "Styling tips underrated"
         }
       ],
       [
         {
-          "name": "Win-back kampanj",
+          "name": "Win-back campaign",
           "sat": "3.2",
-          "note": "Oftast för generisk"
+          "note": "Usually too generic"
         },
         {
-          "name": "Lojalitetserbjudande",
+          "name": "Loyalty offer",
           "sat": "3.4",
-          "note": "Reaktivt, inte proaktivt"
+          "note": "Reactive, not proactive"
         },
         {
-          "name": "Opt-down (frekvens)",
+          "name": "Opt-down (frequency)",
           "sat": "–",
-          "note": "Saknas idag ⚠️"
+          "note": "Missing today ⚠️"
         }
       ]
     ],
@@ -2653,12 +2653,12 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
       {
         "phase": 1,
         "pos": 0.3,
-        "name": "Storleksguide",
+        "name": "Size guide",
         "gap": -24,
         "type": "crit",
         "effort": 3,
         "reward": 5,
-        "desc": "Störst pain point i hela resan. AI-storleksguide baserat på köphistorik reducerar returer 30%."
+        "desc": "The biggest pain point in the whole journey. An AI size guide based on purchase history cuts returns by 30%."
       },
       {
         "phase": 2,
@@ -2668,77 +2668,77 @@ export const INDUSTRIES: Record<IndustryId, Industry> = {
         "type": "crit",
         "effort": 2,
         "reward": 5,
-        "desc": "34% lämnar utan köp. Exit-intent + sparat cart + reminder minskar drop-off 12%."
+        "desc": "34% leave without buying. Exit intent + a saved cart + a reminder cut drop-off by 12%."
       },
       {
         "phase": 2,
         "pos": 0.8,
-        "name": "Klarna / betalningsalternativ",
+        "name": "Klarna / payment options",
         "gap": 8,
         "type": "quick",
         "effort": 1,
         "reward": 3,
-        "desc": "Betalning överpresterar. Tydligare kommunikation av Klarna-alternativ i cart."
+        "desc": "Payment over-delivers. Show the payment options more clearly in the cart."
       },
       {
         "phase": 3,
         "pos": 0.3,
-        "name": "Leveransnotiser",
+        "name": "Delivery alerts",
         "gap": -22,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "Kunder uppdateras inte proaktivt vid förseningar. Push-notiser + proaktiv kommunikation."
+        "desc": "Customers aren't told about delays. Push notifications + proactive communication."
       },
       {
         "phase": 3,
         "pos": 0.6,
-        "name": "Spårning (sällan uppdaterad)",
+        "name": "Tracking (rarely updated)",
         "gap": -16,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "Realtidsspårning är hygien 2026. Kartbaserad leveransview."
+        "desc": "Real-time tracking is table stakes in 2026. A map-based delivery view."
       },
       {
         "phase": 4,
         "pos": 0.3,
-        "name": "Retur-tracking",
+        "name": "Return tracking",
         "gap": -14,
         "type": "watch",
         "effort": 1,
         "reward": 3,
-        "desc": "Kunder oroar sig för om returen kommit fram. Proaktiv bekräftelse dag 1."
+        "desc": "Customers worry whether the return arrived. Confirm proactively on day 1."
       },
       {
         "phase": 4,
         "pos": 0.7,
-        "name": "Post-purchase kommunikation",
+        "name": "Post-purchase communication",
         "gap": -16,
         "type": "crit",
         "effort": 2,
         "reward": 4,
-        "desc": "Styling-inspirationsmail ökar repeat purchase med 22%. Underskattat kanal."
+        "desc": "Styling inspiration emails raise repeat purchases by 22%. An underrated channel."
       },
       {
         "phase": 5,
         "pos": 0.4,
-        "name": "Win-back kampanj (generisk)",
+        "name": "Win-back campaign (generic)",
         "gap": -20,
         "type": "crit",
         "effort": 2,
         "reward": 5,
-        "desc": "Generiska win-back kampanjer fungerar inte. Personaliserat baserat på köphistorik."
+        "desc": "Generic win-back campaigns don't work. Personalise based on purchase history."
       },
       {
         "phase": 5,
         "pos": 0.8,
-        "name": "Opt-down (saknas)",
+        "name": "Opt-down (missing)",
         "gap": -18,
         "type": "crit",
         "effort": 1,
         "reward": 4,
-        "desc": "Kunder som churnar vill ha lägre frekvens, inte avprenumerera. Opt-down saknas helt."
+        "desc": "Customers who churn want fewer emails, not none. There's no opt-down at all."
       }
     ]
   }

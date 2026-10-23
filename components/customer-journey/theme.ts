@@ -17,15 +17,15 @@ export const personaColor = (i: number) => PERSONA_COLORS[i % PERSONA_COLORS.len
 export const personaTint = (i: number) => `color-mix(in srgb, ${personaColor(i)} 14%, white)`;
 
 export const SENTIMENT: Record<Sentiment, { color: string; label: string; bg: string; fg: string }> = {
-  pos: { color: "var(--color-chart-3)", label: "Positiv", bg: "var(--color-feedback-success-bg)", fg: "var(--color-feedback-success-fg)" },
-  mixed: { color: "var(--color-chart-5)", label: "Ambivalent", bg: "var(--color-feedback-warning-bg)", fg: "var(--color-feedback-warning-fg)" },
-  neg: { color: "var(--color-chart-6)", label: "Negativ", bg: "var(--color-feedback-error-bg)", fg: "var(--color-feedback-error-fg)" },
+  pos: { color: "var(--color-chart-3)", label: "Positive", bg: "var(--color-feedback-success-bg)", fg: "var(--color-feedback-success-fg)" },
+  mixed: { color: "var(--color-chart-5)", label: "Mixed", bg: "var(--color-feedback-warning-bg)", fg: "var(--color-feedback-warning-fg)" },
+  neg: { color: "var(--color-chart-6)", label: "Negative", bg: "var(--color-feedback-error-bg)", fg: "var(--color-feedback-error-fg)" },
 };
 
 export const OPPORTUNITY: Record<OpportunityType, { color: string; label: string; bg: string; fg: string }> = {
-  crit: { color: "var(--color-chart-6)", label: "Kritiskt gap", bg: "var(--color-feedback-error-bg)", fg: "var(--color-feedback-error-fg)" },
+  crit: { color: "var(--color-chart-6)", label: "Critical gap", bg: "var(--color-feedback-error-bg)", fg: "var(--color-feedback-error-fg)" },
   quick: { color: "var(--color-chart-3)", label: "Quick win", bg: "var(--color-feedback-success-bg)", fg: "var(--color-feedback-success-fg)" },
-  watch: { color: "var(--color-chart-5)", label: "Bevaka", bg: "var(--color-feedback-warning-bg)", fg: "var(--color-feedback-warning-fg)" },
+  watch: { color: "var(--color-chart-5)", label: "Watch", bg: "var(--color-feedback-warning-bg)", fg: "var(--color-feedback-warning-fg)" },
 };
 
 /** Small uppercase label in brand blue, as on the other case pages. */
