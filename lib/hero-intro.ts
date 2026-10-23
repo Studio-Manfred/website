@@ -1,5 +1,6 @@
 export type IntroPhase = "pending" | "playing" | "done";
-export type IntroEvent = "ready" | "complete" | "error" | "timeout";
+// "skip" is for visitors who prefer reduced motion: no animation at all.
+export type IntroEvent = "ready" | "complete" | "error" | "timeout" | "skip";
 
 export const FPS = 25;
 export const SPEED = 1.5;
@@ -11,8 +12,7 @@ export const INTRO_DURATION_MS = Math.round(
 );
 export const INTRO_TIMEOUT_MS = 4000;
 
-const HEADLINE_AT = 0.85;
-const BUTTON_AFTER_HEADLINE_MS = 300;
+export const BUTTON_AFTER_HEADLINE_MS = 300;
 
 export function initialPhase(reducedMotion: boolean): IntroPhase {
   return reducedMotion ? "done" : "pending";
@@ -20,7 +20,8 @@ export function initialPhase(reducedMotion: boolean): IntroPhase {
 
 export function nextPhase(phase: IntroPhase, event: IntroEvent): IntroPhase {
   if (phase === "done") return "done";
-  if (event === "error" || event === "timeout") return "done";
+  if (event === "error" || event === "timeout" || event === "skip")
+    return "done";
   if (event === "ready" && phase === "pending") return "playing";
   if (event === "complete" && phase === "playing") return "done";
   return phase;
@@ -31,7 +32,10 @@ export function frameAt(elapsedMs: number): number {
   return Math.max(0, Math.floor((elapsedMs / 1000) * FPS * SPEED));
 }
 
+// The headline starts when the drawing is done, the button a little later.
 export function textStartTimes(durationMs: number) {
-  const headline = Math.round(durationMs * HEADLINE_AT);
-  return { headline, button: headline + BUTTON_AFTER_HEADLINE_MS };
+  return {
+    headline: durationMs,
+    button: durationMs + BUTTON_AFTER_HEADLINE_MS,
+  };
 }

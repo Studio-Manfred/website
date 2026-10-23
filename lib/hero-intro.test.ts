@@ -12,7 +12,7 @@ import {
 } from "./hero-intro";
 
 const PHASES: IntroPhase[] = ["pending", "playing", "done"];
-const EVENTS: IntroEvent[] = ["ready", "complete", "error", "timeout"];
+const EVENTS: IntroEvent[] = ["ready", "complete", "error", "timeout", "skip"];
 
 describe("initialPhase", () => {
   it("starts pending", () => {
@@ -45,6 +45,11 @@ describe("nextPhase", () => {
     for (const phase of PHASES) {
       expect(nextPhase(phase, "error")).toBe("done");
     }
+  });
+
+  it("moves pending and playing to done on skip", () => {
+    expect(nextPhase("pending", "skip")).toBe("done");
+    expect(nextPhase("playing", "skip")).toBe("done");
   });
 
   it("moves pending and playing to done on timeout", () => {
@@ -88,14 +93,14 @@ describe("frameAt", () => {
 });
 
 describe("textStartTimes", () => {
-  it("starts the headline at 85 % and the button 300 ms later", () => {
-    expect(textStartTimes(1000)).toEqual({ headline: 850, button: 1150 });
+  it("starts the headline when the drawing is done and the button 300 ms later", () => {
+    expect(textStartTimes(1000)).toEqual({ headline: 1000, button: 1300 });
   });
 
-  it("rounds to whole milliseconds", () => {
+  it("uses the intro duration", () => {
     expect(textStartTimes(INTRO_DURATION_MS)).toEqual({
-      headline: 1609,
-      button: 1909,
+      headline: 1893,
+      button: 2193,
     });
   });
 });
