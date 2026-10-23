@@ -60,7 +60,7 @@ export function StepFilter({ step, onStep }: { step: Step | null; onStep: (s: St
         ))}
       </div>
       <p aria-live="polite" className="text-sm font-light text-[var(--color-text-muted)]">
-        {step === null ? "Showing every part of the instrument" : step === 1 ? "Showing step 1" : `Showing steps 1 to ${step}`}
+        {step === null ? "Showing every part of the instrument" : `Showing step ${step}`}
       </p>
     </div>
   );
@@ -75,13 +75,13 @@ export function Roadmap({ step, onStep }: { step: Step | null; onStep: (s: Step 
           Roadmap: from easy to advanced
         </h2>
         <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>
-          Some parts of a journey instrument can be in place in weeks, others take months and several teams. Pick a step to see what you have after it.
+          Some parts of a journey instrument can be in place in weeks, others take months and several teams. Pick a step to see only its parts.
         </p>
       </div>
       <ol className="grid gap-4 md:grid-cols-3">
         {STEPS.map((s) => {
           const on = step === s.step;
-          const included = step === null || s.step <= step;
+          const included = step === null || s.step === step;
           return (
             <li key={s.step}>
               <button
@@ -115,22 +115,5 @@ export function Roadmap({ step, onStep }: { step: Step | null; onStep: (s: Step 
         })}
       </ol>
     </section>
-  );
-}
-
-/** Stands in for a part that comes in a later step than the one chosen. */
-export function LaterStep({ step, what, onShow }: { step: Step; what: string; onShow: () => void }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-dashed border-[var(--color-border-default)] p-6">
-      <div>
-        <StepTag step={step} />
-        <p className="mt-2 font-light text-[var(--color-text-secondary)]">
-          {what} comes in step {step}, {stepOf(step).title.toLowerCase()}.
-        </p>
-      </div>
-      <button type="button" onClick={onShow} className="shrink-0 rounded-full border border-[var(--color-business-blue)] px-4 py-2 text-sm text-[var(--color-business-blue)] hover:bg-[var(--blue-50)]">
-        Show step {step}
-      </button>
-    </div>
   );
 }

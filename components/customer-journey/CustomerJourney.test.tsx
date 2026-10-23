@@ -182,36 +182,53 @@ describe("complexity filter", () => {
     expect(within(g).getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("step 1 shows only the easy rows, and the gap analysis, AI and Insights wait for later steps", async () => {
+  it("a step shows only its own rows in the matrix", async () => {
+    render(<CustomerJourney />);
+    for (const step of [1, 2, 3] as const) {
+      await userEvent.click(within(complexity()).getByRole("button", { name: new RegExp(`Step ${step}`) }));
+      for (const r of MATRIX_ROWS) {
+        const rowLabel = screen.queryAllByText(r.name, { selector: "p.font-extrabold" });
+        expect(rowLabel.length > 0).toBe(ROW_STEP[r.id] === step);
+      }
+      expect(screen.getByText(`Showing step ${step}`)).toBeInTheDocument();
+    }
+  });
+
+  it("step 1 keeps the emotion curve and touchpoints, and hides the gap analysis, AI and Insights", async () => {
     render(<CustomerJourney />);
     await userEvent.click(within(complexity()).getByRole("button", { name: /Step 1/ }));
-    for (const r of MATRIX_ROWS) {
-      if (ROW_STEP[r.id] === 1) expect(screen.getByText(r.name)).toBeInTheDocument();
-      else expect(screen.queryByText(r.name)).not.toBeInTheDocument();
-    }
-    expect(screen.getByText(/The gap analysis comes in step 2/)).toBeInTheDocument();
-    expect(screen.getByText(/AI analysis of the data comes in step 3/)).toBeInTheDocument();
-    expect(screen.queryByRole("group", { name: "Show opportunities for a phase" })).not.toBeInTheDocument();
+    expect(screen.getByText("Emotion curve")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Touchpoints/ })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /Gap/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "Analyse" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/comes in step/)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Insights/ })).toBeDisabled();
   });
 
-  it("is cumulative: step 2 adds its rows and the gap analysis", async () => {
+  it("step 2 shows the gap analysis but not the emotion curve, touchpoints or AI", async () => {
     render(<CustomerJourney />);
     await userEvent.click(within(complexity()).getByRole("button", { name: /Step 2/ }));
-    for (const r of MATRIX_ROWS) {
-      if (ROW_STEP[r.id] <= 2) expect(screen.getByText(r.name)).toBeInTheDocument();
-      else expect(screen.queryByText(r.name)).not.toBeInTheDocument();
-    }
-    expect(screen.getByRole("group", { name: "Show opportunities for a phase" })).toBeInTheDocument();
-    expect(screen.getByText("Showing steps 1 to 2")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Gap/ })).toBeInTheDocument();
+    expect(screen.queryByText("Emotion curve")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Touchpoints/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "Analyse" })).not.toBeInTheDocument();
+    for (const p of finance.phases) expect(screen.getAllByText(p.name).length).toBeGreaterThan(0);
   });
 
-  it("a roadmap card and a Show step button switch the step too", async () => {
+  it("step 3 shows AI analysis and Insights but not the gap analysis", async () => {
     render(<CustomerJourney />);
-    const roadmap = screen.getByRole("region", { name: /Roadmap/ });
-    await userEvent.click(within(roadmap).getByRole("button", { name: /Map the journey/ }));
+    await userEvent.click(within(complexity()).getByRole("button", { name: /Step 3/ }));
+    expect(screen.getByRole("textbox", { name: "Analyse" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Insights" })).toBeEnabled();
+    expect(screen.queryByRole("heading", { name: /Gap/ })).not.toBeInTheDocument();
+  });
+
+  it("a roadmap card switches the step, and again switches back to All", async () => {
+    render(<CustomerJourney />);
+    const card = within(screen.getByRole("region", { name: /Roadmap/ })).getByRole("button", { name: /Map the journey/ });
+    await userEvent.click(card);
     expect(within(complexity()).getByRole("button", { name: /Step 1/ })).toHaveAttribute("aria-pressed", "true");
-    await userEvent.click(screen.getByRole("button", { name: "Show step 2" }));
-    expect(within(complexity()).getByRole("button", { name: /Step 2/ })).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(card);
+    expect(within(complexity()).getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
   });
 });

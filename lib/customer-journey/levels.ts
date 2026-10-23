@@ -1,6 +1,6 @@
 // How hard each part of the journey instrument is to build, as three steps of
-// a roadmap. The complexity filter is cumulative: step 2 shows what steps 1
-// and 2 give you.
+// a roadmap. Choosing a step shows only that step's parts, so each step reads
+// as a clean overview.
 
 export type Step = 1 | 2 | 3;
 
@@ -71,4 +71,4 @@ export const SECTION_STEP = {
 } as const satisfies Record<string, Step>;
 
 /** null means every step. */
-export const inStep = (level: Step, step: Step | null) => step === null || level <= step;
+export const inStep = (level: Step, step: Step | null) => step === null || level === step;

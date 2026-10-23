@@ -140,12 +140,12 @@ describe("matrix by role and step", () => {
     expect(count(visibleGroups("all", null))).toBe(MATRIX_ROWS.length);
   });
 
-  it("a step shows its rows and the steps before it", () => {
-    const step1 = visibleGroups("all", 1);
-    for (const g of step1) for (const r of g.rows) expect(ROW_STEP[r.id]).toBe(1);
-    const step2 = count(visibleGroups("all", 2));
-    expect(step2).toBe(MATRIX_ROWS.filter((r) => ROW_STEP[r.id] <= 2).length);
-    expect(count(step1)).toBeLessThan(step2);
+  it("a step shows only its own rows", () => {
+    for (const step of [1, 2, 3] as const) {
+      const gs = visibleGroups("all", step);
+      for (const g of gs) for (const r of g.rows) expect(ROW_STEP[r.id]).toBe(step);
+      expect(count(gs)).toBe(MATRIX_ROWS.filter((r) => ROW_STEP[r.id] === step).length);
+    }
     expect(visibleGroups("all", 1).map((g) => g.label)).not.toContain("Internal Services");
   });
 
