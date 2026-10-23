@@ -17,7 +17,7 @@ Each task is one Red, Green, Refactor cycle. Commit after each task. Use Convent
 | 4. `WordmarkReveal` component (done) | 1, 2, 3 | none |
 | 5. `HeroIntro`: headline and button wait (done) | 1, 4 | Timing approved: the headline after the wordmark (100 %), the button 0.3 s later. |
 | 6. First paint, no JavaScript, reduced motion (CSS rule done; checks in Task 7) | 5 | none |
-| 7. End-to-end tests | 6 | none |
+| 7. End-to-end tests (done) | 6 | none |
 | 8. Docs and PR | 7 | You approve the PR text. |
 
 Tasks 1 and 2 do not depend on anything. They can run in parallel.
