@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Cases**: on the Customer Journey Intelligence case the gap analysis and journey instrument headings stand alone, with what they mean behind a small info button, for a tighter page.
 - **Home**: the wordmark in the hero draws itself when the page loads, in 1.6 s. When it is done, the headline rises, and the button 0.3 s later, with the same rise as before. Visitors who prefer reduced motion, visitors without JavaScript and a failed load all get the whole hero at once (STU-1183).
 - **Home**: the open menu has no Manfred wordmark any more. The panel header holds only the close button, in the same place as the menu button (STU-1184).
 - **Cases**: the AI Activities (Triple Diamond) page filters by level (Easy, Medium, Advanced) as well as by role (STU-1182).
