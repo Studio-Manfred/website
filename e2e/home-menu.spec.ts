@@ -75,11 +75,6 @@ test.describe("home menu", () => {
     await expect(close).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   });
 
-  test("is not on other pages", async ({ page }) => {
-    await page.goto("/writing");
-    await expect(openMenuButton(page)).toHaveCount(0);
-  });
-
   test("keeps the button in place when the menu opens", async ({ page }) => {
     await page.goto("/");
     const menuButton = await box(openMenuButton(page));

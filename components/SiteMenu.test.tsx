@@ -114,6 +114,19 @@ describe("SiteMenu buttons", () => {
     );
   });
 
+  it("puts the page's nav row geometry on the panel header, so the close button keeps its place", async () => {
+    await openAt("/cases", {
+      headerClassName: "px-6 py-5",
+      headerInnerClassName: "mx-auto h-[56px] w-full",
+      headerInnerStyle: { maxWidth: "1200px" },
+    });
+    const close = screen.getByRole("button", { name: "Close menu" });
+    const inner = close.parentElement as HTMLElement;
+    expect(inner).toHaveClass("mx-auto", "h-[56px]", "w-full", "justify-end");
+    expect(inner.style.maxWidth).toBe("1200px");
+    expect(inner.parentElement).toHaveClass("px-6", "py-5");
+  });
+
   it("puts the page's own geometry on the menu button and the panel header", async () => {
     await openAt("/", {
       triggerClassName: "absolute top-[12px]",

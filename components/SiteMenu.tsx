@@ -41,6 +41,9 @@ interface SiteMenuProps {
   /** The panel header must have the page's nav geometry, so the close button sits where the menu button was. */
   headerClassName?: string;
   headerStyle?: CSSProperties;
+  /** The row inside the header that holds the close button, for a nav row with its own max width. */
+  headerInnerClassName?: string;
+  headerInnerStyle?: CSSProperties;
 }
 
 const ring =
@@ -56,6 +59,8 @@ export function SiteMenu({
   triggerStyle,
   headerClassName = "",
   headerStyle,
+  headerInnerClassName = "",
+  headerInnerStyle,
 }: SiteMenuProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -87,19 +92,21 @@ export function SiteMenu({
         className="inset-0 h-dvh w-screen max-w-none gap-0 overflow-y-auto border-0 bg-[var(--color-business-blue)] p-0 shadow-none"
       >
         <SheetTitle className="sr-only">Menu</SheetTitle>
-        <div
-          className={`flex shrink-0 items-center justify-end ${headerClassName}`}
-          style={headerStyle}
-        >
-          <SheetClose asChild>
-            <button
-              type="button"
-              aria-label="Close menu"
-              className={`${ring} ${toneClass.white}`}
-            >
-              <Icon name="x" size="lg" />
-            </button>
-          </SheetClose>
+        <div className={`shrink-0 ${headerClassName}`} style={headerStyle}>
+          <div
+            className={`flex items-center justify-end ${headerInnerClassName}`}
+            style={headerInnerStyle}
+          >
+            <SheetClose asChild>
+              <button
+                type="button"
+                aria-label="Close menu"
+                className={`${ring} ${toneClass.white}`}
+              >
+                <Icon name="x" size="lg" />
+              </button>
+            </SheetClose>
+          </div>
         </div>
         <nav aria-label="Primary">
           <ul>
