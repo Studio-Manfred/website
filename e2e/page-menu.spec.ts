@@ -231,6 +231,29 @@ test.describe("the hamburger turns into a cross", () => {
     expect(names).toContain("menu-icon-top-in");
   });
 
+  test("the cross takes 600 ms to form, and 350 ms to turn back", async ({
+    page,
+  }) => {
+    await page.goto("/writing");
+    await menuButton(page).click();
+    await expect(panel(page)).toBeVisible();
+    const duration = (name: string) =>
+      page.evaluate((n) => {
+        const a = document
+          .getAnimations()
+          .find((x) => (x as CSSAnimation).animationName === n);
+        return a ? a.effect?.getTiming().duration : null;
+      }, name);
+    expect(await duration("menu-icon-top-in")).toBe(600);
+    expect(await duration("menu-icon-middle-in")).toBe(360);
+    expect(await duration("menu-panel-in")).toBe(400);
+    await settled(page);
+    await page.keyboard.press("Escape");
+    await expect.poll(() => duration("menu-icon-top-out")).toBe(350);
+    expect(await duration("menu-icon-middle-out")).toBe(210);
+    expect(await duration("menu-panel-out")).toBe(350);
+  });
+
   test("with reduced motion the cross shows at once and nothing animates", async ({
     page,
   }) => {
