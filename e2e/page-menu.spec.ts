@@ -171,7 +171,8 @@ test.describe("the logo in the nav on narrow screens", () => {
     const row = await box(page.locator("nav > div").first());
     const m = await box(mark);
     expect(Math.abs(m.x - row.x)).toBeLessThanOrEqual(1);
-    expect(m.height).toBeGreaterThan(24);
+    expect(m.height).toBeGreaterThan(21);
+    expect(m.height).toBeLessThan(25);
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= window.innerWidth,

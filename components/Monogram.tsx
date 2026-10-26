@@ -4,8 +4,9 @@ interface MonogramProps {
   color: "white" | "blue";
 }
 
-// The M at the same optical weight as the wordmark's cap height (27 px at the
-// 44 px phone wordmark). The box hugs the glyph, so it sits flush with the edge.
+// The M is a dense glyph, so it reads as heavy as the wordmark at a little under
+// the wordmark's cap height (27 px at the 44 px phone wordmark): 23 px. The box
+// hugs the glyph, so it sits flush with the edge.
 export function Monogram({ color }: MonogramProps) {
   const fill =
     color === "white"
@@ -17,8 +18,8 @@ export function Monogram({ color }: MonogramProps) {
       role="img"
       aria-label="Manfred home"
       viewBox={monogram.tightViewBox}
-      height={27}
-      width={30}
+      height={23}
+      width={26}
       focusable="false"
     >
       <path d={monogram.path} fill={fill} />
