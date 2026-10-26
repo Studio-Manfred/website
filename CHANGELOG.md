@@ -6,6 +6,10 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Join us**: no sideways scroll on a phone. The two-column blocks stack and the photo cluster shrinks with the screen.
+
 ### Changed
 
 - **Top nav**: on wide screens the nav now lines up with the content's outer edges on the shared CV, `/cases`, case pages, course pages, `/join-us`, `/writing` and `/privacy-policy`.

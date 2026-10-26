@@ -59,7 +59,7 @@ export default function JoinUsPage() {
 
               {/* Skills */}
               <div style={{ borderTop: "1px solid var(--color-border-default)", paddingTop: "40px", marginBottom: "40px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
+                <div className="join-split" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
                   <p className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)" }}>Skills</p>
                   <div>
                     <p className="font-light text-[var(--color-text-secondary)] mb-5" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>
@@ -84,7 +84,7 @@ export default function JoinUsPage() {
 
               {/* Experience */}
               <div style={{ borderTop: "1px solid var(--color-border-default)", paddingTop: "40px", marginBottom: "40px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
+                <div className="join-split" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
                   <p className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)" }}>Experience</p>
                   <div>
                     <p className="font-light text-[var(--color-text-secondary)] mb-5" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>
@@ -125,7 +125,7 @@ export default function JoinUsPage() {
                 },
               ].map(({ label, text }) => (
                 <div key={label} style={{ borderTop: "1px solid var(--color-border-default)", paddingTop: "40px", marginBottom: "40px" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
+                  <div className="join-split" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px" }}>
                     <p className="font-extrabold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)" }}>{label}</p>
                     <p className="font-light text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.875rem, 1.2vw, 1rem)", lineHeight: 1.75 }}>{text}</p>
                   </div>
@@ -184,7 +184,7 @@ export default function JoinUsPage() {
               </p>
 
               {/* 4 points — colored cards in 2 columns */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridAutoRows: "1fr", gap: "12px" }}>
+              <div className="join-split" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridAutoRows: "1fr", gap: "12px" }}>
                 {[
                   {
                     title: "A guaranteed salary, even between assignments.",
@@ -220,7 +220,7 @@ export default function JoinUsPage() {
 
               {/* Examples */}
               <div style={{ marginTop: "100px" }}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "60px", marginBottom: "40px" }}>
+                <div className="join-split" style={{ display: "flex", alignItems: "flex-start", gap: "60px", marginBottom: "40px" }}>
                   <h3 className="font-extrabold text-[var(--color-business-blue)]" style={{ fontSize: "clamp(1.5rem, 2.5vw, 2rem)", lineHeight: 1.1, flexShrink: 0 }}>
                     Examples
                   </h3>
@@ -276,8 +276,8 @@ export default function JoinUsPage() {
               </div>
 
               {/* What goes to Manfred */}
-              <div style={{ backgroundColor: "#f5f3ee", borderRadius: "16px", padding: "48px", marginTop: "60px" }}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "60px", marginBottom: "40px" }}>
+              <div className="join-box" style={{ backgroundColor: "#f5f3ee", borderRadius: "16px", padding: "48px", marginTop: "60px" }}>
+                <div className="join-split" style={{ display: "flex", alignItems: "flex-start", gap: "60px", marginBottom: "40px" }}>
                   <h3
                     className="font-extrabold text-[var(--color-text-primary)]"
                     style={{ fontSize: "clamp(1.5rem, 2.5vw, 2rem)", lineHeight: 1.1, flexShrink: 0 }}
@@ -301,7 +301,7 @@ export default function JoinUsPage() {
                   />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0 60px" }}>
+                <div className="join-split" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0 60px" }}>
                   {[
                     {
                       title: "Buffer",
@@ -329,7 +329,7 @@ export default function JoinUsPage() {
         {/* ── IMAGE CLUSTER ───────────────────────── */}
         <FadeIn>
           <div className="bg-white" style={{ padding: "40px 0 100px" }}>
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", gap: 0 }}>
+            <div className="join-photos" style={{ display: "flex", justifyContent: "center", alignItems: "flex-end", gap: 0 }}>
               <LoopingPhoto
                 images={["/vibes/moa-katt.jpeg", "/vibes/manfred-unn.jpeg", "/vibes/IMG_3375.jpg"]}
                 interval={2600}
@@ -365,7 +365,7 @@ export default function JoinUsPage() {
             </h2>
 
               {/* Off-grid: narrow left gutter + right column with title + FAQ */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px", alignItems: "start" }}>
+              <div className="join-split" style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "60px", alignItems: "start" }}>
 
                 {/* Left: "The fine details." anchored top-right of its column */}
                 <div style={{ paddingTop: "4px" }}>
