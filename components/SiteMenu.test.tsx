@@ -89,12 +89,26 @@ describe("SiteMenu buttons", () => {
     expect(button).not.toHaveClass("border-2");
   });
 
-  it("draws the close button as a bare white icon, not a ring or a filled circle", async () => {
-    await openAt("/");
+  it("draws the close button as a bare white icon on a blue panel, not a ring or a filled circle", async () => {
+    await openAt("/cases", { tone: "blue" });
     const close = screen.getByRole("button", { name: "Close menu" });
     expect(close).toHaveClass("text-white");
     expect(close).not.toHaveClass("border-2");
     expect(close).not.toHaveClass("bg-white");
+  });
+
+  it("makes the panel white on a blue page, with a blue close button and blue text", async () => {
+    await openAt("/writing", { tone: "white" });
+    const dialog = screen.getByRole("dialog", { name: "Menu" });
+    expect(dialog).toHaveClass("bg-white");
+    expect(dialog).not.toHaveClass("bg-[var(--color-business-blue)]");
+    expect(screen.getByRole("button", { name: "Close menu" })).toHaveClass(
+      "text-[var(--color-business-blue)]",
+    );
+    const nav = screen.getByRole("navigation", { name: "Primary" });
+    expect(within(nav).getAllByRole("link")[0]).toHaveClass(
+      "text-[var(--color-business-blue)]",
+    );
   });
 
   it("keeps the panel blue on a white page", async () => {

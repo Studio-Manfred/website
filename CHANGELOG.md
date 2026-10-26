@@ -8,6 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Changed
 
+- **Menu**: the open menu is white on blue pages (home, writing, training) and blue on white pages (cases, course pages). The wipe no longer shows a dark band under its edge, which looked like a stutter.
 - **Top nav**: on wide screens the nav now lines up with the content's outer edges on the shared CV, `/cases`, case pages, course pages, `/join-us`, `/writing` and `/privacy-policy`.
 
 ### Added

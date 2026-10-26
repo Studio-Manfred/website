@@ -108,6 +108,12 @@ select:focus-visible,
   }
 }
 
+/* The DS sheet overlay (50 % black) fades in under the wipe and showed as a dark
+   band below the panel's edge. The panel covers the page, so the overlay stays clear. */
+body:has(.menu-panel) {
+  --color-bg-overlay: transparent;
+}
+
 /* The content of the panel fades in and rises 8 px after the wipe, row by row
    (50 ms apart, the first after 100 ms). Closing stays fast: no animation then. */
 @media (prefers-reduced-motion: no-preference) {
