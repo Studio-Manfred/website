@@ -32,6 +32,7 @@ import { CellDialog, InsightsDialog, type CellDetail } from "./dialogs";
 import { FilterBar, ROLES, type PersonaChoice } from "./FilterBar";
 import { StepTag } from "./steps";
 import { InfoTip } from "./InfoTip";
+import { DEFAULT_INDUSTRY, industryPath } from "@/lib/customer-journey/slugs";
 import {
   BLUE,
   OPPORTUNITY,
@@ -72,6 +73,8 @@ type Props = {
   intro?: string;
   categoryLine?: string;
   consultants?: Consultant[];
+  /** The industry the page opens on, from the address. */
+  initialIndustry?: IndustryId;
 };
 
 export function CustomerJourney({
@@ -79,8 +82,9 @@ export function CustomerJourney({
   intro = CJ_CASE_DEFAULTS.intro,
   categoryLine = CJ_CASE_DEFAULTS.categoryLine,
   consultants = [],
+  initialIndustry = DEFAULT_INDUSTRY,
 }: Props = {}) {
-  const [industryId, setIndustryId] = useState<IndustryId>("finance");
+  const [industryId, setIndustryId] = useState<IndustryId>(initialIndustry);
   const ind = INDUSTRIES[industryId];
   const [seg, setSeg] = useState(ind.segments[0].id);
   const [personaChoice, setPersonaChoice] = useState<PersonaChoice>(null);
@@ -115,6 +119,10 @@ export function CustomerJourney({
 
   const changeIndustry = (id: IndustryId) => {
     setIndustryId(id);
+    // Each industry has its own address, so the link can be shared. Replace,
+    // not push: switching industry is a filter, not a new page to go back to.
+    window.history.replaceState(null, "", industryPath(id));
+    document.title = `${title} · ${INDUSTRIES[id].name} — Studio Manfred`;
     setSeg(INDUSTRIES[id].segments[0].id);
     setPersonaChoice(null);
     setFocus(null);
