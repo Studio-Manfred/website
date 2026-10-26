@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo, Button } from "@/components/ds";
 import { GetInTouchLink } from "@/components/GetInTouchLink";
+import { Monogram } from "@/components/Monogram";
 import { SiteMenu } from "@/components/SiteMenu";
 import { WIDTH_PX, type LayoutWidth } from "@/lib/layout";
 
@@ -35,15 +36,20 @@ export function PageNav({
         style={rowStyle}
       >
         <Link href="/" className="flex items-center">
-          <span className="leading-[0] md:hidden">
+          {/* Below 340 px the row is too tight for the wordmark: the M takes its place. */}
+          <span className="leading-[0] min-[340px]:hidden">
+            <Monogram color={logoColor} />
+          </span>
+          {/* The wordmark's letters sit about 10 % inside its box; pull it out by that much. */}
+          <span className="-ml-[9.5px] leading-[0] max-[339px]:hidden md:hidden">
             <Logo
-              variant="monogram"
+              variant="wordmark"
               color={logoColor}
-              height={40}
+              height={44}
               aria-label="Manfred home"
             />
           </span>
-          <span className="leading-[0] max-md:hidden">
+          <span className="leading-[0] max-md:hidden md:-ml-[12px]">
             <Logo
               variant="wordmark"
               color={logoColor}

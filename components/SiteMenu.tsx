@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ds";
 import { GetInTouchLink } from "@/components/GetInTouchLink";
+import { MenuIcon } from "@/components/MenuIcon";
 import { contact } from "@/lib/contact";
 import { menuGutter } from "@/lib/menu-layout";
 import { fontSize } from "@/lib/typography";
@@ -46,11 +47,12 @@ interface SiteMenuProps {
   headerInnerStyle?: CSSProperties;
 }
 
-const ring =
-  "flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-full border-2 md:h-[56px] md:w-[56px]";
+// A bare icon in a 48 px box (56 px from md): no ring, no fill (owner decision).
+const iconButton =
+  "flex h-[48px] w-[48px] shrink-0 items-center justify-center -mr-[12px] md:h-[56px] md:w-[56px] md:-mr-[16px]";
 const toneClass = {
-  white: "border-white text-white",
-  blue: "border-[var(--color-business-blue)] text-[var(--color-business-blue)]",
+  white: "text-white",
+  blue: "text-[var(--color-business-blue)]",
 };
 
 export function SiteMenu({
@@ -79,17 +81,17 @@ export function SiteMenu({
         <button
           type="button"
           aria-label="Open menu"
-          className={`${ring} ${toneClass[tone]} ${triggerClassName}`}
+          className={`${iconButton} ${toneClass[tone]} ${triggerClassName}`}
           style={triggerStyle}
         >
-          <Icon name="menu" size="lg" />
+          <MenuIcon />
         </button>
       </SheetTrigger>
       <SheetContent
         side="top"
         showCloseButton={false}
         aria-describedby={undefined}
-        className="inset-0 h-dvh w-screen max-w-none gap-0 overflow-y-auto border-0 bg-[var(--color-business-blue)] p-0 shadow-none"
+        className="menu-panel inset-0 h-dvh w-screen max-w-none gap-0 overflow-y-auto border-0 bg-[var(--color-business-blue)] p-0 shadow-none"
       >
         <SheetTitle className="sr-only">Menu</SheetTitle>
         <div className={`shrink-0 ${headerClassName}`} style={headerStyle}>
@@ -101,9 +103,9 @@ export function SiteMenu({
               <button
                 type="button"
                 aria-label="Close menu"
-                className={`${ring} ${toneClass.white}`}
+                className={`${iconButton} ${toneClass.white}`}
               >
-                <Icon name="x" size="lg" />
+                <MenuIcon morph />
               </button>
             </SheetClose>
           </div>

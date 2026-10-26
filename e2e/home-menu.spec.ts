@@ -5,11 +5,22 @@ const openMenuButton = (page: Page) =>
 const bar = (page: Page) => page.getByTestId("home-menu-bar");
 const panel = (page: Page) => page.getByRole("dialog", { name: "Menu" });
 
+// Waits for the finite animations (the panel wipe and the icon morph) to finish.
+async function settled(page: Page) {
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+        .map((a) => a.finished.catch(() => undefined)),
+    ),
+  );
+}
+
 async function openPanel(page: Page) {
   await openMenuButton(page).click();
   await expect(panel(page)).toBeVisible();
-  // The panel slides in; wait until it rests at the top of the viewport.
-  await expect.poll(async () => (await panel(page).boundingBox())?.y).toBe(0);
+  await settled(page);
 }
 
 async function box(locator: Locator) {
@@ -62,16 +73,16 @@ test.describe("home menu", () => {
     await expect(nav.getByRole("link", { name: /^Home/ })).toHaveCount(0);
   });
 
-  test("draws both buttons as a ring, not a filled circle", async ({
+  test("draws both buttons as a bare icon: no ring, no fill", async ({
     page,
   }) => {
     await page.goto("/");
     const menuButton = openMenuButton(page);
-    await expect(menuButton).toHaveCSS("border-top-width", "2px");
+    await expect(menuButton).toHaveCSS("border-top-width", "0px");
     await expect(menuButton).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
     await openPanel(page);
     const close = panel(page).getByRole("button", { name: "Close menu" });
-    await expect(close).toHaveCSS("border-top-width", "2px");
+    await expect(close).toHaveCSS("border-top-width", "0px");
     await expect(close).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   });
 

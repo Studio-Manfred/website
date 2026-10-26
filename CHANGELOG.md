@@ -12,8 +12,9 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
+- **Menu**: the menu button is a plain hamburger, with no ring, and it turns into a cross when the menu opens (and back when it closes). The menu wipes in from the top. The logo and the menu button are now flush with the page content's edges. On phones the nav shows the full wordmark, and the M only on very narrow screens (below 340 px), where the M is bigger than before (STU-1185).
 - **Menu**: every page has the menu now, in the top nav after Get in touch (all pages except the shared CV). On a phone the nav shows the M instead of the wordmark so everything fits. The nav is the same width as the page content. The menu is always blue, also from a white page, and the close button sits in the same place as the menu button (STU-1185).
-- **Menu**: Cases is back in the home menu ("Work we're proud of. Mostly."), and the menu has a Home link ("Back to start.") that is hidden on the home page. The link to the page you are on is never shown. The menu button and the close button are a thin ring instead of a filled circle. The menu is now one shared component, ready for the other pages (STU-1185).
+- **Menu**: Cases is back in the home menu ("Work we're proud of. Mostly."), and the menu has a Home link ("Back to start.") that is hidden on the home page. The link to the page you are on is never shown. The menu is now one shared component, ready for the other pages (STU-1185).
 - **Cases**: on the Customer Journey Intelligence case the gap analysis and journey instrument headings stand alone, with what they mean behind a small info button, for a tighter page.
 - **Home**: the wordmark in the hero draws itself when the page loads, in 1.6 s. When it is done, the headline rises, and the button 0.3 s later, with the same rise as before. Visitors who prefer reduced motion, visitors without JavaScript and a failed load all get the whole hero at once (STU-1183).
 - **Home**: the open menu has no Manfred wordmark any more. The panel header holds only the close button, in the same place as the menu button (STU-1184).

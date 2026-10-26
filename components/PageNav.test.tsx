@@ -3,8 +3,21 @@ import { render, screen, within } from "@testing-library/react";
 import { PageNav } from "./PageNav";
 
 vi.mock("@/components/ds", () => ({
-  Logo: ({ color, variant }: { color: string; variant: string }) => (
-    <div data-testid="logo" data-color={color} data-variant={variant} />
+  Logo: ({
+    color,
+    variant,
+    height,
+  }: {
+    color: string;
+    variant: string;
+    height: number;
+  }) => (
+    <div
+      data-testid="logo"
+      data-color={color}
+      data-variant={variant}
+      data-height={height}
+    />
   ),
   Button: ({ children }: { children: React.ReactNode }) => (
     <span data-testid="button">{children}</span>
@@ -64,12 +77,34 @@ describe("PageNav", () => {
     expect(row.style.maxWidth).toBe("1200px");
   });
 
-  it("shows the wordmark on desktop and the M monogram on a phone", () => {
+  it("has the wordmark at 44 px on a phone and 56 px from md, and the M below 340 px", () => {
+    const { container } = render(<PageNav />);
+    const logos = screen.getAllByTestId("logo");
+    expect(logos.map((logo) => logo.getAttribute("data-variant"))).toEqual([
+      "wordmark",
+      "wordmark",
+    ]);
+    expect(logos.map((logo) => logo.getAttribute("data-height"))).toEqual([
+      "44",
+      "56",
+    ]);
+    const m = container.querySelector(
+      '[data-testid="monogram"]',
+    ) as HTMLElement;
+    expect(m).not.toBeNull();
+    expect(m.closest("span")).toHaveClass("min-[340px]:hidden");
+    expect(logos[0].closest("span")).toHaveClass(
+      "max-[339px]:hidden",
+      "md:hidden",
+    );
+    expect(logos[1].closest("span")).toHaveClass("max-md:hidden");
+  });
+
+  it("pulls the wordmark out by its own padding, so the letters sit flush with the content edge", () => {
     render(<PageNav />);
-    const variants = screen
-      .getAllByTestId("logo")
-      .map((logo) => logo.getAttribute("data-variant"));
-    expect(variants.sort()).toEqual(["monogram", "wordmark"]);
+    const [phone, desktop] = screen.getAllByTestId("logo");
+    expect(phone.closest("span")).toHaveClass("-ml-[9.5px]");
+    expect(desktop.closest("span")).toHaveClass("md:-ml-[12px]");
   });
 
   it("puts the menu last, after Get in touch", () => {

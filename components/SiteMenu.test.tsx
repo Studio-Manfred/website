@@ -72,38 +72,28 @@ describe("SiteMenu links", () => {
 });
 
 describe("SiteMenu buttons", () => {
-  it("draws the menu button as a white ring by default", () => {
+  it("draws the menu button as a bare white icon by default: no ring, no fill", () => {
     path.current = "/";
     render(<SiteMenu />);
     const button = screen.getByRole("button", { name: "Open menu" });
-    expect(button).toHaveClass(
-      "rounded-full",
-      "border-2",
-      "border-white",
-      "text-white",
-    );
+    expect(button).toHaveClass("text-white");
+    expect(button).not.toHaveClass("border-2");
     expect(button).not.toHaveClass("bg-white");
   });
 
-  it("draws the menu button as a blue ring on a white page", () => {
+  it("draws the menu button as a bare blue icon on a white page", () => {
     path.current = "/writing";
     render(<SiteMenu tone="blue" />);
     const button = screen.getByRole("button", { name: "Open menu" });
-    expect(button).toHaveClass(
-      "border-2",
-      "border-[var(--color-business-blue)]",
-    );
+    expect(button).toHaveClass("text-[var(--color-business-blue)]");
+    expect(button).not.toHaveClass("border-2");
   });
 
-  it("draws the close button as a white ring, not a filled circle", async () => {
+  it("draws the close button as a bare white icon, not a ring or a filled circle", async () => {
     await openAt("/");
     const close = screen.getByRole("button", { name: "Close menu" });
-    expect(close).toHaveClass(
-      "rounded-full",
-      "border-2",
-      "border-white",
-      "text-white",
-    );
+    expect(close).toHaveClass("text-white");
+    expect(close).not.toHaveClass("border-2");
     expect(close).not.toHaveClass("bg-white");
   });
 
@@ -135,5 +125,43 @@ describe("SiteMenu buttons", () => {
     expect(
       screen.getByRole("dialog").querySelector(".h-\\[96px\\]"),
     ).not.toBeNull();
+  });
+});
+
+describe("SiteMenu icon and panel motion", () => {
+  it("draws the menu button as three lines that rest as a hamburger", () => {
+    path.current = "/";
+    render(<SiteMenu />);
+    const icon = screen
+      .getByRole("button", { name: "Open menu" })
+      .querySelector("svg");
+    expect(icon).toHaveClass("menu-icon");
+    expect(icon).not.toHaveClass("menu-icon--morph");
+    expect(icon?.querySelectorAll("line")).toHaveLength(3);
+    expect(icon).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("draws the close button with the same three lines, set to turn into a cross", async () => {
+    await openAt("/");
+    const icon = screen
+      .getByRole("button", { name: "Close menu" })
+      .querySelector("svg");
+    expect(icon).toHaveClass("menu-icon", "menu-icon--morph");
+    expect(icon?.querySelectorAll("line")).toHaveLength(3);
+  });
+
+  it("pulls both buttons out by the space around the lines, so the lines sit flush with the content edge", async () => {
+    await openAt("/");
+    for (const name of ["Open menu", "Close menu"]) {
+      const button = screen.getByRole("button", { name, hidden: true });
+      expect(button).toHaveClass("-mr-[12px]", "md:-mr-[16px]");
+    }
+  });
+
+  it("marks the panel for the wipe, so the close button does not travel", async () => {
+    await openAt("/");
+    expect(screen.getByRole("dialog", { name: "Menu" })).toHaveClass(
+      "menu-panel",
+    );
   });
 });
