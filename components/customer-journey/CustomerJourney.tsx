@@ -91,7 +91,15 @@ export function CustomerJourney({
   const [closed, setClosed] = useState<Record<string, boolean>>({});
   const [cell, setCell] = useState<CellDetail | null>(null);
   const [insightsOpen, setInsightsOpen] = useState(false);
+  // The build steps are folded away until asked for; closing them shows everything again.
+  const [stepsOpen, setStepsOpen] = useState(false);
   const [step, setStep] = useState<Step | null>(null);
+  const hideSteps = () => {
+    setStepsOpen(false);
+    setStep(null);
+  };
+  // Step tags only help while the steps are open and every step is shown.
+  const tagsOn = stepsOpen && step === null;
   const gapOn = inStep(SECTION_STEP.gap, step);
   const askOn = inStep(SECTION_STEP.ask, step);
   const journeyOn = inStep(SECTION_STEP.journey, step);
@@ -202,6 +210,8 @@ export function CustomerJourney({
             insightsOn={inStep(SECTION_STEP.insights, step)}
             step={step}
             onStep={setStep}
+            stepsOpen={stepsOpen}
+            onHideSteps={hideSteps}
           />
 
           {persona && (
@@ -284,7 +294,12 @@ export function CustomerJourney({
             </dl>
           </div>
 
-          <Roadmap step={step} onStep={setStep} />
+          <Roadmap
+            step={step}
+            onStep={setStep}
+            open={stepsOpen}
+            onToggle={() => (stepsOpen ? hideSteps() : setStepsOpen(true))}
+          />
 
           {askOn && (
             <div className="mt-12">
@@ -316,9 +331,11 @@ export function CustomerJourney({
                   >
                     Gap: expectation against experience
                   </h2>
-                  <p className="mb-3">
-                    <StepTag step={SECTION_STEP.gap} />
-                  </p>
+                  {tagsOn && (
+                    <p className="mb-3">
+                      <StepTag step={SECTION_STEP.gap} />
+                    </p>
+                  )}
                   <p
                     className="font-light text-[var(--color-text-secondary)]"
                     style={{ lineHeight: 1.7 }}
@@ -536,8 +553,8 @@ export function CustomerJourney({
                 style={{ lineHeight: 1.7 }}
               >
                 The emotion curve, touchpoints and metrics per phase. Pick a
-                phase to highlight it and a cell for details. The view and the
-                complexity step decide which rows you see.
+                phase to highlight it and a cell for details. The view, and the
+                build step when the steps are open, decide which rows you see.
               </p>
             </div>
 
@@ -576,9 +593,11 @@ export function CustomerJourney({
                         <p className="text-xs font-light text-[var(--color-text-muted)]">
                           Sentiment 0–100 · NPS and interviews
                         </p>
-                        <p className="mt-2">
-                          <StepTag step={SECTION_STEP.journey} />
-                        </p>
+                        {tagsOn && (
+                          <p className="mt-2">
+                            <StepTag step={SECTION_STEP.journey} />
+                          </p>
+                        )}
                       </div>
                       <div className="col-span-6 px-0 py-4">
                         <EmotionChart
@@ -645,7 +664,7 @@ export function CustomerJourney({
                     >
                       <span className="flex items-center gap-4">
                         <span className={label}>Touchpoints</span>
-                        <StepTag step={SECTION_STEP.touchpoints} />
+                        {tagsOn && <StepTag step={SECTION_STEP.touchpoints} />}
                       </span>
                       <svg
                         aria-hidden="true"
@@ -755,7 +774,7 @@ export function CustomerJourney({
                                 </span>
                                 {row.source}
                               </p>
-                              {step === null && (
+                              {tagsOn && (
                                 <p className="mt-1.5">
                                   <StepTag step={ROW_STEP[row.id]} />
                                 </p>

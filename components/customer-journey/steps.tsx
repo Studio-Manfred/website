@@ -35,8 +35,8 @@ export function StepTag({ step }: { step: Step }) {
   );
 }
 
-/** The always-visible complexity switch in the sticky bar. */
-export function StepFilter({ step, onStep }: { step: Step | null; onStep: (s: Step | null) => void }) {
+/** The complexity switch in the sticky bar, shown while the build steps are open. */
+export function StepFilter({ step, onStep, onHide }: { step: Step | null; onStep: (s: Step | null) => void; onHide: () => void }) {
   const btn = (on: boolean) =>
     `inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
       on
@@ -62,23 +62,53 @@ export function StepFilter({ step, onStep }: { step: Step | null; onStep: (s: St
       <p aria-live="polite" className="text-sm font-light text-[var(--color-text-muted)]">
         {step === null ? "Showing every part of the instrument" : `Showing step ${step}`}
       </p>
+      <button type="button" onClick={onHide} className="ml-auto text-sm font-light underline underline-offset-4 hover:text-[var(--color-business-blue)]">
+        Hide the build steps
+      </button>
     </div>
   );
 }
 
 /** The roadmap: what each step takes. Each card also switches the filter. */
-export function Roadmap({ step, onStep }: { step: Step | null; onStep: (s: Step | null) => void }) {
+export function Roadmap({
+  step,
+  onStep,
+  open,
+  onToggle,
+}: {
+  step: Step | null;
+  onStep: (s: Step | null) => void;
+  open: boolean;
+  onToggle: () => void;
+}) {
   return (
     <section aria-labelledby="cj-roadmap" className="mt-16 border-t-4 border-[var(--color-business-blue)] pt-6">
-      <div className="mb-8 max-w-2xl">
-        <h2 id="cj-roadmap" className="mb-2 font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)]" style={{ fontSize: "clamp(1.4rem, 2.4vw, 2rem)" }}>
-          Roadmap: from easy to advanced
-        </h2>
-        <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>
-          Some parts of a journey instrument can be in place in weeks, others take months and several teams. Pick a step to see only its parts.
-        </p>
+      <div className={`flex flex-wrap items-end justify-between gap-4 ${open ? "mb-8" : ""}`}>
+        <div className="max-w-2xl">
+          <h2 id="cj-roadmap" className="mb-2 font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)]" style={{ fontSize: "clamp(1.4rem, 2.4vw, 2rem)" }}>
+            Roadmap: from easy to advanced
+          </h2>
+          <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>
+            {open
+              ? "Some parts of a journey instrument can be in place in weeks, others take months and several teams. Pick a step to see only its parts."
+              : "How to build an instrument like this in three steps, from easy to advanced. Open the steps to filter the journey by them."}
+          </p>
+        </div>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls="cj-roadmap-steps"
+          onClick={onToggle}
+          className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[var(--color-business-blue)] px-4 py-2 text-sm text-[var(--color-business-blue)] hover:bg-[var(--blue-50)]"
+        >
+          <StepBars step={3} />
+          {open ? "Hide the build steps" : "Show the build steps"}
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={`transition-transform ${open ? "rotate-180" : ""}`}>
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
       </div>
-      <ol className="grid gap-4 md:grid-cols-3">
+      <ol id="cj-roadmap-steps" hidden={!open} className="grid gap-4 md:grid-cols-3">
         {STEPS.map((s) => {
           const on = step === s.step;
           const included = step === null || s.step === step;
