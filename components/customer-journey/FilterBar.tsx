@@ -37,7 +37,7 @@ type Props = {
   onStep: (s: Step | null) => void;
   /** The step filter row shows only while the build steps are open. */
   stepsOpen: boolean;
-  onHideSteps: () => void;
+  onToggleSteps: () => void;
 };
 
 function Chip({ name, value, onClear }: { name: string; value: string; onClear: () => void }) {
@@ -60,7 +60,7 @@ function Chip({ name, value, onClear }: { name: string; value: string; onClear: 
 }
 
 export function FilterBar(props: Props) {
-  const { industries, industry, onIndustry, segments, seg, onSeg, personas, persona, onPersona, role, onRole, onInsights, insightsOn, step, onStep, stepsOpen, onHideSteps } = props;
+  const { industries, industry, onIndustry, segments, seg, onSeg, personas, persona, onPersona, role, onRole, onInsights, insightsOn, step, onStep, stepsOpen, onToggleSteps } = props;
   const [open, setOpen] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
@@ -240,11 +240,9 @@ export function FilterBar(props: Props) {
           )}
         </button>
       </div>
-      {stepsOpen && (
-        <div className="mt-3 border-t border-[var(--color-border-default)] pt-3">
-          <StepFilter step={step} onStep={onStep} onHide={onHideSteps} />
-        </div>
-      )}
+      <div className="mt-2">
+        <StepFilter step={step} onStep={onStep} open={stepsOpen} onToggle={onToggleSteps} />
+      </div>
     </div>
   );
 }

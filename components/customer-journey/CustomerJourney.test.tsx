@@ -22,7 +22,8 @@ const finance = INDUSTRIES.finance;
 const openFilters = () => userEvent.click(screen.getByRole("button", { name: /^Filter/ }));
 const filterPanel = () => screen.getByRole("region", { name: "Filter" });
 const complexity = () => screen.getByRole("group", { name: "Complexity" });
-const openSteps = () => userEvent.click(screen.getByRole("button", { name: /Show the build steps/ }));
+const stepsToggle = () => screen.getByRole("button", { name: "Build steps" });
+const openSteps = () => userEvent.click(stepsToggle());
 
 describe("CustomerJourney", () => {
   it("one h1 with the case defaults, and the bank journey to start with", () => {
@@ -193,9 +194,8 @@ describe("complexity filter", () => {
   it("is folded away at first: no step filter, cards or step tags", () => {
     render(<CustomerJourney />);
     expect(screen.queryByRole("group", { name: "Complexity" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Map the journey/ })).not.toBeInTheDocument();
     expect(screen.queryByText(/Step \d · (Easy|Medium|Advanced)/)).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Show the build steps/ })).toHaveAttribute("aria-expanded", "false");
+    expect(stepsToggle()).toHaveAttribute("aria-expanded", "false");
     for (const r of MATRIX_ROWS) expect(screen.getAllByText(r.name).length).toBeGreaterThan(0);
   });
 
@@ -203,20 +203,18 @@ describe("complexity filter", () => {
     render(<CustomerJourney />);
     await openSteps();
     await userEvent.click(within(complexity()).getByRole("button", { name: /Step 2/ }));
-    // The sticky bar's hide link comes first; the roadmap's toggle is the other one.
-    const [barHide, roadmapToggle] = screen.getAllByRole("button", { name: "Hide the build steps" });
-    expect(roadmapToggle).toHaveAttribute("aria-expanded", "true");
-    await userEvent.click(barHide);
+    expect(stepsToggle()).toHaveAttribute("aria-expanded", "true");
+    await userEvent.click(stepsToggle());
     expect(screen.queryByRole("group", { name: "Complexity" })).not.toBeInTheDocument();
     expect(screen.getByText("Emotion curve")).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "Analyse" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Show the build steps/ })).toHaveAttribute("aria-expanded", "false");
+    expect(stepsToggle()).toHaveAttribute("aria-expanded", "false");
   });
 
   it("opening shows the steps on All, with step tags", async () => {
     render(<CustomerJourney />);
     await openSteps();
-    expect(screen.getByRole("button", { name: /Hide the build steps/, expanded: true })).toBeInTheDocument();
+    expect(stepsToggle()).toHaveAttribute("aria-expanded", "true");
     expect(screen.getAllByText(/Step \d · (Easy|Medium|Advanced)/).length).toBeGreaterThan(3);
     const g = complexity();
     expect(within(g).getAllByRole("button").map((b) => b.textContent)).toEqual(["All", "Step 1 · Easy", "Step 2 · Medium", "Step 3 · Advanced"]);
@@ -232,7 +230,7 @@ describe("complexity filter", () => {
         const rowLabel = screen.queryAllByText(r.name, { selector: "p.font-extrabold" });
         expect(rowLabel.length > 0).toBe(ROW_STEP[r.id] === step);
       }
-      expect(screen.getByText(`Showing step ${step}`)).toBeInTheDocument();
+      expect(within(complexity()).getByRole("button", { name: new RegExp(`Step ${step}`) })).toHaveAttribute("aria-pressed", "true");
     }
   });
 
@@ -268,14 +266,21 @@ describe("complexity filter", () => {
     expect(screen.queryByRole("heading", { name: /Gap/ })).not.toBeInTheDocument();
   });
 
-  it("a roadmap card switches the step, and again switches back to All", async () => {
+  it("a chosen step says what it takes: title, time and who", async () => {
     render(<CustomerJourney />);
     await openSteps();
-    const card = within(screen.getByRole("region", { name: /Roadmap/ })).getByRole("button", { name: /Map the journey/ });
-    await userEvent.click(card);
-    expect(within(complexity()).getByRole("button", { name: /Step 1/ })).toHaveAttribute("aria-pressed", "true");
-    await userEvent.click(card);
-    expect(within(complexity()).getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Pick a step to see only its parts")).toBeInTheDocument();
+    await userEvent.click(within(complexity()).getByRole("button", { name: /Step 2/ }));
+    expect(screen.getByText("Connect the data · 2–3 months · Product, analytics, data")).toBeInTheDocument();
+  });
+
+  it("the journey joins the gap analysis with no line between, and gets its own line when the gap is hidden", async () => {
+    render(<CustomerJourney />);
+    const journey = () => screen.getByRole("region", { name: "Journey instrument" });
+    expect(journey().className).not.toMatch(/border-t-4/);
+    await openSteps();
+    await userEvent.click(within(complexity()).getByRole("button", { name: /Step 1/ }));
+    expect(journey().className).toMatch(/border-t-4/);
   });
 });
 

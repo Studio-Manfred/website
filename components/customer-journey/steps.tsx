@@ -1,7 +1,6 @@
 "use client";
 
 import { STEPS, type Step } from "@/lib/customer-journey/levels";
-import { label } from "./theme";
 
 // The complexity roadmap: three steps from easy to advanced. The same bars as
 // the Triple Diamond levels mark how hard each part is to build.
@@ -35,42 +34,12 @@ export function StepTag({ step }: { step: Step }) {
   );
 }
 
-/** The complexity switch in the sticky bar, shown while the build steps are open. */
-export function StepFilter({ step, onStep, onHide }: { step: Step | null; onStep: (s: Step | null) => void; onHide: () => void }) {
-  const btn = (on: boolean) =>
-    `inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
-      on
-        ? "bg-[var(--color-business-blue)] border-[var(--color-business-blue)] text-white"
-        : "bg-white border-[var(--color-border-default)] text-[var(--color-text-primary)] hover:border-[var(--color-business-blue)] hover:text-[var(--color-business-blue)]"
-    }`;
-  return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-      <p id="cj-complexity" className={label}>
-        Complexity
-      </p>
-      <div role="group" aria-labelledby="cj-complexity" className="flex flex-wrap gap-2">
-        <button type="button" aria-pressed={step === null} onClick={() => onStep(null)} className={btn(step === null)}>
-          All
-        </button>
-        {STEPS.map((s) => (
-          <button key={s.step} type="button" aria-pressed={step === s.step} onClick={() => onStep(s.step)} className={btn(step === s.step)}>
-            <StepBars step={s.step} onDark={step === s.step} />
-            Step {s.step} · {s.name}
-          </button>
-        ))}
-      </div>
-      <p aria-live="polite" className="text-sm font-light text-[var(--color-text-muted)]">
-        {step === null ? "Showing every part of the instrument" : `Showing step ${step}`}
-      </p>
-      <button type="button" onClick={onHide} className="ml-auto text-sm font-light underline underline-offset-4 hover:text-[var(--color-business-blue)]">
-        Hide the build steps
-      </button>
-    </div>
-  );
-}
-
-/** The roadmap: what each step takes. Each card also switches the filter. */
-export function Roadmap({
+/**
+ * The build steps, a quiet row under the industry switch in the sticky bar.
+ * Folded away at first so the whole journey is easy to demo; opened, it
+ * filters the page to the parts of one step.
+ */
+export function StepFilter({
   step,
   onStep,
   open,
@@ -81,69 +50,46 @@ export function Roadmap({
   open: boolean;
   onToggle: () => void;
 }) {
+  const btn = (on: boolean) =>
+    `inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
+      on
+        ? "border-[var(--color-business-blue)] bg-[var(--blue-50)] text-[var(--color-business-blue)]"
+        : "border-[var(--color-border-default)] text-[var(--color-text-secondary)] hover:border-[var(--color-business-blue)] hover:text-[var(--color-business-blue)]"
+    }`;
+  const chosen = step ? stepOf(step) : null;
   return (
-    <section aria-labelledby="cj-roadmap" className="mt-16 border-t-4 border-[var(--color-business-blue)] pt-6">
-      <div className={`flex flex-wrap items-end justify-between gap-4 ${open ? "mb-8" : ""}`}>
-        <div className="max-w-2xl">
-          <h2 id="cj-roadmap" className="mb-2 font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)]" style={{ fontSize: "clamp(1.4rem, 2.4vw, 2rem)" }}>
-            Roadmap: from easy to advanced
-          </h2>
-          <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>
-            {open
-              ? "Some parts of a journey instrument can be in place in weeks, others take months and several teams. Pick a step to see only its parts."
-              : "How to build an instrument like this in three steps, from easy to advanced. Open the steps to filter the journey by them."}
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls="cj-build-steps"
+        onClick={onToggle}
+        className="inline-flex items-center gap-1.5 text-xs font-light text-[var(--color-text-muted)] hover:text-[var(--color-business-blue)]"
+      >
+        <StepBars step={3} />
+        Build steps
+        <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={`transition-transform ${open ? "rotate-180" : "-rotate-90"}`}>
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+      {open && (
+        <div id="cj-build-steps" className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <div role="group" aria-label="Complexity" className="flex flex-wrap gap-1.5">
+            <button type="button" aria-pressed={step === null} onClick={() => onStep(null)} className={btn(step === null)}>
+              All
+            </button>
+            {STEPS.map((s) => (
+              <button key={s.step} type="button" aria-pressed={step === s.step} onClick={() => onStep(s.step)} className={btn(step === s.step)}>
+                <StepBars step={s.step} />
+                Step {s.step} · {s.name}
+              </button>
+            ))}
+          </div>
+          <p aria-live="polite" className="text-xs font-light text-[var(--color-text-muted)]">
+            {chosen ? `${chosen.title} · ${chosen.time} · ${chosen.who}` : "Pick a step to see only its parts"}
           </p>
         </div>
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls="cj-roadmap-steps"
-          onClick={onToggle}
-          className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[var(--color-business-blue)] px-4 py-2 text-sm text-[var(--color-business-blue)] hover:bg-[var(--blue-50)]"
-        >
-          <StepBars step={3} />
-          {open ? "Hide the build steps" : "Show the build steps"}
-          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={`transition-transform ${open ? "rotate-180" : ""}`}>
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </button>
-      </div>
-      <ol id="cj-roadmap-steps" hidden={!open} className="grid gap-4 md:grid-cols-3">
-        {STEPS.map((s) => {
-          const on = step === s.step;
-          const included = step === null || s.step === step;
-          return (
-            <li key={s.step}>
-              <button
-                type="button"
-                aria-pressed={on}
-                onClick={() => onStep(on ? null : s.step)}
-                className={`flex h-full w-full flex-col rounded-2xl border p-5 text-left transition-colors ${
-                  on ? "border-[var(--color-business-blue)] bg-[var(--blue-50)]" : included ? "border-[var(--color-border-default)] hover:border-[var(--color-business-blue)]" : "border-dashed border-[var(--color-border-strong)] hover:border-[var(--color-business-blue)]"
-                }`}
-              >
-                <span className="flex items-center justify-between gap-3">
-                  <span className={label}>Step {s.step}</span>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-light text-[var(--color-text-muted)]">
-                    <StepBars step={s.step} />
-                    {s.name}
-                  </span>
-                </span>
-                <span className="mt-3 block font-extrabold" style={{ fontSize: "1.15rem" }}>{s.title}</span>
-                <span className="mt-2 block text-sm font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.6 }}>{s.summary}</span>
-                <span className="mt-4 grid grid-cols-[64px_1fr] gap-x-3 gap-y-1.5 border-t border-[var(--color-border-default)] pt-4 text-xs">
-                  <span className="font-extrabold">Data</span>
-                  <span className="font-light text-[var(--color-text-secondary)]">{s.sources}</span>
-                  <span className="font-extrabold">Time</span>
-                  <span className="font-light text-[var(--color-text-secondary)]">{s.time}</span>
-                  <span className="font-extrabold">Who</span>
-                  <span className="font-light text-[var(--color-text-secondary)]">{s.who}</span>
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ol>
-    </section>
+      )}
+    </div>
   );
 }

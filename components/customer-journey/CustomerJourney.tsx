@@ -30,7 +30,7 @@ import { EmotionChart, GapChart } from "./charts";
 import { AskBar } from "./AskBar";
 import { CellDialog, InsightsDialog, type CellDetail } from "./dialogs";
 import { FilterBar, ROLES, type PersonaChoice } from "./FilterBar";
-import { Roadmap, StepTag } from "./steps";
+import { StepTag } from "./steps";
 import {
   BLUE,
   OPPORTUNITY,
@@ -211,7 +211,7 @@ export function CustomerJourney({
             step={step}
             onStep={setStep}
             stepsOpen={stepsOpen}
-            onHideSteps={hideSteps}
+            onToggleSteps={() => (stepsOpen ? hideSteps() : setStepsOpen(true))}
           />
 
           {persona && (
@@ -293,13 +293,6 @@ export function CustomerJourney({
               ))}
             </dl>
           </div>
-
-          <Roadmap
-            step={step}
-            onStep={setStep}
-            open={stepsOpen}
-            onToggle={() => (stepsOpen ? hideSteps() : setStepsOpen(true))}
-          />
 
           {askOn && (
             <div className="mt-12">
@@ -538,13 +531,14 @@ export function CustomerJourney({
           {/* Journey instrument */}
           <section
             aria-labelledby="cj-journey"
-            className="mt-20 border-t-4 border-[var(--color-business-blue)] pt-6"
+            className={gapOn ? "mt-14" : "mt-16 border-t-4 border-[var(--color-business-blue)] pt-6"}
           >
             <div className="max-w-2xl mb-8">
               <h2
                 id="cj-journey"
                 className="font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-2"
-                style={{ fontSize: "clamp(1.4rem, 2.4vw, 2rem)" }}
+                // Right under the gap analysis it reads as part of the same section.
+                style={{ fontSize: gapOn ? "clamp(1.15rem, 1.6vw, 1.4rem)" : "clamp(1.4rem, 2.4vw, 2rem)" }}
               >
                 Journey instrument
               </h2>
