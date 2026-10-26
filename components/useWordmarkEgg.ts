@@ -16,8 +16,10 @@ export interface EggFont {
   family: string;
 }
 
-// Cycling twice a second is under the three flashes a second that WCAG 2.3.1
-// allows, and it is a small area. It is off for reduced motion.
+// Cycling is fast (about six changes a second, lib/wordmark-fonts.ts), which is
+// more than the three flashes a second of WCAG 2.3.1. It is small text on a
+// fixed colour, not a luminance flash of a large area, and it is off for
+// reduced motion.
 export function useWordmarkEgg(enabled: boolean) {
   const [font, setFont] = useState<EggFont | null>(null);
   const [families] = useState(() => new Map<string, string>());

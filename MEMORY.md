@@ -3,7 +3,7 @@
 Quick-start notes for future sessions. Audit this before editing — recent changes may have invalidated parts of it.
 
 ## 2026-10-26 — Wordmark font easter egg (branch `markus/wordmark-font-easter-egg`)
-- Hover (mouse) or tap (touch, stops after 6 s) the home wordmark: ten Google fonts cycle every 500 ms. Fonts load lazily on first interaction (`components/wordmark-fonts.ts`, `preload: false`); see CLAUDE.md "Wordmark easter egg". Chosen by the owner from rendered previews: Rock Salt, UnifrakturCook, Inter Tight, Playfair Display, Rubik Wet Paint, Special Elite, Space Grotesk, Bungee, Great Vibes, Raleway.
+- Hover (mouse) or tap (touch, stops after 6 s) the home wordmark: ten Google fonts cycle every 150 ms (first 500 ms, made much faster on the owner's feedback). Fonts load lazily on first interaction (`components/wordmark-fonts.ts`, `preload: false`); see CLAUDE.md "Wordmark easter egg". Chosen by the owner from rendered previews: Rock Salt, UnifrakturCook, Inter Tight, Playfair Display, Rubik Wet Paint, Special Elite, Space Grotesk, Bungee, Great Vibes, Raleway.
 
 ## 2026-10-23 — Home hero intro (STU-1183, branch `markus/stu-1183-animated-manfred-wordmark-intro-on-the-home-hero-lottie`)
 - Where it stopped: code, unit tests and e2e tests are done and committed. The PR is not open (the owner reviews the text first). Spec and plan: `docs/superpowers/specs|plans/2026-10-23-hero-wordmark-intro.md`. It is rebased on `main` after the menu (PR #58, STU-1181) merged. The menu button is `absolute` at the top right of the page and shows from the first frame, so it does not wait for the intro. There is no sticky bar and the hero has no `id`.

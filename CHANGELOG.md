@@ -12,7 +12,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
-- **Home**: easter egg. Hover the Manfred wordmark in the hero (or tap it on a phone) and the word changes typeface every half second: script, punk, gothic, grotesk, serif, typewriter and more. The real wordmark comes back when you leave, or on a second tap; a tap stops by itself after 6 seconds. Off for visitors who prefer reduced motion. The ten fonts load only on the first hover or tap.
+- **Home**: easter egg. Hover the Manfred wordmark in the hero (or tap it on a phone) and the word changes typeface fast, every 150 ms: script, punk, gothic, grotesk, serif, typewriter and more. The real wordmark comes back when you leave, or on a second tap; a tap stops by itself after 6 seconds. Off for visitors who prefer reduced motion. The ten fonts load only on the first hover or tap.
 - **Cases**: each industry on the Customer Journey Intelligence case has its own address (`/cases/customer-journey-intelligence/hotel`, `/retail-bank`, `/insurance`, `/grocery`, `/e-commerce`), so a link opens the journey on that industry. Switching industry updates the address and the tab title; an unknown industry is a 404.
 - **Menu**: Cases is back in the home menu ("Work we're proud of. Mostly."), and the menu has a Home link ("Back to start.") that is hidden on the home page. The link to the page you are on is never shown. The menu button and the close button are a thin ring instead of a filled circle. The menu is now one shared component, ready for the other pages (STU-1185).
 - **Cases**: on the Customer Journey Intelligence case the gap analysis and journey instrument headings stand alone, with what they mean behind a small info button, for a tighter page.

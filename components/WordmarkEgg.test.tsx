@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { WORDMARK_FONTS } from "@/lib/wordmark-fonts";
+import { CYCLE_INTERVAL_MS, WORDMARK_FONTS } from "@/lib/wordmark-fonts";
 import { WordmarkReveal } from "./WordmarkReveal";
 
 // The real module calls next/font/google, which only works inside Next's build.
@@ -89,13 +89,13 @@ describe("the wordmark easter egg: mouse", () => {
     expect(artwork(container)).toHaveAttribute("visibility", "hidden");
   });
 
-  it("changes font every 500 ms while you hover", async () => {
+  it("changes font on every cycle interval while you hover", async () => {
     const { user, wordmark, container } = setup();
     await user.hover(wordmark);
     await flush();
-    await tick(500);
+    await tick(CYCLE_INTERVAL_MS);
     expect(eggText(container)?.style.fontFamily).toBe(`family-${second.key}`);
-    await tick(500);
+    await tick(CYCLE_INTERVAL_MS);
     expect(eggText(container)?.style.fontFamily).toBe(
       `family-${WORDMARK_FONTS[2].key}`,
     );
@@ -154,7 +154,7 @@ describe("the wordmark easter egg: mouse", () => {
     expect(eggText(container)).toBeNull();
     expect(artwork(container)).toHaveAttribute("visibility", "visible");
     release();
-    await tick(500);
+    await tick(CYCLE_INTERVAL_MS);
     expect(eggText(container)).not.toBeNull();
   });
 });
@@ -168,7 +168,7 @@ describe("the wordmark easter egg: touch", () => {
     await tap(user, wordmark);
     await flush();
     expect(eggText(container)).not.toBeNull();
-    await tick(500);
+    await tick(CYCLE_INTERVAL_MS);
     expect(eggText(container)?.style.fontFamily).toBe(`family-${second.key}`);
   });
 

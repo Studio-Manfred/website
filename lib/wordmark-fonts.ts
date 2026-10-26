@@ -1,9 +1,9 @@
 // The home hero wordmark easter egg: hover it (or tap it on a phone) and the
-// word Manfred changes typeface every half second. This module is the pure part:
+// word Manfred changes typeface about six times a second. This module is the pure part:
 // the font list and the cycling. The fonts themselves load in
 // components/wordmark-fonts.ts, only when someone first hovers or taps.
 
-export const CYCLE_INTERVAL_MS = 500;
+export const CYCLE_INTERVAL_MS = 150;
 // A tap has no "leave", so the cycling ends by itself.
 export const TAP_STOP_MS = 6000;
 

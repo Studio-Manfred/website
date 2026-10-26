@@ -22,8 +22,8 @@ describe("WORDMARK_FONTS", () => {
     }
   });
 
-  it("cycles every half second, and a tap stops by itself after six seconds", () => {
-    expect(CYCLE_INTERVAL_MS).toBe(500);
+  it("cycles every 150 ms, and a tap stops by itself after six seconds", () => {
+    expect(CYCLE_INTERVAL_MS).toBe(150);
     expect(TAP_STOP_MS).toBe(6000);
   });
 });
@@ -56,7 +56,7 @@ describe("createCycler", () => {
     vi.useRealTimers();
   });
 
-  it("shows the first font at once, then the next one every 500 ms", () => {
+  it("shows the first font at once, then the next one every cycle interval", () => {
     const seen: string[] = [];
     const cycler = createCycler({
       order,
@@ -65,11 +65,11 @@ describe("createCycler", () => {
     });
     cycler.start();
     expect(seen).toEqual(["a"]);
-    vi.advanceTimersByTime(500);
+    vi.advanceTimersByTime(CYCLE_INTERVAL_MS);
     expect(seen).toEqual(["a", "b"]);
-    vi.advanceTimersByTime(1000);
+    vi.advanceTimersByTime(CYCLE_INTERVAL_MS * 2);
     expect(seen).toEqual(["a", "b", "c", "d"]);
-    vi.advanceTimersByTime(500);
+    vi.advanceTimersByTime(CYCLE_INTERVAL_MS);
     expect(seen).toEqual(["a", "b", "c", "d", "a"]);
   });
 
@@ -81,7 +81,7 @@ describe("createCycler", () => {
       onTick: (key) => seen.push(key),
     });
     cycler.start();
-    vi.advanceTimersByTime(500);
+    vi.advanceTimersByTime(CYCLE_INTERVAL_MS);
     cycler.stop();
     vi.advanceTimersByTime(5000);
     expect(seen).toEqual(["a", "b"]);
@@ -98,7 +98,7 @@ describe("createCycler", () => {
     });
     cycler.start();
     cycler.start();
-    vi.advanceTimersByTime(500);
+    vi.advanceTimersByTime(CYCLE_INTERVAL_MS);
     expect(seen).toEqual(["a", "b"]);
   });
 
@@ -111,10 +111,10 @@ describe("createCycler", () => {
       onTick: (key) => seen.push(key),
     });
     cycler.start();
-    vi.advanceTimersByTime(500);
+    vi.advanceTimersByTime(CYCLE_INTERVAL_MS);
     expect(seen).toEqual([]);
     ready.add("c");
-    vi.advanceTimersByTime(500);
+    vi.advanceTimersByTime(CYCLE_INTERVAL_MS);
     expect(seen).toEqual(["c"]);
   });
 
