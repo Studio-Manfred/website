@@ -188,6 +188,24 @@ describe("section info", () => {
   });
 });
 
+describe("industry addresses", () => {
+  it("opens on the industry it is given", () => {
+    render(<CustomerJourney initialIndustry="hotel" />);
+    expect(screen.getByRole("heading", { level: 2, name: `The customer journey at ${INDUSTRIES.hotel.name}` })).toBeInTheDocument();
+    expect(within(screen.getByRole("group", { name: "Industry" })).getByRole("button", { name: /Hotel/ })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("switching industry puts its own address in the address bar", async () => {
+    render(<CustomerJourney />);
+    const industries = within(screen.getByRole("group", { name: "Industry" }));
+    await userEvent.click(industries.getByRole("button", { name: /Hotel/ }));
+    expect(window.location.pathname).toBe("/cases/customer-journey-intelligence/hotel");
+    expect(document.title).toBe(`${CJ_CASE_DEFAULTS.title} · ${INDUSTRIES.hotel.name} — Studio Manfred`);
+    await userEvent.click(industries.getByRole("button", { name: /E-commerce/ }));
+    expect(window.location.pathname).toBe("/cases/customer-journey-intelligence/e-commerce");
+  });
+});
+
 describe("hotel industry", () => {
   it("switching to Hotel shows the guest journey, its segments and personas", async () => {
     render(<CustomerJourney />);
