@@ -3,6 +3,9 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HomeMenu } from "./HomeMenu";
 
+// The menu hides the link to the page you are on. The home page is "/".
+vi.mock("next/navigation", () => ({ usePathname: () => "/" }));
+
 // Next's Link calls preventDefault on a client-side navigation, so the mock
 // does too. A close handler that skips prevented clicks would then fail here.
 vi.mock("next/link", () => ({
@@ -53,16 +56,16 @@ describe("HomeMenu", () => {
     expect(trigger).toHaveAttribute("aria-expanded", "true");
   });
 
-  it("lists the two main links in the primary nav", async () => {
+  it("lists Writing, Training & Courses and Cases on the home page", async () => {
     await openMenu();
     const nav = screen.getByRole("navigation", { name: "Primary" });
     const links = within(nav).getAllByRole("link");
     const expected = [
       ["Writing", "/writing"],
       ["Training & Courses", "/training-and-courses"],
+      ["Cases", "/cases"],
     ];
     expect(links).toHaveLength(expected.length);
-    expect(within(nav).queryByText("Cases")).not.toBeInTheDocument();
     expect(within(nav).queryByText("Home")).not.toBeInTheDocument();
     links.forEach((link, index) => {
       const [title, href] = expected[index];
@@ -77,6 +80,7 @@ describe("HomeMenu", () => {
     for (const line of [
       "Thoughts from the messy middle.",
       "Steal our tricks. We won't mind.",
+      "Work we're proud of. Mostly.",
     ]) {
       expect(within(nav).getByText(line)).toBeInTheDocument();
     }

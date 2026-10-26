@@ -101,7 +101,7 @@ overlays need to sit outside the max-width wrapper.
 - `/` has no top bar over the hero. The Hero's 100 px wordmark is its nav, and a
   hamburger button sits top right (STU-1181). It scrolls away with the page: there
   is no sticky bar. The button opens a full-screen menu
-  ([`HomeMenu`](components/HomeMenu.tsx)). The menu is on `/` only.
+  ([`SiteMenu`](components/SiteMenu.tsx), placed by [`HomeMenu`](components/HomeMenu.tsx)). The menu is on `/` only for now.
 - All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx); an optional `width` aligns the nav row with wider content (widths in [lib/layout.ts](lib/layout.ts)).
 
 ### Home hero intro

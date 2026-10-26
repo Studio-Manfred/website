@@ -48,6 +48,33 @@ test.describe("home menu", () => {
     await expect(bar(page)).toHaveCount(0);
   });
 
+  test("lists Writing, Training & Courses and Cases, and hides Home on the home page", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await openPanel(page);
+    const nav = panel(page).getByRole("navigation", { name: "Primary" });
+    await expect(nav.getByRole("link")).toHaveCount(3);
+    await expect(nav.getByRole("link", { name: /^Cases/ })).toHaveAttribute(
+      "href",
+      "/cases",
+    );
+    await expect(nav.getByRole("link", { name: /^Home/ })).toHaveCount(0);
+  });
+
+  test("draws both buttons as a ring, not a filled circle", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const menuButton = openMenuButton(page);
+    await expect(menuButton).toHaveCSS("border-top-width", "2px");
+    await expect(menuButton).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+    await openPanel(page);
+    const close = panel(page).getByRole("button", { name: "Close menu" });
+    await expect(close).toHaveCSS("border-top-width", "2px");
+    await expect(close).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  });
+
   test("is not on other pages", async ({ page }) => {
     await page.goto("/writing");
     await expect(openMenuButton(page)).toHaveCount(0);
