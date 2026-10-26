@@ -31,6 +31,7 @@ import { AskBar } from "./AskBar";
 import { CellDialog, InsightsDialog, type CellDetail } from "./dialogs";
 import { FilterBar, ROLES, type PersonaChoice } from "./FilterBar";
 import { StepTag } from "./steps";
+import { InfoTip } from "./InfoTip";
 import {
   BLUE,
   OPPORTUNITY,
@@ -315,29 +316,29 @@ export function CustomerJourney({
               aria-labelledby="cj-gap"
               className="mt-16 border-t-4 border-[var(--color-business-blue)] pt-6"
             >
-              <div className="flex flex-wrap items-end justify-between gap-6 mb-8">
-                <div className="max-w-2xl">
-                  <h2
-                    id="cj-gap"
-                    className="font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-2"
-                    style={{ fontSize: "clamp(1.4rem, 2.4vw, 2rem)" }}
-                  >
-                    Gap: expectation against experience
-                  </h2>
+              <div className="flex flex-wrap items-end justify-between gap-6 mb-6">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <h2
+                      id="cj-gap"
+                      className="font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)]"
+                      style={{ fontSize: "clamp(1.4rem, 2.4vw, 2rem)" }}
+                    >
+                      Gap: expectation against experience
+                    </h2>
+                    <InfoTip topic="the gap analysis">
+                      What customers expect along the journey (solid line)
+                      against what {ind.name} delivers (dashed). The shaded area
+                      between the curves is the gap: the bigger it is, the bigger
+                      the opportunity. Hover a phase for its numbers, and pick a
+                      touchpoint to see effort and reward.
+                    </InfoTip>
+                  </div>
                   {tagsOn && (
-                    <p className="mb-3">
+                    <p className="mt-2">
                       <StepTag step={SECTION_STEP.gap} />
                     </p>
                   )}
-                  <p
-                    className="font-light text-[var(--color-text-secondary)]"
-                    style={{ lineHeight: 1.7 }}
-                  >
-                    What customers expect along the journey (solid line) against
-                    what {ind.name} delivers (dashed). The area between the
-                    curves shows where the opportunities are. Pick a touchpoint
-                    for effort and reward.
-                  </p>
                 </div>
                 <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-light">
                   <li className="flex items-center gap-2">
@@ -533,23 +534,21 @@ export function CustomerJourney({
             aria-labelledby="cj-journey"
             className={gapOn ? "mt-14" : "mt-16 border-t-4 border-[var(--color-business-blue)] pt-6"}
           >
-            <div className="max-w-2xl mb-8">
+            <div className="mb-6 flex items-center gap-3">
               <h2
                 id="cj-journey"
-                className="font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)] mb-2"
+                className="font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)]"
                 // Right under the gap analysis it reads as part of the same section.
                 style={{ fontSize: gapOn ? "clamp(1.15rem, 1.6vw, 1.4rem)" : "clamp(1.4rem, 2.4vw, 2rem)" }}
               >
                 Journey instrument
               </h2>
-              <p
-                className="font-light text-[var(--color-text-secondary)]"
-                style={{ lineHeight: 1.7 }}
-              >
-                The emotion curve, touchpoints and metrics per phase. Pick a
-                phase to highlight it and a cell for details. The view, and the
-                build step when the steps are open, decide which rows you see.
-              </p>
+              <InfoTip topic="the journey instrument">
+                The emotion curve, touchpoints and metrics for each phase of the
+                journey. Pick a phase to highlight it, and a cell for its
+                details. The view in the filter, and the build step when the
+                steps are open, decide which rows you see.
+              </InfoTip>
             </div>
 
             <div className="overflow-x-auto rounded-2xl border border-[var(--color-border-default)]">

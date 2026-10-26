@@ -176,6 +176,18 @@ describe("CustomerJourney", () => {
   });
 });
 
+describe("section info", () => {
+  it("gap and journey headings stand alone, with what they mean behind an info button", async () => {
+    render(<CustomerJourney />);
+    expect(screen.queryByText(/The shaded area between the curves/)).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "About the gap analysis" }));
+    expect(screen.getByRole("note")).toHaveTextContent(`against what ${finance.name} delivers`);
+    await userEvent.click(screen.getByRole("button", { name: "About the journey instrument" }));
+    expect(screen.getAllByRole("note")).toHaveLength(1);
+    expect(screen.getByRole("note")).toHaveTextContent("Pick a phase to highlight it");
+  });
+});
+
 describe("hotel industry", () => {
   it("switching to Hotel shows the guest journey, its segments and personas", async () => {
     render(<CustomerJourney />);
