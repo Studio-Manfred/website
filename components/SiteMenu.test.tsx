@@ -165,3 +165,34 @@ describe("SiteMenu icon and panel motion", () => {
     );
   });
 });
+
+describe("SiteMenu content reveal", () => {
+  const index = (el: HTMLElement) =>
+    el.style.getPropertyValue("--menu-reveal-index");
+
+  it("lets each row fade in after the panel, in order", async () => {
+    const nav = await openAt("/join-us");
+    const rows = within(nav).getAllByRole("listitem");
+    expect(rows).toHaveLength(4);
+    rows.forEach((row, i) => {
+      expect(row).toHaveClass("menu-reveal");
+      expect(index(row)).toBe(String(i));
+    });
+  });
+
+  it("lets the Get in touch block fade in after the last row", async () => {
+    const nav = await openAt("/");
+    const rows = within(nav).getAllByRole("listitem");
+    const cta = screen
+      .getByRole("link", { name: "Get in touch" })
+      .closest(".menu-reveal") as HTMLElement;
+    expect(cta).not.toBeNull();
+    expect(index(cta)).toBe(String(rows.length));
+  });
+
+  it("does not animate the close button, which morphs instead", async () => {
+    await openAt("/");
+    const close = screen.getByRole("button", { name: "Close menu" });
+    expect(close.closest(".menu-reveal")).toBeNull();
+  });
+});

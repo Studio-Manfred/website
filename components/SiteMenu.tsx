@@ -50,6 +50,11 @@ interface SiteMenuProps {
 // A bare icon in a 48 px box (56 px from md): no ring, no fill (owner decision).
 const iconButton =
   "flex h-[48px] w-[48px] shrink-0 items-center justify-center -mr-[12px] md:h-[56px] md:w-[56px] md:-mr-[16px]";
+// Each row, then the Get in touch block, fades in after the panel's wipe, 50 ms
+// apart (see .menu-reveal in globals.css). The index sets the delay.
+const revealStyle = (index: number) =>
+  ({ "--menu-reveal-index": index }) as CSSProperties;
+
 const toneClass = {
   white: "text-white",
   blue: "text-[var(--color-business-blue)]",
@@ -112,8 +117,12 @@ export function SiteMenu({
         </div>
         <nav aria-label="Primary">
           <ul>
-            {visibleLinks.map(({ title, href, line }) => (
-              <li key={href} className="relative">
+            {visibleLinks.map(({ title, href, line }, index) => (
+              <li
+                key={href}
+                className="menu-reveal relative"
+                style={revealStyle(index)}
+              >
                 <Link
                   href={href}
                   onClick={close}
@@ -145,8 +154,11 @@ export function SiteMenu({
           </ul>
         </nav>
         <div
-          className="mt-auto flex items-center justify-between gap-[20px] pb-[40px] pt-[24px] max-md:flex-col md:pb-[clamp(24px,4vh,100px)] md:pt-[clamp(16px,2.7vh,48px)]"
-          style={{ paddingInline: menuGutter }}
+          className="menu-reveal mt-auto flex items-center justify-between gap-[20px] pb-[40px] pt-[24px] max-md:flex-col md:pb-[clamp(24px,4vh,100px)] md:pt-[clamp(16px,2.7vh,48px)]"
+          style={{
+            paddingInline: menuGutter,
+            ...revealStyle(visibleLinks.length),
+          }}
         >
           <Button variant="inverse" size="lg" asChild className="max-md:w-full">
             <GetInTouchLink location="menu" />

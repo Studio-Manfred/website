@@ -254,6 +254,45 @@ test.describe("the hamburger turns into a cross", () => {
     expect(await duration("menu-panel-out")).toBe(350);
   });
 
+  test("the content fades in after the wipe, row by row, and not when closing", async ({
+    page,
+  }) => {
+    await page.goto("/writing");
+    await menuButton(page).click();
+    await expect(panel(page)).toBeVisible();
+    const reveals = () =>
+      page.evaluate(() =>
+        document
+          .getAnimations()
+          .filter((a) => (a as CSSAnimation).animationName === "menu-reveal-in")
+          .map((a) => {
+            const t = a.effect?.getTiming();
+            return [Math.round(Number(t?.delay)), t?.duration];
+          }),
+      );
+    // /writing hides Writing: three rows (Home, Training, Cases) and the Get in touch block.
+    expect(await reveals()).toEqual([
+      [100, 350],
+      [150, 350],
+      [200, 350],
+      [250, 350],
+    ]);
+    await settled(page);
+    await page.keyboard.press("Escape");
+    await expect
+      .poll(() =>
+        page.evaluate(() =>
+          document
+            .getAnimations()
+            .some(
+              (a) => (a as CSSAnimation).animationName === "menu-panel-out",
+            ),
+        ),
+      )
+      .toBe(true);
+    expect(await reveals()).toEqual([]);
+  });
+
   test("with reduced motion the cross shows at once and nothing animates", async ({
     page,
   }) => {
