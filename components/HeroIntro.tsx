@@ -81,7 +81,12 @@ export function HeroIntro({
   return (
     <div data-intro={phase} className="w-full">
       <div className="flex justify-center mb-24 md:mb-32">
-        <WordmarkReveal phase={phase} frames={frames} onComplete={onComplete} />
+        <WordmarkReveal
+          phase={phase}
+          frames={frames}
+          onComplete={onComplete}
+          egg={phase === "done"}
+        />
       </div>
       <FadeIn delay={1} start={headlineStart}>
         <h1

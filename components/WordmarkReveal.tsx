@@ -3,12 +3,16 @@
 import { useEffect, useId, useRef } from "react";
 import { INTRO_DURATION_MS, frameAt, type IntroPhase } from "@/lib/hero-intro";
 import { wordmark } from "@/lib/wordmark";
+import { WORDMARK_FONTS } from "@/lib/wordmark-fonts";
+import { useWordmarkEgg } from "@/components/useWordmarkEgg";
 
 interface WordmarkRevealProps {
   phase: IntroPhase;
   frames: readonly string[] | null;
   onComplete: () => void;
   height?: number;
+  // The hover/tap easter egg (lib/wordmark-fonts.ts). On once the intro is done.
+  egg?: boolean;
 }
 
 // Draws the real wordmark artwork. While the phase is "playing", a mask shows
@@ -19,7 +23,12 @@ export function WordmarkReveal({
   frames,
   onComplete,
   height = 100,
+  egg = false,
 }: WordmarkRevealProps) {
+  const eggState = useWordmarkEgg(egg);
+  const eggFont = eggState.font
+    ? WORDMARK_FONTS.find(({ key }) => key === eggState.font?.key)
+    : undefined;
   const maskId = `wordmark-stencil-${useId().replace(/:/g, "")}`;
   const pathRef = useRef<SVGPathElement>(null);
   const onCompleteRef = useRef(onComplete);
@@ -59,7 +68,8 @@ export function WordmarkReveal({
       role="img"
       aria-label="Manfred"
       className="inline-block leading-[0]"
-      style={{ height, width }}
+      style={{ height, width, touchAction: "manipulation" }}
+      {...eggState.handlers}
     >
       <svg
         viewBox={wordmark.viewBox}
@@ -88,11 +98,30 @@ export function WordmarkReveal({
             />
           </mask>
         </defs>
-        <g mask={masked ? `url(#${maskId})` : undefined}>
+        <g
+          mask={masked ? `url(#${maskId})` : undefined}
+          visibility={eggFont ? "hidden" : "visible"}
+        >
           {wordmark.paths.map((d) => (
             <path key={d} d={d} fill="var(--color-brand-logo-paper, #fff)" />
           ))}
         </g>
+        {eggFont && eggState.font && (
+          <text
+            x={30}
+            y={eggFont.baseline}
+            fontSize={eggFont.size}
+            textLength={560}
+            lengthAdjust="spacingAndGlyphs"
+            fill="var(--color-brand-logo-paper, #fff)"
+            style={{
+              fontFamily: eggState.font.family,
+              fontWeight: eggFont.weight,
+            }}
+          >
+            Manfred
+          </text>
+        )}
       </svg>
     </span>
   );

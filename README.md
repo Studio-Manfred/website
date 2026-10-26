@@ -112,6 +112,9 @@ button rise (STU-1183). [`HeroIntro`](components/HeroIntro.tsx) runs the phases 
 a stencil ([`lib/wordmark-stencil.json`](lib/wordmark-stencil.json)). Reduced
 motion, no JavaScript and a failed load all show the hero at once. The stencil is
 made by [`scripts/build-wordmark-stencil.mjs`](scripts/build-wordmark-stencil.mjs).
+Hover the wordmark (or tap it on a phone) for an easter egg: it cycles through ten
+typefaces ([`lib/wordmark-fonts.ts`](lib/wordmark-fonts.ts)), loaded only on the first
+hover or tap.
 
 ### Analytics
 
