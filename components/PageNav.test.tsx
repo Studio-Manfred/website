@@ -25,4 +25,16 @@ describe("PageNav", () => {
     expect(nav?.className).not.toContain("bg-[var(--color-business-blue)]");
     expect(screen.getByTestId("logo").getAttribute("data-color")).toBe("blue");
   });
+
+  it("caps the inner row at 960px by default", () => {
+    const { container } = render(<PageNav />);
+    const row = container.querySelector("nav > div") as HTMLElement;
+    expect(row.style.maxWidth).toBe("960px");
+  });
+
+  it("widens the inner row to 1200px for width=\"wide\"", () => {
+    const { container } = render(<PageNav width="wide" />);
+    const row = container.querySelector("nav > div") as HTMLElement;
+    expect(row.style.maxWidth).toBe("1200px");
+  });
 });

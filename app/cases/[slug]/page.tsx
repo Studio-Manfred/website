@@ -34,7 +34,7 @@ export default async function CasePage({ params, searchParams }: Props) {
 
   return (
     <>
-      <PageNav variant="white" />
+      <PageNav variant="white" width={study ? "wide" : "default"} />
       <main id="main" tabIndex={-1}>
         {study ? (
           <CaseStudy study={study} />

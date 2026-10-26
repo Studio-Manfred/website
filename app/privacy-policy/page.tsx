@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <PageNav />
+      <PageNav width="narrow" />
       <main id="main" tabIndex={-1}>
         <Section background="white" width="narrow" padding="tight">
           <h1
