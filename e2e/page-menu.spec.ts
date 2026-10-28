@@ -55,7 +55,7 @@ for (const { path, nav, hides } of PAGES) {
       expect(touch.x + touch.width).toBeLessThanOrEqual(menu.x);
     });
 
-    test("opens a blue panel with the close button exactly where the menu button was", async ({
+    test("opens a panel in the opposite colour of the page, with the close button exactly where the menu button was", async ({
       page,
     }) => {
       await page.goto(path);
@@ -66,7 +66,14 @@ for (const { path, nav, hides } of PAGES) {
       await expect
         .poll(async () => (await panel(page).boundingBox())?.y)
         .toBe(0);
-      await expect(panel(page)).toHaveCSS("background-color", BLUE);
+      // The panel is the opposite of the page, so the wipe is always seen.
+      await expect(panel(page)).toHaveCSS(
+        "background-color",
+        nav === "blue" ? WHITE : BLUE,
+      );
+      await expect(
+        panel(page).getByRole("button", { name: "Close menu" }),
+      ).toHaveCSS("color", nav === "blue" ? BLUE : WHITE);
 
       const after = await box(
         panel(page).getByRole("button", { name: "Close menu" }),

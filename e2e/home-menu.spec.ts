@@ -161,8 +161,9 @@ test.describe("home menu rows", () => {
     const before = await box(title);
     await row(page).hover();
 
-    await expect(row(page)).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(title).toHaveCSS("color", "rgb(44, 40, 236)");
+    // The home panel is white, so a row turns blue with white text.
+    await expect(row(page)).toHaveCSS("background-color", "rgb(44, 40, 236)");
+    await expect(title).toHaveCSS("color", "rgb(255, 255, 255)");
     expectSameBox(await box(title), before);
 
     const rowBox = await box(row(page));
@@ -180,11 +181,11 @@ test.describe("home menu rows", () => {
     await row(page).focus();
 
     await expect(row(page)).toBeFocused();
-    await expect(row(page)).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(row(page)).toHaveCSS("background-color", "rgb(44, 40, 236)");
     await expect(row(page)).toHaveCSS("outline-offset", "-4px");
   });
 
-  test("leaves a resting row blue", async ({ page }) => {
+  test("leaves a resting row see-through, so the white panel shows", async ({ page }) => {
     await page.goto("/");
     await openPanel(page);
     await expect(row(page)).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
