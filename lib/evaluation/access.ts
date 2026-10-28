@@ -1,15 +1,16 @@
-import { timingSafeEqual } from "node:crypto";
+// The evaluation service has no login and is open at /evaluation. Each run
+// costs an AI call, so the API only answers requests sent from the site's own
+// page: the browser's Origin header must match the host it was sent to. This
+// stops other sites from using it and keeps out casual bots; it is no defence
+// against someone who writes their own client, which is fine for a prototype.
 
-// The evaluation service has no login. It lives at an unlisted address,
-// /evaluation/<token>, where the token is only in the EVAL_LINK_TOKEN
-// environment variable (the repo is public, so it can't be in the code).
-// Without the variable, every address is a 404.
-
-export const MIN_TOKEN_LENGTH = 16;
-
-export function isEvalToken(candidate: string | null | undefined, secret = process.env.EVAL_LINK_TOKEN): boolean {
-  if (!secret || secret.length < MIN_TOKEN_LENGTH || !candidate) return false;
-  const a = Buffer.from(candidate);
-  const b = Buffer.from(secret);
-  return a.length === b.length && timingSafeEqual(a, b);
+export function isSameOrigin(req: Request): boolean {
+  const origin = req.headers.get("origin");
+  const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+  if (!origin || !host) return false;
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
 }

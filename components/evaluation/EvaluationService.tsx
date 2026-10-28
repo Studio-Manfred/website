@@ -34,7 +34,7 @@ function Meter({ value, of = 5, name }: { value: number; of?: number; name: stri
   );
 }
 
-export function EvaluationService({ token, live }: { token: string; live: boolean }) {
+export function EvaluationService({ live }: { live: boolean }) {
   const [industry, setIndustry] = useState<IndustryId>("hotel");
   const ind = INDUSTRIES[industry];
   const [chosen, setChosen] = useState<string[]>(ind.personas.map((p) => p.id));
@@ -72,7 +72,7 @@ export function EvaluationService({ token, live }: { token: string; live: boolea
     try {
       const res = await fetch("/api/evaluation", {
         method: "POST",
-        headers: { "content-type": "application/json", "x-eval-token": token },
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({ industry, archetypes: chosen, phase, task, url: url.trim() || undefined, screenshots: shots.map(({ mediaType, data }) => ({ mediaType, data })) }),
       });
       const json = await res.json().catch(() => null);
@@ -92,7 +92,7 @@ export function EvaluationService({ token, live }: { token: string; live: boolea
     <section className="bg-white px-6 md:px-12 lg:px-8 pt-20 md:pt-32 pb-20">
       <div className="mx-auto max-w-[1400px]">
         <div className="print:hidden">
-          <p className={`${label} mb-4`}>Prototype · Unlisted</p>
+          <p className={`${label} mb-4`}>Prototype</p>
           <h1 className="font-extrabold leading-[1.05] tracking-[var(--letter-spacing-tight)]" style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)" }}>
             Evaluation <span className="text-[var(--color-business-blue)]">service</span>
           </h1>

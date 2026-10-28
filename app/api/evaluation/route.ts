@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { INDUSTRIES } from "@/lib/customer-journey/datasets";
 import type { IndustryId } from "@/lib/customer-journey/types";
-import { isEvalToken } from "@/lib/evaluation/access";
+import { isSameOrigin } from "@/lib/evaluation/access";
 import { EvaluationInputError, runEvaluation } from "@/lib/evaluation/evaluate";
 
-// Runs one evaluation for the unlisted evaluation page. The page sends its
-// token in a header; without the right one this route doesn't exist.
+// Runs one evaluation for the evaluation page. Only the site's own page may
+// call it (see isSameOrigin).
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -33,7 +33,7 @@ const Body = z.object({
 });
 
 export async function POST(req: Request) {
-  if (!isEvalToken(req.headers.get("x-eval-token"))) return new NextResponse(null, { status: 404 });
+  if (!isSameOrigin(req)) return NextResponse.json({ error: "Not allowed." }, { status: 403 });
 
   const parsed = Body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Some of the input is missing or too large." }, { status: 400 });

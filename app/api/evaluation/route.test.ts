@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/evaluation/evaluate", async (orig) => {
   const actual = await orig<typeof import("@/lib/evaluation/evaluate")>();
@@ -9,22 +9,17 @@ vi.mock("@/lib/evaluation/evaluate", async (orig) => {
 import { POST } from "./route";
 import { EvaluationInputError, runEvaluation } from "@/lib/evaluation/evaluate";
 
-const TOKEN = "test-token-that-is-long-enough";
 const body = { industry: "hotel", archetypes: ["family_planner"], phase: 1, task: "Book a room", url: "https://hotel.example" };
-const call = (b: unknown, token = TOKEN) =>
-  POST(new Request("http://localhost/api/evaluation", { method: "POST", headers: { "x-eval-token": token, "content-type": "application/json" }, body: JSON.stringify(b) }));
+const SAME = { origin: "https://studiomanfred.com", host: "studiomanfred.com" };
+const call = (b: unknown, headers: Record<string, string> = SAME) =>
+  POST(new Request("https://studiomanfred.com/api/evaluation", { method: "POST", headers: { ...headers, "content-type": "application/json" }, body: JSON.stringify(b) }));
 
-beforeEach(() => vi.stubEnv("EVAL_LINK_TOKEN", TOKEN));
-afterEach(() => {
-  vi.unstubAllEnvs();
-  vi.mocked(runEvaluation).mockReset();
-});
+afterEach(() => vi.mocked(runEvaluation).mockReset());
 
 describe("POST /api/evaluation", () => {
-  it("is a 404 without the right token, or when no token is set", async () => {
-    expect((await call(body, "wrong-token-wrong-token")).status).toBe(404);
-    vi.stubEnv("EVAL_LINK_TOKEN", "");
-    expect((await call(body)).status).toBe(404);
+  it("refuses calls from other sites or without an origin", async () => {
+    expect((await call(body, { origin: "https://evil.example", host: "studiomanfred.com" })).status).toBe(403);
+    expect((await call(body, { host: "studiomanfred.com" })).status).toBe(403);
     expect(runEvaluation).not.toHaveBeenCalled();
   });
 
@@ -65,7 +60,7 @@ describe("POST /api/evaluation", () => {
   });
 
   it("refuses a body that is not JSON", async () => {
-    const res = await POST(new Request("http://localhost/api/evaluation", { method: "POST", headers: { "x-eval-token": TOKEN }, body: "not json" }));
+    const res = await POST(new Request("http://localhost/api/evaluation", { method: "POST", headers: SAME, body: "not json" }));
     expect(res.status).toBe(400);
   });
 });

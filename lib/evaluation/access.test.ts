@@ -1,20 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { isEvalToken } from "./access";
+import { isSameOrigin } from "./access";
 
-const secret = "a-long-unguessable-token-123";
+const req = (headers: Record<string, string>) => new Request("https://studiomanfred.com/api/evaluation", { method: "POST", headers });
 
-describe("isEvalToken", () => {
-  it("accepts only the exact token", () => {
-    expect(isEvalToken(secret, secret)).toBe(true);
-    expect(isEvalToken(secret + "x", secret)).toBe(false);
-    expect(isEvalToken(secret.slice(0, -1), secret)).toBe(false);
-    expect(isEvalToken("", secret)).toBe(false);
-    expect(isEvalToken(null, secret)).toBe(false);
+describe("isSameOrigin", () => {
+  it("accepts requests from the site's own pages", () => {
+    expect(isSameOrigin(req({ origin: "https://studiomanfred.com", host: "studiomanfred.com" }))).toBe(true);
+    expect(isSameOrigin(req({ origin: "http://localhost:3000", host: "localhost:3000" }))).toBe(true);
+    expect(isSameOrigin(req({ origin: "https://studiomanfred.com", host: "internal:1234", "x-forwarded-host": "studiomanfred.com" }))).toBe(true);
   });
 
-  it("is closed when no token is set, or the set one is too short to be secret", () => {
-    expect(isEvalToken("anything", undefined)).toBe(false);
-    expect(isEvalToken("", "")).toBe(false);
-    expect(isEvalToken("short", "short")).toBe(false);
+  it("refuses other sites, missing or broken origins", () => {
+    expect(isSameOrigin(req({ origin: "https://evil.example", host: "studiomanfred.com" }))).toBe(false);
+    expect(isSameOrigin(req({ host: "studiomanfred.com" }))).toBe(false);
+    expect(isSameOrigin(req({ origin: "null", host: "studiomanfred.com" }))).toBe(false);
+    expect(isSameOrigin(req({ origin: "https://studiomanfred.com" }))).toBe(false);
   });
 });
