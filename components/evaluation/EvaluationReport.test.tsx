@@ -62,7 +62,7 @@ describe("EvaluationReport", () => {
     expect(panel).toBeVisible();
     expect(within(panel).getByText("The fix.")).toBeInTheDocument();
     expect(within(panel).getByText(/Will the cot fit\?/)).toBeInTheDocument();
-    expect(within(panel).getByText(/affected customers ×/)).toBeInTheDocument();
+    expect(within(panel).getByText(/× segment revenue ×/)).toBeInTheDocument();
 
     const a11y = screen.getByRole("button", { name: /Images without alt text/ });
     await userEvent.click(a11y);
@@ -81,13 +81,13 @@ describe("EvaluationReport", () => {
     render(<EvaluationReport result={result} industry="hotel" task="t" />);
     const total = () => within(screen.getByText("Estimated value at stake").closest("div")!).getAllByText(/SEK/)[0].textContent;
     const before = total();
-    const revenue = screen.getByLabelText("Revenue per customer and year");
-    expect(revenue).toHaveValue(2450);
+    const revenue = screen.getByLabelText("Revenue per customer, Business travellers");
+    expect(revenue).toHaveValue(3300);
     await userEvent.clear(revenue);
     await userEvent.type(revenue, "9000");
     expect(total()).not.toBe(before);
     await userEvent.click(screen.getByRole("button", { name: "Reset to the journey data" }));
-    expect(screen.getByLabelText("Revenue per customer and year")).toHaveValue(2450);
+    expect(screen.getByLabelText("Revenue per customer, Business travellers")).toHaveValue(3300);
     expect(total()).toBe(before);
   });
 
@@ -112,5 +112,40 @@ describe("EvaluationReport", () => {
     await userEvent.clear(critical);
     await userEvent.type(critical, "50");
     expect(total()).not.toBe(fewer);
+  });
+
+  it("says where the data comes from, and what it was evaluated against", () => {
+    render(<EvaluationReport result={{ ...result, criteria: ["h-status", "h-errors", "a11y-html", "b-trust", "b-conversion", "b-price", "b-mobile", "b-content"] }} industry="hotel" task="t" />);
+    expect(screen.getByRole("link", { name: /Hotel customer journey/ })).toHaveAttribute("href", "/cases/customer-journey-intelligence/hotel");
+    expect(screen.getByText(/Evaluated against/).parentElement).toHaveTextContent(/Usability heuristics: Visibility of system status, Error prevention · Accessibility \(WCAG 2.2 AA\): Automatic HTML checks · Experience and business: all 5/);
+  });
+
+  it("shows each archetype's value per customer, from its segments", () => {
+    render(<EvaluationReport result={result} industry="hotel" task="t" />);
+    const list = screen.getByRole("list", { name: "Archetypes by value" });
+    expect(within(list).getByText(/The Loyal Regular/).closest("li")).toHaveTextContent(/5,280 SEK per customer a year/);
+  });
+
+  it("every ticket shows how it spreads over archetypes, and opens to archetypes and segments", async () => {
+    render(<EvaluationReport result={result} industry="hotel" task="t" />);
+    const row = screen.getByRole("button", { name: /Images without alt text/ });
+    expect(within(row).getByRole("img", { name: /Affected: The Business Traveller \d+%, The Loyal Regular \d+%/ })).toBeInTheDocument();
+    await userEvent.click(row);
+    const panel = document.getElementById(row.getAttribute("aria-controls")!)!;
+    const archetypes = within(panel).getByRole("table", { name: "Affected archetypes" });
+    expect(within(archetypes).getAllByRole("row")).toHaveLength(3);
+    const segments = within(panel).getByRole("table", { name: "Affected segments" });
+    expect(within(segments).getByRole("row", { name: /Business travellers/ })).toHaveTextContent(/% of the segment/);
+  });
+
+  it("the segment revenues drive each archetype's value", async () => {
+    render(<EvaluationReport result={result} industry="hotel" task="t" />);
+    const list = screen.getByRole("list", { name: "Archetypes by value" });
+    const regular = () => within(list).getByText(/The Loyal Regular/).closest("li")!.textContent;
+    const before = regular();
+    const loyal = screen.getByLabelText("Revenue per customer, Loyalty members");
+    await userEvent.clear(loyal);
+    await userEvent.type(loyal, "10000");
+    expect(regular()).not.toBe(before);
   });
 });

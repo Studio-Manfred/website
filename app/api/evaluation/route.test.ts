@@ -8,6 +8,7 @@ vi.mock("@/lib/evaluation/evaluate", async (orig) => {
 
 import { POST } from "./route";
 import { EvaluationInputError, runEvaluation } from "@/lib/evaluation/evaluate";
+import { ALL_CRITERIA } from "@/lib/evaluation/criteria";
 
 const body = { industry: "hotel", archetypes: ["family_planner"], phase: 1, task: "Book a room", url: "https://hotel.example" };
 const SAME = { origin: "https://studiomanfred.com", host: "studiomanfred.com" };
@@ -28,7 +29,9 @@ describe("POST /api/evaluation", () => {
     const res = await call(body);
     expect(res.status).toBe(200);
     expect(await res.json()).toMatchObject({ mode: "demo" });
-    expect(runEvaluation).toHaveBeenCalledWith({ ...body, screenshots: [] });
+    expect(runEvaluation).toHaveBeenCalledWith({ ...body, screenshots: [], criteria: ALL_CRITERIA });
+    await call({ ...body, criteria: ["h-status"] });
+    expect(vi.mocked(runEvaluation).mock.calls[1][0].criteria).toEqual(["h-status"]);
   });
 
   it("refuses bad input: unknown industry, no archetypes, a bad phase, a huge or non-base64 screenshot", async () => {
@@ -36,6 +39,8 @@ describe("POST /api/evaluation", () => {
       { ...body, industry: "airline" },
       { ...body, archetypes: [] },
       { ...body, phase: 9 },
+      { ...body, criteria: [] },
+      { ...body, criteria: ["ghost"] },
       { ...body, screenshots: [{ mediaType: "image/png", data: "A".repeat(1_400_001) }] },
       { ...body, screenshots: [{ mediaType: "image/gif", data: "AAAA" }] },
       { ...body, screenshots: [{ mediaType: "image/png", data: "<script>" }] },

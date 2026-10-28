@@ -122,4 +122,53 @@ describe("EvaluationService", () => {
     await fillAndRun();
     expect(await screen.findByRole("alert")).toHaveTextContent("The evaluation failed. Try again.");
   });
+
+  it("shows that the data comes from the industry's customer journey", async () => {
+    render(<EvaluationService live={false} />);
+    expect(screen.getByRole("link", { name: /Open the Hotel journey/ })).toHaveAttribute("href", "/cases/customer-journey-intelligence/hotel");
+    await userEvent.click(screen.getByRole("button", { name: /Grocery/ }));
+    expect(screen.getByRole("link", { name: /Open the Grocery journey/ })).toHaveAttribute("href", "/cases/customer-journey-intelligence/grocery");
+  });
+
+  it("each archetype shows its main segment and what it is worth", () => {
+    render(<EvaluationService live />);
+    const card = screen.getByRole("button", { name: /The Business Traveller/ });
+    expect(within(card).getByText(/Mostly Business travellers \(70%\)/)).toBeInTheDocument();
+    expect(within(card).getByText(/3,700 SEK per customer/)).toBeInTheDocument();
+    expect(screen.getByText(/Most valuable per customer: The Loyal Regular/)).toBeInTheDocument();
+  });
+
+  it("the phase shows what the journey says about it", async () => {
+    render(<EvaluationService live={false} />);
+    await userEvent.selectOptions(screen.getByLabelText("Journey phase"), "2");
+    expect(screen.getByText(/In the journey, customers expect \d+ and get \d+/)).toBeInTheDocument();
+  });
+
+  it("picks what to evaluate against, by criterion or by group, and sends it", async () => {
+    const fetchSpy = mockFetch(200, result);
+    render(<EvaluationService live={false} />);
+    expect(screen.getByRole("checkbox", { name: /Error prevention/ })).toBeChecked();
+    await userEvent.click(screen.getByRole("button", { name: "Clear Experience and business" }));
+    expect(screen.getByRole("checkbox", { name: /Price transparency/ })).not.toBeChecked();
+    await userEvent.click(screen.getByRole("checkbox", { name: /Error prevention/ }));
+    expect(screen.getByText(/14 of 20 chosen/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("checkbox", { name: /Price transparency/ }));
+    expect(screen.getByText(/15 of 20 chosen/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("checkbox", { name: /Price transparency/ }));
+    await fillAndRun();
+    const sent = JSON.parse((fetchSpy.mock.calls[0][1] as RequestInit).body as string);
+    expect(sent.criteria).toHaveLength(14);
+    expect(sent.criteria).not.toContain("h-errors");
+    expect(sent.criteria).not.toContain("b-price");
+  });
+
+  it("can't run with nothing to evaluate against", async () => {
+    render(<EvaluationService live={false} />);
+    for (const g of ["Usability heuristics", "Accessibility (WCAG 2.2 AA)", "Experience and business"]) await userEvent.click(screen.getByRole("button", { name: `Clear ${g}` }));
+    await userEvent.type(screen.getByLabelText("Page address"), "https://hotel.example");
+    await userEvent.type(screen.getByLabelText("The task"), "Book a room");
+    expect(screen.getByRole("button", { name: "Run the evaluation" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "Select all Usability heuristics" }));
+    expect(screen.getByRole("button", { name: "Run the evaluation" })).toBeEnabled();
+  });
 });

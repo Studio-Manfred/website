@@ -1,11 +1,15 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { INDUSTRIES } from "@/lib/customer-journey/datasets";
 import type { IndustryId } from "@/lib/customer-journey/types";
 import type { Screenshot } from "@/lib/evaluation/evaluate";
 import type { EvaluationResult } from "@/lib/evaluation/findings";
 import { TRAITS } from "@/lib/evaluation/traits";
+import { ALL_CRITERIA, CRITERIA_GROUPS } from "@/lib/evaluation/criteria";
+import { archetypeEconomics, defaultAssumptions, phaseGap, phaseWeight } from "@/lib/evaluation/score";
+import { SEGMENT_MIX, businessSegments } from "@/lib/evaluation/segments";
+import { industryPath } from "@/lib/customer-journey/slugs";
 import { label, personaColor, pill } from "@/components/customer-journey/theme";
 import { EvaluationReport } from "./EvaluationReport";
 import { toScreenshot } from "./screenshots";
@@ -17,6 +21,8 @@ import { toScreenshot } from "./screenshots";
 const LIST = Object.values(INDUSTRIES);
 const MAX_SHOTS = 3;
 const DEVICE = { mobile: "Mobile", desktop: "Desktop", both: "Mobile and desktop" } as const;
+const num = (n: number) => new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(n);
+const millions = (n: number) => (n >= 1_000_000 ? `${(n / 1_000_000).toFixed(n >= 10_000_000 ? 0 : 1)}M SEK` : `${num(n)} SEK`);
 
 type Shot = Screenshot & { name: string };
 type Status = { kind: "idle" } | { kind: "running" } | { kind: "error"; message: string } | { kind: "done"; result: EvaluationResult; industry: IndustryId };
@@ -43,7 +49,16 @@ export function EvaluationService({ live }: { live: boolean }) {
   const [task, setTask] = useState("");
   const [shots, setShots] = useState<Shot[]>([]);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
-  const ids = { url: useId(), task: useId(), phase: useId(), files: useId() };
+  const [criteria, setCriteria] = useState<string[]>(ALL_CRITERIA);
+  const ids = { url: useId(), task: useId(), phase: useId(), files: useId(), phaseInfo: useId() };
+  const economics = useMemo(() => archetypeEconomics(ind, defaultAssumptions(ind)), [ind]);
+  const segments = businessSegments(ind);
+  const mostValuable = [...ind.personas].sort((a, b) => economics[b.id].revenuePerCustomer - economics[a.id].revenuePerCustomer)[0];
+  const gap = phaseGap(ind, phase);
+  const phaseOpps = ind.opportunities.filter((o) => o.phase === phase);
+  const setGroup = (itemIds: string[], on: boolean) =>
+    setCriteria((c) => (on ? ALL_CRITERIA.filter((id) => c.includes(id) || itemIds.includes(id)) : c.filter((id) => !itemIds.includes(id))));
+  const toggleCriterion = (id: string) => setCriteria((c) => (c.includes(id) ? c.filter((x) => x !== id) : ALL_CRITERIA.filter((x) => c.includes(x) || x === id)));
 
   const pickIndustry = (id: IndustryId) => {
     setIndustry(id);
@@ -63,7 +78,7 @@ export function EvaluationService({ live }: { live: boolean }) {
     }
   };
 
-  const ready = chosen.length > 0 && task.trim().length >= 3 && (url.trim() !== "" || shots.length > 0);
+  const ready = chosen.length > 0 && criteria.length > 0 && task.trim().length >= 3 && (url.trim() !== "" || shots.length > 0);
 
   const run = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +88,7 @@ export function EvaluationService({ live }: { live: boolean }) {
       const res = await fetch("/api/evaluation", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ industry, archetypes: chosen, phase, task, url: url.trim() || undefined, screenshots: shots.map(({ mediaType, data }) => ({ mediaType, data })) }),
+        body: JSON.stringify({ industry, archetypes: chosen, phase, task, url: url.trim() || undefined, criteria, screenshots: shots.map(({ mediaType, data }) => ({ mediaType, data })) }),
       });
       const json = await res.json().catch(() => null);
       if (!res.ok) {
@@ -115,12 +130,21 @@ export function EvaluationService({ live }: { live: boolean }) {
                   </button>
                 ))}
               </div>
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-[var(--beige-light)] px-5 py-4">
+                <p className="text-sm font-light text-[var(--color-text-secondary)]">
+                  <span className="font-extrabold text-[var(--color-text-primary)]">Built on the {ind.name} customer journey.</span>{" "}
+                  The archetypes, business segments, journey phases and revenue come from it: {ind.stats.customers} customers · {segments.length} segments · {ind.personas.length} archetypes · {ind.phases.length} phases.
+                </p>
+                <a href={industryPath(industry)} target="_blank" rel="noopener" className="shrink-0 text-sm font-extrabold text-[var(--color-business-blue)] underline underline-offset-4">
+                  Open the {ind.name} journey <span aria-hidden="true">↗</span>
+                </a>
+              </div>
             </fieldset>
 
             <fieldset>
               <legend className={`${label} mb-1`}>2 · Archetypes</legend>
               <p className="mb-4 text-sm font-light text-[var(--color-text-secondary)]">
-                {ind.segments.length} segments and {ind.personas.length} archetypes from the {ind.name} journey. Choose who walks through the task.
+                Choose who walks through the task. Each archetype belongs to the journey&apos;s business segments, which sets what a customer is worth. Most valuable per customer: {mostValuable.name}.
               </p>
               <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 {ind.personas.map((p) => {
@@ -142,6 +166,19 @@ export function EvaluationService({ live }: { live: boolean }) {
                           <span className="shrink-0 text-xs font-light text-[var(--color-text-muted)]">{p.share}%</span>
                         </span>
                         <span className="mt-1 block text-sm font-light text-[var(--color-text-secondary)]">{p.tagline}</span>
+                        {(() => {
+                          const mix = SEGMENT_MIX[p.id];
+                          const main = segments.reduce((best, s) => (mix[s.id] > mix[best.id] ? s : best), segments[0]);
+                          const eco = economics[p.id];
+                          return (
+                            <span className="mt-3 block rounded-xl bg-white/70 px-3 py-2 text-xs">
+                              <span className="block font-extrabold">{num(eco.revenuePerCustomer)} SEK per customer a year</span>
+                              <span className="block font-light text-[var(--color-text-secondary)]">
+                                Mostly {main.label} ({Math.round(mix[main.id] * 100)}%) · {millions(eco.yearly)} a year in all
+                              </span>
+                            </span>
+                          );
+                        })()}
                         <span className="mt-4 grid grid-cols-[90px_1fr] items-center gap-x-3 gap-y-1.5 text-xs">
                           <span className="font-light text-[var(--color-text-muted)]">Digital skill</span>
                           <Meter value={t.digitalSkill} name="Digital skill" />
@@ -166,8 +203,42 @@ export function EvaluationService({ live }: { live: boolean }) {
               </ul>
             </fieldset>
 
+            <fieldset>
+              <legend className={`${label} mb-1`}>3 · Evaluate against</legend>
+              <p className="mb-4 text-sm font-light text-[var(--color-text-secondary)]">
+                {criteria.length} of {ALL_CRITERIA.length} chosen. Findings are only reported for the groups you keep.
+              </p>
+              <div className="grid gap-4 lg:grid-cols-3">
+                {CRITERIA_GROUPS.map((g) => {
+                  const itemIds = g.items.map((c) => c.id);
+                  const all = itemIds.every((id) => criteria.includes(id));
+                  return (
+                    <fieldset key={g.kind} className="relative rounded-2xl border border-[var(--color-border-default)] p-5">
+                      <legend className="float-left mb-3 pr-20 font-extrabold">{g.name}</legend>
+                      <button type="button" onClick={() => setGroup(itemIds, !all)} aria-label={`${all ? "Clear" : "Select all"} ${g.name}`} className="absolute right-5 top-5 text-xs font-light underline underline-offset-4 hover:text-[var(--color-business-blue)]">
+                        {all ? "Clear" : "Select all"}
+                      </button>
+                      <ul className="clear-both space-y-2.5">
+                        {g.items.map((c) => (
+                          <li key={c.id}>
+                            <label className="flex cursor-pointer gap-2.5 text-sm">
+                              <input type="checkbox" checked={criteria.includes(c.id)} onChange={() => toggleCriterion(c.id)} className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--color-business-blue)]" />
+                              <span>
+                                <span className="block">{c.name}</span>
+                                <span className="block text-xs font-light text-[var(--color-text-muted)]">{c.hint}</span>
+                              </span>
+                            </label>
+                          </li>
+                        ))}
+                      </ul>
+                    </fieldset>
+                  );
+                })}
+              </div>
+            </fieldset>
+
             <fieldset className="grid gap-6 lg:grid-cols-2">
-              <legend className={`${label} mb-4`}>3 · What to evaluate</legend>
+              <legend className={`${label} mb-4`}>4 · What to evaluate</legend>
               <div className="space-y-6">
                 <div>
                   <label htmlFor={ids.url} className="mb-2 block font-extrabold text-sm">Page address</label>
@@ -180,13 +251,17 @@ export function EvaluationService({ live }: { live: boolean }) {
                 </div>
                 <div>
                   <label htmlFor={ids.phase} className="mb-2 block font-extrabold text-sm">Journey phase</label>
-                  <select id={ids.phase} value={phase} onChange={(e) => setPhase(Number(e.target.value))} className={field}>
+                  <select id={ids.phase} aria-describedby={ids.phaseInfo} value={phase} onChange={(e) => setPhase(Number(e.target.value))} className={field}>
                     {ind.phases.map((p, i) => (
                       <option key={p.name} value={i}>
                         {String(i + 1).padStart(2, "0")} {p.name} · {p.sub}
                       </option>
                     ))}
                   </select>
+                  <p id={ids.phaseInfo} className="mt-2 text-xs font-light text-[var(--color-text-secondary)]">
+                    In the journey, customers expect {gap.expect} and get {gap.delivery} here (out of 100), so findings in this phase weigh ×{phaseWeight(ind, phase).toFixed(2)} in value.
+                    {phaseOpps.length > 0 && ` Known moments: ${phaseOpps.map((o) => o.name.toLowerCase()).join(", ")}.`}
+                  </p>
                 </div>
               </div>
               <div>
@@ -220,7 +295,7 @@ export function EvaluationService({ live }: { live: boolean }) {
                 {status.kind === "running"
                   ? `Walking through the task as ${chosen.length} archetype${chosen.length === 1 ? "" : "s"}. This can take a minute or two.`
                   : !ready
-                    ? "Choose archetypes, describe the task, and give an address or a screenshot."
+                    ? "Choose archetypes and criteria, describe the task, and give an address or a screenshot."
                     : ""}
               </p>
             </div>

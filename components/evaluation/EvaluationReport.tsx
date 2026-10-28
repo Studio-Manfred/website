@@ -5,7 +5,10 @@ import { INDUSTRIES } from "@/lib/customer-journey/datasets";
 import type { IndustryId } from "@/lib/customer-journey/types";
 import type { EvaluationResult, Kind, Severity } from "@/lib/evaluation/findings";
 import { SEVERITIES } from "@/lib/evaluation/findings";
-import { defaultAssumptions, rankFindings, valueByArchetype, type Assumptions, type Valued } from "@/lib/evaluation/score";
+import { archetypeEconomics, defaultAssumptions, rankFindings, valueByArchetype, type Assumptions, type Valued } from "@/lib/evaluation/score";
+import { CRITERIA_GROUPS } from "@/lib/evaluation/criteria";
+import { SEGMENT_MIX, businessSegments } from "@/lib/evaluation/segments";
+import { industryPath } from "@/lib/customer-journey/slugs";
 import { label, pad2, personaColor } from "@/components/customer-journey/theme";
 
 // The report: what was found, for whom, where in the journey, and what it is
@@ -21,6 +24,8 @@ const SEVERITY: Record<Severity, { label: string; bg: string; fg: string }> = {
   medium: { label: "Medium", bg: "var(--blue-50)", fg: "var(--color-business-blue)" },
   low: { label: "Low", bg: "var(--color-bg-subtle)", fg: "var(--color-text-secondary)" },
 };
+const num = (n: number) => new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 }).format(n);
+const pct = (x: number) => `${Math.round(x * 100)}%`;
 const countLabel = (n: number) => `${n} finding${n === 1 ? "" : "s"}`;
 const KIND: Record<Kind, string> = { usability: "Usability", accessibility: "Accessibility", improvement: "Improvement" };
 const SOURCE = { model: "AI analysis", check: "Automatic check", demo: "Demo data" } as const;
@@ -73,6 +78,11 @@ export function EvaluationReport({ result, industry, task }: { result: Evaluatio
 
   const ranked = useMemo(() => rankFindings(result.findings, ind, assumptions), [result.findings, ind, assumptions]);
   const byArchetype = useMemo(() => valueByArchetype(ranked, ind), [ranked, ind]);
+  const economics = useMemo(() => archetypeEconomics(ind, assumptions), [ind, assumptions]);
+  const segments = businessSegments(ind);
+  const usedGroups = result.criteria
+    ? CRITERIA_GROUPS.map((g) => ({ g, items: g.items.filter((c) => result.criteria!.includes(c.id)) })).filter((x) => x.items.length)
+    : [];
   const involved = ind.personas.filter((p) => ranked.some((f) => f.archetypes.includes(p.id)));
   const total = ranked.reduce((s, f) => s + f.value, 0);
   const serious = ranked.filter((f) => f.severity === "critical" || f.severity === "high").length;
@@ -88,6 +98,12 @@ export function EvaluationReport({ result, industry, task }: { result: Evaluatio
         <div className="max-w-3xl">
           <p className={label}>
             Evaluation report · {ind.name} · {result.mode === "live" ? "AI analysis" : "Demo data"}
+          </p>
+          <p className="mt-1 text-sm font-light text-[var(--color-text-secondary)]">
+            Archetypes, segments, phases and revenue from the{" "}
+            <a href={industryPath(industry)} target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-[var(--color-business-blue)]">
+              {ind.name} customer journey<span aria-hidden="true"> ↗</span>
+            </a>
           </p>
           <h2 id={`${baseId}-h`} className="mt-2 font-extrabold leading-[1.15] tracking-[var(--letter-spacing-tight)]" style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)" }}>
             {task}
@@ -114,6 +130,12 @@ export function EvaluationReport({ result, industry, task }: { result: Evaluatio
       <p className="mt-6 max-w-3xl font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>
         {result.summary}
       </p>
+      {usedGroups.length > 0 && (
+        <p className="mt-4 max-w-3xl text-sm font-light text-[var(--color-text-secondary)]">
+          <span className="font-extrabold text-[var(--color-text-primary)]">Evaluated against</span>{" "}
+          {usedGroups.map(({ g, items }) => `${g.name}: ${items.length === g.items.length ? `all ${g.items.length}` : items.map((c) => c.name).join(", ")}`).join(" · ")}
+        </p>
+      )}
 
       <dl className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat name="Findings" value={String(ranked.length)} />
@@ -125,8 +147,9 @@ export function EvaluationReport({ result, industry, task }: { result: Evaluatio
       {/* Value per archetype: one measure, so plain bars; colour is each archetype's identity, as on the journey page. */}
       <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
         <div>
-          <h3 className={`${label} mb-4`}>Value at stake per archetype</h3>
-          <ul className="space-y-4">
+          <h3 className={`${label} mb-1`}>Archetypes by value</h3>
+          <p className="mb-4 text-sm font-light text-[var(--color-text-secondary)]">What each archetype is worth, from its business segments, and how much of it these findings put at stake.</p>
+          <ul aria-label="Archetypes by value" className="space-y-5">
             {ind.personas.map((p) => (
               <li key={p.id}>
                 <div className="mb-1.5 flex items-baseline justify-between gap-3 text-sm">
@@ -135,9 +158,12 @@ export function EvaluationReport({ result, industry, task }: { result: Evaluatio
                     {p.name}
                   </span>
                   <span className="font-light text-[var(--color-text-secondary)]">
-                    {sek(byArchetype[p.id] ?? 0)} · {countLabel(ranked.filter((f) => f.archetypes.includes(p.id)).length)}
+                    {sek(byArchetype[p.id] ?? 0)} at stake · {countLabel(ranked.filter((f) => f.archetypes.includes(p.id)).length)}
                   </span>
                 </div>
+                <p className="mb-1.5 text-xs font-light text-[var(--color-text-muted)]">
+                  {num(economics[p.id].revenuePerCustomer)} SEK per customer a year · {short(economics[p.id].yearly)} a year in all
+                </p>
                 <div aria-hidden="true" className="h-2.5 rounded-full bg-[var(--color-bg-subtle)]">
                   <div className="h-full rounded-full" style={{ width: `${((byArchetype[p.id] ?? 0) / maxArchetype) * 100}%`, background: personaColor(p.color), minWidth: byArchetype[p.id] ? 4 : 0 }} />
                 </div>
@@ -198,14 +224,39 @@ export function EvaluationReport({ result, industry, task }: { result: Evaluatio
         <section aria-labelledby={`${baseId}-a`} className="rounded-2xl border border-[var(--color-border-default)] p-6 print:break-inside-avoid">
           <h3 id={`${baseId}-a`} className={`${label} mb-1`}>Assumptions</h3>
           <p className="mb-5 text-sm font-light text-[var(--color-text-secondary)]">
-            Value = affected customers × revenue per customer × share at stake × how big the journey gap is in that phase (1 to 2). Change any number and the report follows.
+            Value = affected customers in each segment × that segment&apos;s revenue per customer × share at stake × how big the journey gap is in that phase (1 to 2). Change any number and the report follows.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
             <NumberField id={`${baseId}-c`} name="Customers" value={assumptions.customers} onChange={(n) => setAssumptions((a) => ({ ...a, customers: n }))} />
-            <NumberField id={`${baseId}-r`} name="Revenue per customer and year" value={assumptions.revenuePerCustomer} suffix="SEK" onChange={(n) => setAssumptions((a) => ({ ...a, revenuePerCustomer: n }))} />
+            {segments.map((s) => (
+              <NumberField key={s.id} id={`${baseId}-r-${s.id}`} name={`Revenue per customer, ${s.label}`} value={assumptions.revenue[s.id]} suffix="SEK" onChange={(n) => setAssumptions((a) => ({ ...a, revenue: { ...a.revenue, [s.id]: n } }))} />
+            ))}
             {[...SEVERITIES].reverse().map((s) => (
               <NumberField key={s} id={`${baseId}-${s}`} name={`At stake, ${SEVERITY[s].label.toLowerCase()}`} value={Math.round(assumptions.impact[s] * 1000) / 10} step={0.1} suffix="%" onChange={(n) => setImpact(s, n)} />
             ))}
+          </div>
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full min-w-[420px] text-xs">
+              <caption className="mb-2 text-left text-sm font-extrabold">Archetypes in segments <span className="font-light text-[var(--color-text-muted)]">(modelled, each row adds up to 100%)</span></caption>
+              <thead>
+                <tr className="text-[var(--color-text-muted)]">
+                  <th scope="col" className="py-1.5 pr-2 text-left font-light">Archetype</th>
+                  {segments.map((s) => (
+                    <th key={s.id} scope="col" className="px-1.5 py-1.5 text-right font-light">{s.label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {ind.personas.map((p) => (
+                  <tr key={p.id} className="border-t border-[var(--color-border-default)]">
+                    <th scope="row" className="py-1.5 pr-2 text-left font-light">{p.name}</th>
+                    {segments.map((s) => (
+                      <td key={s.id} className="px-1.5 py-1.5 text-right">{pct(SEGMENT_MIX[p.id][s.id])}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           <button type="button" onClick={() => setAssumptions(defaultAssumptions(ind))} className="mt-5 text-sm font-light underline underline-offset-4 hover:text-[var(--color-business-blue)] print:hidden">
             Reset to the journey data
@@ -214,7 +265,7 @@ export function EvaluationReport({ result, industry, task }: { result: Evaluatio
         <section aria-labelledby={`${baseId}-n`} className="rounded-2xl bg-[var(--beige-light)] p-6 text-sm font-light text-[var(--color-text-secondary)] print:break-inside-avoid" style={{ lineHeight: 1.7 }}>
           <h3 id={`${baseId}-n`} className={`${label} mb-3`}>How to read this</h3>
           <p>The archetypes are synthetic. Treat every finding as a hypothesis and test the important ones with real users before you build.</p>
-          <p className="mt-3">The values are estimates for comparing findings with each other, not forecasts. They come from the segment shares and business data in the {ind.name} journey.</p>
+          <p className="mt-3">The values are estimates for comparing findings with each other, not forecasts. Customers, archetype shares and segment revenue come from the {ind.name} journey. How each archetype spreads over the segments is a modelled assumption: change the segment revenues to see what it means.</p>
           <p className="mt-3">The automatic checks read the page&apos;s HTML and catch only part of WCAG. Contrast, keyboard use and screen reader behaviour need a manual test.</p>
         </section>
       </div>
@@ -234,6 +285,9 @@ function BacklogItem({ f, rank, maxPriority, open, onToggle, phase, persona, ass
 }) {
   const panel = useId();
   const sev = SEVERITY[f.severity];
+  const parts = f.byArchetype.map((x) => ({ ...x, p: persona(x.id), share: f.affectedCustomers ? x.customers / f.affectedCustomers : 0 }));
+  const segs = f.bySegment.filter((s) => s.customers > 0);
+  const cell = "px-3 py-2 text-right";
   return (
     <li className="rounded-2xl border border-[var(--color-border-default)] print:break-inside-avoid">
       <button type="button" aria-expanded={open} aria-controls={panel} onClick={onToggle} className="grid w-full grid-cols-[32px_minmax(0,1fr)] gap-x-4 gap-y-2 p-4 text-left md:grid-cols-[32px_minmax(0,1fr)_200px] md:items-center">
@@ -244,9 +298,19 @@ function BacklogItem({ f, rank, maxPriority, open, onToggle, phase, persona, ass
             <Badge bg={sev.bg} fg={sev.fg}>{sev.label}</Badge>
             <Badge bg="var(--color-bg-subtle)" fg="var(--color-text-secondary)">{KIND[f.kind]}</Badge>
             <span className="text-xs font-light text-[var(--color-text-muted)]">{phase} · effort {f.effort}</span>
-            <span className="flex gap-1" aria-label={`Affects ${f.archetypes.map((a) => persona(a).name).join(", ")}`}>
-              {f.archetypes.map((a) => (
-                <span key={a} aria-hidden="true" title={persona(a).name}>{persona(a).emoji}</span>
+          </span>
+          {/* Who the finding reaches: one 100% bar, a segment per archetype by affected customers, 2px gaps. */}
+          <span className="mt-2.5 flex items-center gap-2">
+            <span role="img" aria-label={`Affected: ${parts.map((x) => `${x.p.name} ${pct(x.share)}`).join(", ")}`} className="flex h-2 w-40 shrink-0 gap-[2px]">
+              {parts.map((x) => (
+                <span key={x.id} className="h-full first:rounded-l-full last:rounded-r-full" style={{ width: `${x.share * 100}%`, background: personaColor(x.p.color) }} />
+              ))}
+            </span>
+            <span aria-hidden="true" className="flex flex-wrap gap-x-2 text-xs font-light text-[var(--color-text-muted)]">
+              {parts.map((x) => (
+                <span key={x.id} title={x.p.name}>
+                  {x.p.emoji} {pct(x.share)}
+                </span>
               ))}
             </span>
           </span>
@@ -297,9 +361,63 @@ function BacklogItem({ f, rank, maxPriority, open, onToggle, phase, persona, ass
             </div>
           )}
           <div className="md:col-span-2">
+            <dt className="font-extrabold">Who it reaches</dt>
+            <dd className="mt-2 grid gap-4 lg:grid-cols-2">
+              <div className="overflow-x-auto rounded-xl border border-[var(--color-border-default)]">
+                <table className="w-full min-w-[360px] text-xs">
+                  <caption className="sr-only">Affected archetypes</caption>
+                  <thead className="bg-[var(--beige-light)]">
+                    <tr>
+                      <th scope="col" className="px-3 py-2 text-left font-extrabold">Archetype</th>
+                      <th scope="col" className={cell}>Customers</th>
+                      <th scope="col" className={cell}>Share</th>
+                      <th scope="col" className={cell}>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {parts.map((x) => (
+                      <tr key={x.id} className="border-t border-[var(--color-border-default)]">
+                        <th scope="row" className="px-3 py-2 text-left font-light">
+                          <span aria-hidden="true" className="mr-1.5 inline-block h-2 w-2 rounded-full" style={{ background: personaColor(x.p.color) }} />
+                          {x.p.name}
+                        </th>
+                        <td className={cell}>{num(x.customers)}</td>
+                        <td className={cell}>{pct(x.share)}</td>
+                        <td className={cell}>{sek(x.value)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="overflow-x-auto rounded-xl border border-[var(--color-border-default)]">
+                <table className="w-full min-w-[360px] text-xs">
+                  <caption className="sr-only">Affected segments</caption>
+                  <thead className="bg-[var(--beige-light)]">
+                    <tr>
+                      <th scope="col" className="px-3 py-2 text-left font-extrabold">Segment</th>
+                      <th scope="col" className={cell}>Customers</th>
+                      <th scope="col" className={cell}>Reach</th>
+                      <th scope="col" className={cell}>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {segs.map((s) => (
+                      <tr key={s.id} className="border-t border-[var(--color-border-default)]">
+                        <th scope="row" className="px-3 py-2 text-left font-light">{s.label}</th>
+                        <td className={cell}>{num(s.customers)}</td>
+                        <td className={cell}>{pct(s.ofSegment)} of the segment</td>
+                        <td className={cell}>{sek(s.value)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </dd>
+          </div>
+          <div className="md:col-span-2">
             <dt className="font-extrabold">How the value is worked out</dt>
             <dd className="mt-1 font-light text-[var(--color-text-secondary)]">
-              {new Intl.NumberFormat("en-GB").format(f.affectedCustomers)} affected customers × {sek(assumptions.revenuePerCustomer)} × {Math.round(assumptions.impact[f.severity] * 1000) / 10}% at stake × phase gap {f.weight.toFixed(2)} = {sek(f.value)} per year. Effort {f.effort}, so priority {sek(Math.round(f.priority))} per effort unit.
+              Per segment: affected customers × segment revenue × {Math.round(assumptions.impact[f.severity] * 1000) / 10}% at stake × phase gap {f.weight.toFixed(2)}, added up: {sek(f.value)} per year for {num(f.affectedCustomers)} customers. Effort {f.effort}, so priority {sek(Math.round(f.priority))} per effort unit.
             </dd>
           </div>
         </dl>

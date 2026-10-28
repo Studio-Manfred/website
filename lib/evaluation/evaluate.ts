@@ -7,6 +7,7 @@ import { demoFindings } from "./demo";
 import { FetchPageError, PageUnreachableError, fetchPage } from "./fetch-page";
 import { ModelReport, cleanFinding, type EvaluationResult, type Finding } from "./findings";
 import { TRAITS } from "./traits";
+import { AUTO_CHECKS, CRITERIA_GROUPS, allowedKinds } from "./criteria";
 
 // One evaluation: fetch the page (if an address is given), run the plain
 // HTML checks, then let Claude walk through the task as each archetype.
@@ -24,6 +25,8 @@ export type EvaluationInput = {
   task: string;
   url?: string;
   screenshots: Screenshot[];
+  /** Criterion ids from the menu; see criteria.ts. */
+  criteria: string[];
 };
 
 export type ModelContext = {
@@ -36,7 +39,8 @@ const SYSTEM = `You are a senior UX researcher and accessibility specialist at a
 
 How to work:
 - Walk through the task step by step as each archetype. Note where they would hesitate, misread, give up, or be blocked.
-- Report usability problems, accessibility barriers (cite the WCAG 2.2 success criterion), and improvements that would matter to these archetypes.
+- Evaluate only against the criteria you are given. Report usability problems (kind usability), accessibility barriers (kind accessibility, cite the WCAG 2.2 success criterion), and improvements that would matter to these archetypes (kind improvement), but only for the groups that have criteria.
+- Set heuristic to the name of the criterion the finding falls under.
 - Base every finding on something you can see in the screenshots or the page content. Don't invent features you can't see. If the material is too thin to judge something, leave it out.
 - One finding per distinct problem. If several archetypes hit the same problem, list them all on that finding instead of repeating it.
 - Write quotes as short first-person reactions in each archetype's own voice.
@@ -64,6 +68,12 @@ export function buildPrompt(ctx: ModelContext): Anthropic.Beta.Messages.BetaCont
     })
     .join("\n");
   const phases = ind.phases.map((p, i) => `${i}: ${p.name} (${p.sub})`).join("\n");
+  const criteria = CRITERIA_GROUPS.map((g) => {
+    const items = g.items.filter((c) => c.id !== AUTO_CHECKS && input.criteria.includes(c.id));
+    return items.length ? `${g.name} (kind ${g.kind}):\n${items.map((c) => `- ${c.name}: ${c.hint}`).join("\n")}` : "";
+  })
+    .filter(Boolean)
+    .join("\n\n");
 
   const text = `Industry: ${ind.name} (${ind.industry}). ${ind.description}
 
@@ -74,6 +84,9 @@ The task being evaluated sits mainly in phase ${input.phase}: ${ind.phases[input
 
 Archetypes:
 ${archetypes}
+
+Evaluate against these criteria only:
+${criteria || "(Only the automatic HTML checks were chosen; report nothing else.)"}
 
 Task: ${input.task}
 ${page ? `\nPage: ${page.url}\nTitle: ${page.title}\n\n<page_content>\n${page.text}\n</page_content>` : "\nNo page address was given; judge from the screenshots."}
@@ -124,8 +137,11 @@ export async function runEvaluation(input: EvaluationInput, deps: Deps = default
   const archetypes = input.archetypes.filter((a) => ids.includes(a));
   if (archetypes.length === 0) throw new EvaluationInputError("Choose at least one archetype.");
   if (!input.url && input.screenshots.length === 0) throw new EvaluationInputError("Give a page address or at least one screenshot.");
+  const criteria = CRITERIA_GROUPS.flatMap((g) => g.items.map((c) => c.id)).filter((id) => input.criteria.includes(id));
+  if (criteria.length === 0) throw new EvaluationInputError("Choose at least one thing to evaluate against.");
+  const kinds = allowedKinds(criteria);
   const phase = Math.min(Math.max(Math.round(input.phase), 0), ind.phases.length - 1);
-  const clean = { ...input, archetypes, phase };
+  const clean = { ...input, archetypes, phase, criteria };
 
   let page: ModelContext["page"] = null;
   let checks: Finding[] = [];
@@ -135,7 +151,7 @@ export async function runEvaluation(input: EvaluationInput, deps: Deps = default
       const fetched = await deps.fetchPage(input.url);
       const digest = pageDigest(fetched.html);
       page = { url: fetched.url, title: digest.title, text: digest.text };
-      checks = checkFindings(fetched.html, archetypes, phase);
+      if (criteria.includes(AUTO_CHECKS)) checks = checkFindings(fetched.html, archetypes, phase);
     } catch (e) {
       // With screenshots there is still something to evaluate; a blocked address is always an error.
       if (e instanceof PageUnreachableError && input.screenshots.length) fetchNote = `${e.message} The evaluation used the screenshots only.`;
@@ -149,9 +165,10 @@ export async function runEvaluation(input: EvaluationInput, deps: Deps = default
   const demo = (note: string): EvaluationResult => ({
     mode: "demo",
     summary: `Demo report for ${ind.name}: findings come from the journey data, not from the page.${checks.length ? " The accessibility checks ran on the real page." : ""}`,
-    findings: [...demoFindings(ind, archetypes, phase), ...checks],
+    findings: [...demoFindings(ind, archetypes, phase).filter((f) => kinds.includes(f.kind)), ...checks],
     page: pageInfo,
     note,
+    criteria,
   });
 
   if (!deps.hasKey()) return demo("The AI analysis is not switched on, so this report shows demo findings from the journey data.");
@@ -160,9 +177,9 @@ export async function runEvaluation(input: EvaluationInput, deps: Deps = default
     const report = await deps.callModel({ ind, input: clean, page });
     const findings = report.findings
       .map((f) => cleanFinding(f, archetypes, ind.phases.length))
-      .filter((f): f is NonNullable<typeof f> => f !== null)
+      .filter((f): f is NonNullable<typeof f> => f !== null && kinds.includes(f.kind))
       .map((f, i): Finding => ({ ...f, id: `ai-${i + 1}`, source: "model" }));
-    return { mode: "live", summary: report.summary, findings: [...findings, ...checks], page: pageInfo, ...(fetchNote && { note: fetchNote }) };
+    return { mode: "live", summary: report.summary, findings: [...findings, ...checks], page: pageInfo, criteria, ...(fetchNote && { note: fetchNote }) };
   } catch (e) {
     console.error("evaluation model call:", e instanceof Error ? e.message : e);
     return demo("The AI analysis failed this time, so this report shows demo findings from the journey data. Try again in a moment.");

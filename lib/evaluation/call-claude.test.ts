@@ -12,7 +12,7 @@ const { MODEL, callClaude } = await import("./evaluate");
 
 const ctx = {
   ind: INDUSTRIES.hotel,
-  input: { industry: "hotel" as const, archetypes: ["family_planner"], phase: 1, task: "Book a room", screenshots: [] },
+  input: { industry: "hotel" as const, archetypes: ["family_planner"], phase: 1, task: "Book a room", screenshots: [], criteria: ["h-status"] },
   page: null,
 };
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { INDUSTRIES } from "@/lib/customer-journey/datasets";
 import type { IndustryId } from "@/lib/customer-journey/types";
 import { isSameOrigin } from "@/lib/evaluation/access";
+import { ALL_CRITERIA } from "@/lib/evaluation/criteria";
 import { EvaluationInputError, runEvaluation } from "@/lib/evaluation/evaluate";
 
 // Runs one evaluation for the evaluation page. Only the site's own page may
@@ -30,6 +31,11 @@ const Body = z.object({
     )
     .max(3)
     .default([]),
+  criteria: z
+    .array(z.enum(ALL_CRITERIA as [string, ...string[]]))
+    .min(1)
+    .max(ALL_CRITERIA.length)
+    .default(ALL_CRITERIA),
 });
 
 export async function POST(req: Request) {

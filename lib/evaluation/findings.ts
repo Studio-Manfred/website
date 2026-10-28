@@ -45,6 +45,8 @@ export type EvaluationResult = {
   page: { url: string; title: string } | null;
   /** Why the run fell back to demo data, when it did. */
   note?: string;
+  /** The criteria the evaluation used. */
+  criteria?: string[];
 };
 
 /** Keep only archetypes that exist, phases in range, and quotes for kept archetypes. */
