@@ -340,6 +340,43 @@ dialog button, dialog a {
   }
 }
 
+/* ─── Join-us on a phone ─────────────────────────────────────────────────────── */
+/* The page lays out with inline-style grids and flex rows. Below md they stack,
+   and the photo cluster shrinks with the viewport so nothing scrolls sideways. */
+@media (max-width: 768px) {
+  .join-split {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 24px !important;
+  }
+
+  .join-box {
+    padding: 24px !important;
+  }
+
+  .join-photos > * {
+    height: auto !important;
+    margin-left: -6vw !important;
+  }
+
+  .join-photos > :first-child {
+    width: 31vw !important;
+    margin-left: 0 !important;
+    aspect-ratio: 260 / 360;
+  }
+
+  .join-photos > :nth-child(2) {
+    width: 36vw !important;
+    aspect-ratio: 300 / 430;
+  }
+
+  .join-photos > :nth-child(3) {
+    width: 30vw !important;
+    aspect-ratio: 245 / 375;
+  }
+}
+
 /* ─── Reduced motion (WCAG 2.3.3 / 2.2.2) ───────────────────────────────────── */
 /* Freeze scroll-reveal, marquee animations, and drop the custom cursor so OS
    pointer-magnification / high-contrast pointers come back (STU-290 + STU-291). */

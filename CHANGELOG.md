@@ -6,6 +6,10 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Join us**: no sideways scroll on a phone. The two-column blocks stack and the photo cluster shrinks with the screen.
+
 ### Changed
 
 - **Menu**: the open menu is white on blue pages (home, writing, training) and blue on white pages (cases, course pages). The wipe no longer shows a dark band under its edge, which looked like a stutter.
