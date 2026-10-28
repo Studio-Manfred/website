@@ -11,6 +11,7 @@ export function HomeMenu() {
       triggerStyle={{ right: menuGutter }}
       headerClassName="h-[72px] md:h-[104px]"
       headerStyle={{ paddingInline: menuGutter }}
+      headerInnerClassName="h-full"
     />
   );
 }

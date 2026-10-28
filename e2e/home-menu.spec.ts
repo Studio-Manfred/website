@@ -5,11 +5,22 @@ const openMenuButton = (page: Page) =>
 const bar = (page: Page) => page.getByTestId("home-menu-bar");
 const panel = (page: Page) => page.getByRole("dialog", { name: "Menu" });
 
+// Waits for the finite animations (the panel wipe and the icon morph) to finish.
+async function settled(page: Page) {
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+        .map((a) => a.finished.catch(() => undefined)),
+    ),
+  );
+}
+
 async function openPanel(page: Page) {
   await openMenuButton(page).click();
   await expect(panel(page)).toBeVisible();
-  // The panel slides in; wait until it rests at the top of the viewport.
-  await expect.poll(async () => (await panel(page).boundingBox())?.y).toBe(0);
+  await settled(page);
 }
 
 async function box(locator: Locator) {
@@ -62,22 +73,17 @@ test.describe("home menu", () => {
     await expect(nav.getByRole("link", { name: /^Home/ })).toHaveCount(0);
   });
 
-  test("draws both buttons as a ring, not a filled circle", async ({
+  test("draws both buttons as a bare icon: no ring, no fill", async ({
     page,
   }) => {
     await page.goto("/");
     const menuButton = openMenuButton(page);
-    await expect(menuButton).toHaveCSS("border-top-width", "2px");
+    await expect(menuButton).toHaveCSS("border-top-width", "0px");
     await expect(menuButton).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
     await openPanel(page);
     const close = panel(page).getByRole("button", { name: "Close menu" });
-    await expect(close).toHaveCSS("border-top-width", "2px");
+    await expect(close).toHaveCSS("border-top-width", "0px");
     await expect(close).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
-  });
-
-  test("is not on other pages", async ({ page }) => {
-    await page.goto("/writing");
-    await expect(openMenuButton(page)).toHaveCount(0);
   });
 
   test("keeps the button in place when the menu opens", async ({ page }) => {
@@ -155,8 +161,9 @@ test.describe("home menu rows", () => {
     const before = await box(title);
     await row(page).hover();
 
-    await expect(row(page)).toHaveCSS("background-color", "rgb(255, 255, 255)");
-    await expect(title).toHaveCSS("color", "rgb(44, 40, 236)");
+    // The home panel is white, so a row turns blue with white text.
+    await expect(row(page)).toHaveCSS("background-color", "rgb(44, 40, 236)");
+    await expect(title).toHaveCSS("color", "rgb(255, 255, 255)");
     expectSameBox(await box(title), before);
 
     const rowBox = await box(row(page));
@@ -174,11 +181,11 @@ test.describe("home menu rows", () => {
     await row(page).focus();
 
     await expect(row(page)).toBeFocused();
-    await expect(row(page)).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    await expect(row(page)).toHaveCSS("background-color", "rgb(44, 40, 236)");
     await expect(row(page)).toHaveCSS("outline-offset", "-4px");
   });
 
-  test("leaves a resting row blue", async ({ page }) => {
+  test("leaves a resting row see-through, so the white panel shows", async ({ page }) => {
     await page.goto("/");
     await openPanel(page);
     await expect(row(page)).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");

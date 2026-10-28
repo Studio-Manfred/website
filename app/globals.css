@@ -48,6 +48,118 @@ select:focus-visible,
   outline-offset: -4px;
 }
 
+/* ─── Menu icon morph and panel wipe (STU-1185) ─────────────────────────────── */
+/* The menu button is three lines. The close button in the panel is the same three
+   lines, resting as a cross: they turn into it when the panel opens (600 ms), and back
+   when it closes (350 ms, so it ends with the panel). The panel wipes down from the top instead of sliding, so the close
+   button sits still while it morphs. Reduced motion: no wipe, the cross at once. */
+.menu-icon line {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.menu-icon--morph .menu-icon__top {
+  transform: translateY(7px) rotate(45deg);
+}
+.menu-icon--morph .menu-icon__bottom {
+  transform: translateY(-7px) rotate(-45deg);
+}
+.menu-icon--morph .menu-icon__middle {
+  transform: scaleX(0);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-state="open"] .menu-icon--morph line {
+    animation-duration: 600ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: both;
+  }
+  [data-state="closed"] .menu-icon--morph line {
+    animation-duration: 350ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: both;
+  }
+  [data-state="open"] .menu-icon--morph .menu-icon__top {
+    animation-name: menu-icon-top-in;
+  }
+  [data-state="open"] .menu-icon--morph .menu-icon__bottom {
+    animation-name: menu-icon-bottom-in;
+  }
+  [data-state="open"] .menu-icon--morph .menu-icon__middle {
+    animation-name: menu-icon-middle-in;
+    animation-duration: 360ms;
+  }
+  [data-state="closed"] .menu-icon--morph .menu-icon__top {
+    animation-name: menu-icon-top-out;
+  }
+  [data-state="closed"] .menu-icon--morph .menu-icon__bottom {
+    animation-name: menu-icon-bottom-out;
+  }
+  [data-state="closed"] .menu-icon--morph .menu-icon__middle {
+    animation-name: menu-icon-middle-out;
+    animation-duration: 210ms;
+  }
+
+  .menu-panel[data-state="open"] {
+    animation: menu-panel-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .menu-panel[data-state="closed"] {
+    animation: menu-panel-out 350ms ease-in both;
+  }
+}
+
+/* The DS sheet overlay (50 % black) fades in under the wipe and showed as a dark
+   band below the panel's edge. The panel covers the page, so the overlay stays clear. */
+body:has(.menu-panel) {
+  --color-bg-overlay: transparent;
+}
+
+/* The content of the panel fades in and rises 8 px after the wipe, row by row
+   (50 ms apart, the first after 100 ms). Closing stays fast: no animation then. */
+@media (prefers-reduced-motion: no-preference) {
+  .menu-panel[data-state="open"] .menu-reveal {
+    animation: menu-reveal-in 350ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(100ms + var(--menu-reveal-index, 0) * 50ms);
+  }
+}
+@keyframes menu-reveal-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes menu-icon-top-in {
+  from { transform: none; }
+  to { transform: translateY(7px) rotate(45deg); }
+}
+@keyframes menu-icon-top-out {
+  from { transform: translateY(7px) rotate(45deg); }
+  to { transform: none; }
+}
+@keyframes menu-icon-bottom-in {
+  from { transform: none; }
+  to { transform: translateY(-7px) rotate(-45deg); }
+}
+@keyframes menu-icon-bottom-out {
+  from { transform: translateY(-7px) rotate(-45deg); }
+  to { transform: none; }
+}
+@keyframes menu-icon-middle-in {
+  from { transform: none; opacity: 1; }
+  to { transform: scaleX(0); opacity: 0; }
+}
+@keyframes menu-icon-middle-out {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes menu-panel-in {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0); }
+}
+@keyframes menu-panel-out {
+  from { clip-path: inset(0); }
+  to { clip-path: inset(0 0 100% 0); }
+}
+
 /* ─── Skip link ─────────────────────────────────────────────────────────────── */
 .skip-link {
   position: absolute;

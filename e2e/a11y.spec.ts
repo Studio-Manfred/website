@@ -107,8 +107,15 @@ test("a11y: / with the menu open", async ({ page }, testInfo) => {
   await page.getByRole("button", { name: "Open menu" }).click();
   const panel = page.getByRole("dialog", { name: "Menu" });
   await expect(panel).toBeVisible();
-  // Wait for the slide-in to finish so axe measures contrast on the settled panel.
-  await expect.poll(async () => (await panel.boundingBox())?.y).toBe(0);
+  // Wait for the wipe and the icon morph to finish so axe measures the settled panel.
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+        .map((a) => a.finished.catch(() => undefined)),
+    ),
+  );
 
   const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
   const blocking = results.violations.filter(
