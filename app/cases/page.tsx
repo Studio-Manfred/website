@@ -17,7 +17,7 @@ export default async function CasesPage() {
   const cases = await listCases();
   return (
     <>
-      <PageNav variant="white" width="wide" />
+      <PageNav variant="white" />
       <main id="main" tabIndex={-1}>
         <CaseList cases={cases} />
       </main>

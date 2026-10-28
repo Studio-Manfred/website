@@ -3,28 +3,28 @@ import { Logo, Button } from "@/components/ds";
 import { GetInTouchLink } from "@/components/GetInTouchLink";
 import { Monogram } from "@/components/Monogram";
 import { SiteMenu } from "@/components/SiteMenu";
-import { WIDTH_PX, type LayoutWidth } from "@/lib/layout";
+import { WIDTH_PX } from "@/lib/layout";
+import { pageInset } from "@/lib/menu-layout";
 
 interface PageNavProps {
   variant?: "white" | "blue";
-  /** Max width of the nav row. Match the page content's width to line up edges. */
-  width?: LayoutWidth;
   /** The shared menu. Off on pages that are sent to clients, like the shared CV. */
   menu?: boolean;
 }
 
 // The nav row is one height (48 px on a phone, 56 px from md) so the open menu's
 // header can copy it: the close button then sits exactly where the menu button was.
+// The nav row is as wide on every page, whatever the width of the content.
+const ROW_WIDTH = WIDTH_PX.wide;
 const ROW_HEIGHT = "h-[48px] md:h-[56px]";
 
 export function PageNav({
   variant = "white",
-  width = "default",
   menu = true,
 }: PageNavProps) {
   const isBlue = variant === "blue";
   const logoColor = isBlue ? "white" : "blue";
-  const rowStyle = { maxWidth: `${WIDTH_PX[width]}px` };
+  const rowStyle = { maxWidth: `${ROW_WIDTH}px` };
   return (
     <nav
       className={`px-6 md:px-12 py-5 ${
@@ -65,6 +65,7 @@ export function PageNav({
           {menu && (
             <SiteMenu
               tone={isBlue ? "white" : "blue"}
+              inset={pageInset(ROW_WIDTH)}
               headerClassName="px-6 py-5 md:px-12"
               headerInnerClassName={`mx-auto w-full ${ROW_HEIGHT}`}
               headerInnerStyle={rowStyle}

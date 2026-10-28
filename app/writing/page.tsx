@@ -12,7 +12,7 @@ export default async function WritingPage() {
   const articles = await getArticles();
   return (
     <>
-      <PageNav variant="blue" width="narrow" />
+      <PageNav variant="blue" />
       <main id="main" tabIndex={-1} className="cursor-white bg-[var(--color-business-blue)] min-h-screen">
         <Section width="narrow" padding="first">
           <FadeIn><WritingHeader title="Writing" /></FadeIn>
