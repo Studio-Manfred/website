@@ -102,6 +102,65 @@ for (const { path, nav, hides } of PAGES) {
   });
 }
 
+test.describe("the nav and the open menu are as wide on every page", () => {
+  const SIZES = [
+    { width: 1440, height: 900 },
+    { width: 1024, height: 800 },
+    { width: 390, height: 800 },
+  ];
+
+  for (const size of SIZES) {
+    test(`the nav row is the same on every page at ${size.width} px`, async ({
+      page,
+    }, testInfo) => {
+      test.skip(
+        testInfo.project.name !== "chromium-desktop",
+        "Sets its own size",
+      );
+      await page.setViewportSize(size);
+      const rows: { path: string; x: number; width: number }[] = [];
+      for (const { path } of PAGES) {
+        await page.goto(path);
+        const row = await box(page.locator("nav > div").first());
+        rows.push({ path, x: row.x, width: row.width });
+      }
+      for (const row of rows) {
+        expect(row.x, row.path).toBeCloseTo(rows[0].x, 0);
+        expect(row.width, row.path).toBeCloseTo(rows[0].width, 0);
+      }
+    });
+
+    for (const { path } of PAGES) {
+      test(`the menu rows line up with the nav row on ${path} at ${size.width} px`, async ({
+        page,
+      }, testInfo) => {
+        test.skip(
+          testInfo.project.name !== "chromium-desktop",
+          "Sets its own size",
+        );
+        await page.setViewportSize(size);
+        await page.goto(path);
+        const nav = await box(page.locator("nav > div").first());
+        await menuButton(page).click();
+        await settled(page);
+        const link = panel(page)
+          .getByRole("navigation", { name: "Primary" })
+          .getByRole("link")
+          .first();
+        const title = await box(link.locator("span span").first());
+        const arrow = await box(link.locator("> span").last());
+        expect(Math.abs(title.x - nav.x), "row text left").toBeLessThanOrEqual(
+          1,
+        );
+        expect(
+          Math.abs(arrow.x + arrow.width - (nav.x + nav.width)),
+          "arrow right",
+        ).toBeLessThanOrEqual(1);
+      });
+    }
+  }
+});
+
 test.describe("menu on the shared CV", () => {
   test("is not there, and Get in touch is", async ({ page }) => {
     await page.goto("/cv/testtokentesttokentesttokentesttokentesttok");

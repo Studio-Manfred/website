@@ -34,6 +34,8 @@ const links = [
 ];
 
 interface SiteMenuProps {
+  /** Side inset of the rows, the rules and the Get in touch block. The home page keeps its own gutter; a page with a PageNav passes the inset of its nav row. */
+  inset?: string;
   /** Colour of the menu button: white on a blue page, blue on a white page. The panel is the opposite: white on a blue page, blue on a white page. */
   tone?: "white" | "blue";
   /** Where the page puts the menu button, for example absolute in the hero or in the nav row. */
@@ -85,6 +87,7 @@ const panelTheme = {
 } as const;
 
 export function SiteMenu({
+  inset = menuGutter,
   tone = "white",
   triggerClassName = "",
   triggerStyle,
@@ -152,7 +155,7 @@ export function SiteMenu({
                   href={href}
                   onClick={close}
                   className={`menu-row group flex items-center justify-between py-[20px] ${theme.row} motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-out md:py-[clamp(12px,2.2vh,36px)]`}
-                  style={{ paddingInline: menuGutter }}
+                  style={{ paddingInline: inset }}
                 >
                   <span className="flex flex-col gap-[6px] md:gap-[10px]">
                     <span
@@ -172,7 +175,7 @@ export function SiteMenu({
                 <span
                   aria-hidden
                   className={`pointer-events-none absolute bottom-0 h-px ${theme.rule}`}
-                  style={{ left: menuGutter, right: menuGutter }}
+                  style={{ left: inset, right: inset }}
                 />
               </li>
             ))}
@@ -181,7 +184,7 @@ export function SiteMenu({
         <div
           className="menu-reveal mt-auto flex items-center justify-between gap-[20px] pb-[40px] pt-[24px] max-md:flex-col md:pb-[clamp(24px,4vh,100px)] md:pt-[clamp(16px,2.7vh,48px)]"
           style={{
-            paddingInline: menuGutter,
+            paddingInline: inset,
             ...revealStyle(visibleLinks.length),
           }}
         >

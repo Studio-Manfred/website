@@ -30,14 +30,17 @@ vi.mock("@/components/ds", () => ({
 vi.mock("@/components/SiteMenu", () => ({
   SiteMenu: ({
     tone,
+    inset,
     headerInnerStyle,
   }: {
     tone?: string;
+    inset?: string;
     headerInnerStyle?: { maxWidth?: string };
   }) => (
     <div
       data-testid="menu"
       data-tone={tone}
+      data-inset={inset}
       data-max-width={headerInnerStyle?.maxWidth}
     />
   ),
@@ -65,14 +68,8 @@ describe("PageNav", () => {
     }
   });
 
-  it("caps the inner row at 960px by default", () => {
+  it("caps the inner row at 1200px, the same on every page", () => {
     const { container } = render(<PageNav />);
-    const row = container.querySelector("nav > div") as HTMLElement;
-    expect(row.style.maxWidth).toBe("960px");
-  });
-
-  it('widens the inner row to 1200px for width="wide"', () => {
-    const { container } = render(<PageNav width="wide" />);
     const row = container.querySelector("nav > div") as HTMLElement;
     expect(row.style.maxWidth).toBe("1200px");
   });
@@ -124,9 +121,16 @@ describe("PageNav", () => {
   });
 
   it("gives the menu the same row width as the nav, so the close button keeps its place", () => {
-    render(<PageNav width="wide" />);
+    render(<PageNav />);
     expect(screen.getByTestId("menu").getAttribute("data-max-width")).toBe(
       "1200px",
+    );
+  });
+
+  it("gives the menu rows the page's inset, so they line up with the nav row", () => {
+    render(<PageNav />);
+    expect(screen.getByTestId("menu").getAttribute("data-inset")).toBe(
+      "max(24px, calc((100% - 1200px) / 2))",
     );
   });
 

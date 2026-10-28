@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { menuGutter } from "@/lib/menu-layout";
 import { SiteMenu } from "./SiteMenu";
 
 const path = vi.hoisted(() => ({ current: "/" }));
@@ -208,5 +209,28 @@ describe("SiteMenu content reveal", () => {
     await openAt("/");
     const close = screen.getByRole("button", { name: "Close menu" });
     expect(close.closest(".menu-reveal")).toBeNull();
+  });
+});
+
+describe("SiteMenu inset", () => {
+  it("insets the rows, the rules and the Get in touch block by the page's inset", async () => {
+    const nav = await openAt("/join-us", { inset: "37px" });
+    for (const link of within(nav).getAllByRole("link")) {
+      expect(link.style.paddingInline).toBe("37px");
+    }
+    const rule = nav.querySelector("li > span[aria-hidden]") as HTMLElement;
+    expect(rule.style.left).toBe("37px");
+    expect(rule.style.right).toBe("37px");
+    const block = screen
+      .getByRole("dialog", { name: "Menu" })
+      .querySelector(".menu-reveal.mt-auto") as HTMLElement;
+    expect(block.style.paddingInline).toBe("37px");
+  });
+
+  it("uses the home gutter when the page gives no inset", async () => {
+    const nav = await openAt("/join-us");
+    expect(within(nav).getAllByRole("link")[0].style.paddingInline).toBe(
+      menuGutter,
+    );
   });
 });

@@ -28,7 +28,7 @@ const reasons = [
 export default function JoinUsPage() {
   return (
     <>
-      <PageNav variant="blue" width="xl" />
+      <PageNav variant="blue" />
       <main id="main" tabIndex={-1}>
 
         {/* ── HERO ───────────────────────────────── */}
