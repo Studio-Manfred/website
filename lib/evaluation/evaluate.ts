@@ -139,6 +139,7 @@ export async function runEvaluation(input: EvaluationInput, deps: Deps = default
     } catch (e) {
       // With screenshots there is still something to evaluate; a blocked address is always an error.
       if (e instanceof PageUnreachableError && input.screenshots.length) fetchNote = `${e.message} The evaluation used the screenshots only.`;
+      else if (e instanceof PageUnreachableError) throw new EvaluationInputError(`${e.message} Some sites block automated visits: add screenshots of the page and run again.`);
       else if (e instanceof FetchPageError) throw new EvaluationInputError(e.message);
       else throw e;
     }

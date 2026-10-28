@@ -115,7 +115,7 @@ describe("runEvaluation", () => {
     expect(r.mode).toBe("live");
     expect(r.page).toBeNull();
     expect(r.note).toMatch(/did not answer within 20 seconds.*screenshots only/);
-    await expect(runEvaluation(input, deps({ fetchPage }))).rejects.toThrow(/did not answer/);
+    await expect(runEvaluation(input, deps({ fetchPage }))).rejects.toThrow(/did not answer.*add screenshots/);
   });
 
   it("a blocked address stays an error even with screenshots", async () => {
