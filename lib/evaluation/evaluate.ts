@@ -4,7 +4,7 @@ import { INDUSTRIES } from "@/lib/customer-journey/datasets";
 import type { Industry, IndustryId } from "@/lib/customer-journey/types";
 import { checkFindings, pageDigest } from "./checks";
 import { demoFindings } from "./demo";
-import { FetchPageError, fetchPage } from "./fetch-page";
+import { FetchPageError, PageUnreachableError, fetchPage } from "./fetch-page";
 import { ModelReport, cleanFinding, type EvaluationResult, type Finding } from "./findings";
 import { TRAITS } from "./traits";
 
@@ -129,6 +129,7 @@ export async function runEvaluation(input: EvaluationInput, deps: Deps = default
 
   let page: ModelContext["page"] = null;
   let checks: Finding[] = [];
+  let fetchNote: string | undefined;
   if (input.url) {
     try {
       const fetched = await deps.fetchPage(input.url);
@@ -136,8 +137,10 @@ export async function runEvaluation(input: EvaluationInput, deps: Deps = default
       page = { url: fetched.url, title: digest.title, text: digest.text };
       checks = checkFindings(fetched.html, archetypes, phase);
     } catch (e) {
-      if (e instanceof FetchPageError) throw new EvaluationInputError(e.message);
-      throw e;
+      // With screenshots there is still something to evaluate; a blocked address is always an error.
+      if (e instanceof PageUnreachableError && input.screenshots.length) fetchNote = `${e.message} The evaluation used the screenshots only.`;
+      else if (e instanceof FetchPageError) throw new EvaluationInputError(e.message);
+      else throw e;
     }
   }
   const pageInfo = page ? { url: page.url, title: page.title } : null;
@@ -158,7 +161,7 @@ export async function runEvaluation(input: EvaluationInput, deps: Deps = default
       .map((f) => cleanFinding(f, archetypes, ind.phases.length))
       .filter((f): f is NonNullable<typeof f> => f !== null)
       .map((f, i): Finding => ({ ...f, id: `ai-${i + 1}`, source: "model" }));
-    return { mode: "live", summary: report.summary, findings: [...findings, ...checks], page: pageInfo };
+    return { mode: "live", summary: report.summary, findings: [...findings, ...checks], page: pageInfo, ...(fetchNote && { note: fetchNote }) };
   } catch (e) {
     console.error("evaluation model call:", e instanceof Error ? e.message : e);
     return demo("The AI analysis failed this time, so this report shows demo findings from the journey data. Try again in a moment.");

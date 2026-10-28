@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { INDUSTRIES } from "@/lib/customer-journey/datasets";
 import { demoFindings } from "./demo";
 import { EvaluationInputError, buildPrompt, runEvaluation, type Deps, type EvaluationInput } from "./evaluate";
-import { FetchPageError } from "./fetch-page";
+import { FetchPageError, PageUnreachableError } from "./fetch-page";
 import type { ModelReport } from "./findings";
 
 const hotel = INDUSTRIES.hotel;
@@ -106,5 +106,20 @@ describe("runEvaluation", () => {
     expect(fetchPage).not.toHaveBeenCalled();
     expect(r.page).toBeNull();
     expect(r.findings.every((f) => f.source === "model")).toBe(true);
+  });
+
+  it("goes on with the screenshots when the page can't be reached, and says so", async () => {
+    const fetchPage = async () => { throw new PageUnreachableError("The page did not answer within 20 seconds."); };
+    const shots = [{ mediaType: "image/jpeg" as const, data: "AAAA" }];
+    const r = await runEvaluation({ ...input, screenshots: shots }, deps({ fetchPage }));
+    expect(r.mode).toBe("live");
+    expect(r.page).toBeNull();
+    expect(r.note).toMatch(/did not answer within 20 seconds.*screenshots only/);
+    await expect(runEvaluation(input, deps({ fetchPage }))).rejects.toThrow(/did not answer/);
+  });
+
+  it("a blocked address stays an error even with screenshots", async () => {
+    const fetchPage = async () => { throw new FetchPageError("Private addresses are not allowed."); };
+    await expect(runEvaluation({ ...input, screenshots: [{ mediaType: "image/jpeg", data: "AAAA" }] }, deps({ fetchPage }))).rejects.toThrow(/Private/);
   });
 });

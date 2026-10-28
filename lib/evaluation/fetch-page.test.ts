@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FetchPageError, MAX_BYTES, fetchPage, isPrivateIp, parseTarget } from "./fetch-page";
+import { FetchPageError, MAX_BYTES, PageUnreachableError, fetchPage, isPrivateIp, parseTarget } from "./fetch-page";
 
 const publicDns = async () => ["93.184.216.34"];
 const html = (body: string, init: ResponseInit = {}) =>
@@ -70,5 +70,21 @@ describe("fetchPage", () => {
 
   it("says so when the name can't be found", async () => {
     await expect(fetchPage("https://nowhere.example", { resolve: async () => { throw new Error("ENOTFOUND"); }, fetchImpl: async () => html("x") })).rejects.toThrow(/could not be found/);
+  });
+
+  it("tells a slow page from one that can't be reached, and both are unreachable", async () => {
+    const timeout = async () => { throw new DOMException("timed out", "TimeoutError"); };
+    const slow = fetchPage("https://slow.example", { resolve: publicDns, fetchImpl: timeout });
+    await expect(slow).rejects.toThrow(/did not answer within 20 seconds/);
+    await expect(slow).rejects.toBeInstanceOf(PageUnreachableError);
+    const refused = fetchPage("https://down.example", { resolve: publicDns, fetchImpl: async () => { throw new TypeError("fetch failed"); } });
+    await expect(refused).rejects.toThrow(/could not connect/);
+    await expect(refused).rejects.toBeInstanceOf(PageUnreachableError);
+  });
+
+  it("names itself honestly to the site", async () => {
+    let ua = "";
+    await fetchPage("https://example.com", { resolve: publicDns, fetchImpl: async (_u, init) => { ua = new Headers(init?.headers).get("user-agent") ?? ""; return html("<h1>x</h1>"); } });
+    expect(ua).toMatch(/^Mozilla\/5\.0 \(compatible; StudioManfredEvaluation/);
   });
 });

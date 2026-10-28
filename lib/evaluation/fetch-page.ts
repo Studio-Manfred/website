@@ -10,9 +10,14 @@ import { isIP } from "node:net";
 
 export const MAX_BYTES = 1_500_000;
 const MAX_REDIRECTS = 3;
-const TIMEOUT_MS = 8000;
+const TIMEOUT_MS = 20_000;
+// Many sites stall or refuse clients that don't look like a browser, so the
+// agent starts the way crawlers do, and still says who is asking.
+const USER_AGENT = "Mozilla/5.0 (compatible; StudioManfredEvaluation/0.1; +https://studiomanfred.com)";
 
 export class FetchPageError extends Error {}
+/** The address was allowed, but the page couldn't be fetched (slow, down, or refusing us). */
+export class PageUnreachableError extends FetchPageError {}
 
 function v4ToInt(ip: string): number {
   return ip.split(".").reduce((n, part) => (n << 8) + Number(part), 0) >>> 0;
@@ -93,10 +98,11 @@ export async function fetchPage(raw: string, opts: { fetchImpl?: typeof fetch; r
       res = await doFetch(url, {
         redirect: "manual",
         signal: AbortSignal.timeout(TIMEOUT_MS),
-        headers: { "user-agent": "StudioManfredEvaluation/0.1 (+https://studiomanfred.com)", accept: "text/html" },
+        headers: { "user-agent": USER_AGENT, accept: "text/html,application/xhtml+xml", "accept-language": "sv,en;q=0.8" },
       });
-    } catch {
-      throw new FetchPageError("The page did not answer in time.");
+    } catch (e) {
+      const slow = e instanceof DOMException && (e.name === "TimeoutError" || e.name === "AbortError");
+      throw new PageUnreachableError(slow ? `The page did not answer within ${TIMEOUT_MS / 1000} seconds.` : "We could not connect to the page. It may be down or blocking automated visits.");
     }
     if (res.status >= 300 && res.status < 400) {
       const next = res.headers.get("location");
