@@ -34,7 +34,13 @@ export type Activity = {
   /** How to work with it: a few sentences. */
   how: string;
   example: string;
+  /** Which step of the process roadmap (only guides with a `process`). */
+  step?: StepId;
+  /** Titles of activities in the same guide that this one builds on. */
+  after?: string[];
 };
+
+export type StepId = 1 | 2 | 3;
 
 export const ROLES: Role[] = [
   { id: "res", name: "Researcher" },
@@ -46,7 +52,12 @@ export const ROLES: Role[] = [
   { id: "ds", name: "Data Scientist" },
 ];
 
-export type Role<R extends string = RoleId> = { id: R; name: string };
+export type Role<R extends string = RoleId> = {
+  id: R;
+  name: string;
+  /** For tight spaces, like the process roadmap. */
+  short?: string;
+};
 
 export type Level = { id: LevelId; name: string; description: string };
 
@@ -57,7 +68,8 @@ export type Level = { id: LevelId; name: string; description: string };
 export type Phase<R extends string = RoleId> = {
   name: string;
   goal?: string;
-  subs: { name: string; acts: Record<R, Activity[]> }[];
+  /** `tag` is the client's own phase number, like "Fas 1". */
+  subs: { name: string; tag?: string; acts: Record<R, Activity[]> }[];
 };
 
 /** The page's own words, so a copy of the guide can be in another language. */
@@ -79,11 +91,29 @@ export type GuideCopy = {
   example: string;
 };
 
+/**
+ * The process roadmap: the diagram's labels and the three steps. `sizes`
+ * are assignment sizes as bars, `from`/`to` are sub-phase indexes over all
+ * phases (0 based, inclusive).
+ */
+export type GuideProcess = {
+  groups: { name: string; sub: string; phases: number }[];
+  /** One more than there are phases: before, between and after the diamonds. */
+  milestones: string[];
+  steps: { id: StepId; name: string; description: string }[];
+  stepsTitle: string;
+  step: string;
+  after: string;
+  /** `range` names the phases in words, for phones where the bars stack. */
+  sizes?: { name: string; from: number; to: number; range?: string }[];
+  sizesLabel?: string;
+};
+
 /** Everything the TripleDiamondRoles component shows, apart from the case row. */
 export type Guide = {
   lang?: string;
-  /** An optional process picture, shown under the intro. */
-  image?: { src: string; alt: string; width: number; height: number; caption?: string };
+  /** When set, the phases are drawn as one process diagram with the activities in steps (TripleDiamondProcess). */
+  process?: GuideProcess;
   roles: Role<string>[];
   levels: Level[];
   phases: Phase<string>[];

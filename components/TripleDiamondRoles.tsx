@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { TD_CASE_DEFAULTS, TD_GUIDE, type Activity, type Guide, type Level, type LevelId } from "@/lib/triple-diamond";
+import { TD_CASE_DEFAULTS, TD_GUIDE, type Activity, type Guide, type LevelId } from "@/lib/triple-diamond";
+import { LevelBars, LevelTag, PHASE_BG, label, levelOf } from "./triple-diamond-parts";
+import { TripleDiamondProcess } from "./TripleDiamondProcess";
 import type { Consultant } from "@/lib/cases";
 
 // Triple Diamond Roles share page (STU-1167): role filters on top, the three
@@ -14,7 +16,6 @@ import type { Consultant } from "@/lib/cases";
 
 const BLUE = "var(--color-business-blue)";
 const allRoles = (guide: Guide, value: boolean): Record<string, boolean> => Object.fromEntries(guide.roles.map((r) => [r.id, value]));
-const label = "text-xs font-extrabold uppercase tracking-[0.08em] text-[var(--color-business-blue)]";
 
 // `connect` draws a dashed line from the right tip to the next diamond, across
 // the panel padding (desktop, three columns, panels edge to edge; STU-1174, STU-1176).
@@ -40,42 +41,6 @@ function Diamond({ name, connect }: { name: string; connect: boolean }) {
         {name}
       </h2>
     </div>
-  );
-}
-
-// One brand tint per phase (STU-1173): Light Beige, Blue 50, a lighter Human
-// Pink. The panel and the modal header use it, so the phases are easy to tell apart.
-const PHASE_BG = ["var(--beige-light)", "var(--blue-50)", "color-mix(in srgb, var(--pink) 60%, white)"];
-
-const levelOf = (levels: Level[], id: LevelId) => levels.find((l) => l.id === id)!;
-
-// Three bars, as many filled as the level is hard. Decorative: the name is
-// always written next to it.
-// `inverted`: white bars for a blue (pressed) button.
-function LevelBars({ levels, id, inverted = false }: { levels: Level[]; id: LevelId; inverted?: boolean }) {
-  const n = levels.findIndex((l) => l.id === id) + 1;
-  return (
-    <span aria-hidden="true" className="inline-flex items-end gap-[2px]">
-      {[1, 2, 3].map((i) => (
-        <span
-          key={i}
-          className={`w-[4px] rounded-[1px] ${i <= n ? (inverted ? "bg-white" : "bg-[var(--color-business-blue)]") : inverted ? "bg-white/35" : "bg-[var(--color-border-default)]"}`}
-          style={{ height: `${4 + i * 3}px` }}
-        />
-      ))}
-    </span>
-  );
-}
-
-function LevelTag({ guide, id }: { guide: Guide; id: LevelId }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-light text-[var(--color-text-muted)] whitespace-nowrap">
-      <LevelBars levels={guide.levels} id={id} />
-      <span>
-        <span className="sr-only">{guide.copy.level}: </span>
-        {levelOf(guide.levels, id).name}
-      </span>
-    </span>
   );
 }
 
@@ -136,6 +101,26 @@ function ActivityDialog({ guide, open, onClose }: { guide: Guide; open: Open | n
               <span className="font-extrabold">{copy.level}: {levelOf(levels, open.activity.level).name}.</span> {levelOf(levels, open.activity.level).description}
             </p>
           </div>
+          {guide.process && open.activity.step && (
+            <div className="mb-8 text-sm font-light text-[var(--color-text-primary)]">
+              <p>
+                <span className="font-extrabold">
+                  {guide.process.step} {open.activity.step}: {guide.process.steps.find((s) => s.id === open.activity.step)?.name}.
+                </span>{" "}
+                {guide.process.steps.find((s) => s.id === open.activity.step)?.description}
+              </p>
+              {open.activity.after && open.activity.after.length > 0 && (
+                <>
+                  <h3 className="font-extrabold mt-4 mb-1">{guide.process.after}</h3>
+                  <ul className="list-disc pl-5 space-y-0.5">
+                    {open.activity.after.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </div>
+          )}
           <h3 className="font-extrabold mb-2">{copy.how}</h3>
           <p className="font-light text-[var(--color-text-secondary)] mb-8" style={{ lineHeight: 1.7 }}>{open.activity.how}</p>
           <div className="border-t-4 border-[var(--color-business-blue)] pt-5">
@@ -204,22 +189,6 @@ export function TripleDiamondRoles({
           ))}
         </div>
 
-        {guide.image && (
-          <figure className="mb-20">
-            {/* eslint-disable-next-line @next/next/no-img-element -- a static picture, shown at its own size */}
-            <img
-              src={guide.image.src}
-              alt={guide.image.alt}
-              width={guide.image.width}
-              height={guide.image.height}
-              className="w-full h-auto max-w-[1100px] rounded-2xl border border-[var(--color-border-default)]"
-            />
-            {guide.image.caption && (
-              <figcaption className="text-sm font-light text-[var(--color-text-muted)] mt-3">{guide.image.caption}</figcaption>
-            )}
-          </figure>
-        )}
-
         <div className="border-t-4 border-[var(--color-business-blue)] pt-5 mb-20">
           <p id="roles-label" className={`${label} mb-4`}>{copy.roles}</p>
           <div role="group" aria-labelledby="roles-label" className="flex flex-wrap gap-2">
@@ -273,8 +242,16 @@ export function TripleDiamondRoles({
           </div>
         </div>
 
-        {/* Mobile values as max-lg: so the design system's second copy of
-            .gap-6 / .rounded-2xl can't override the desktop layout (STU-1176). */}
+        {guide.process ? (
+          <TripleDiamondProcess
+            guide={{ ...guide, process: guide.process }}
+            active={active}
+            visible={visible}
+            onOpen={(activity, role, pi, sub) => setOpen({ activity, role, phase: phases[pi].name, sub, bg: PHASE_BG[pi % PHASE_BG.length] })}
+          />
+        ) : (
+        /* Mobile values as max-lg: so the design system's second copy of
+            .gap-6 / .rounded-2xl can't override the desktop layout (STU-1176). */
         <div className="grid max-lg:gap-6 lg:grid-cols-3">
           {phases.map((p, pi) => (
             <section key={p.name} className="relative min-w-0 max-lg:rounded-2xl max-md:p-4 md:max-lg:p-5 lg:px-2 lg:py-5 lg:first:rounded-l-2xl lg:last:rounded-r-2xl" style={{ background: PHASE_BG[pi] }}>
@@ -286,12 +263,6 @@ export function TripleDiamondRoles({
                   data-connector="down"
                   className="lg:hidden absolute top-full h-6 border-l-2 border-dashed border-[var(--color-business-blue)] left-[calc(1rem+min(210px,50%-1rem))] md:left-[calc(1.25rem+min(210px,50%-1.25rem))]"
                 />
-              )}
-              {p.goal && (
-                <div className="mt-6 max-w-[420px] lg:max-w-none sm:px-5 lg:px-3">
-                  <p className={`${label} mb-1`}>{copy.goal}</p>
-                  <p className="text-sm font-light text-[var(--color-text-primary)]" style={{ lineHeight: 1.6 }}>{p.goal}</p>
-                </div>
               )}
               <div className="grid sm:grid-cols-2 mt-8">
                 {p.subs.map((s, i) => (
@@ -343,6 +314,7 @@ export function TripleDiamondRoles({
             </section>
           ))}
         </div>
+        )}
 
         {shown === 0 && (
           <p className="font-light text-[var(--color-text-secondary)] text-center border border-dashed border-[var(--color-border-default)] rounded-2xl p-8 mt-4">

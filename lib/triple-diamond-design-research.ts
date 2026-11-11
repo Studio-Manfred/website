@@ -1,10 +1,11 @@
 // An unlisted copy of the Triple Diamond guide for one client team: only
 // Researcher and UX / Product Designer, in Swedish, with the client's own
-// seven phases (from their process picture) and a goal per diamond. The
+// seven phases (from their process picture, redrawn as the page's diagram)
+// and a goal per diamond. The
 // activities are chosen and described to serve those goals. Figma Make is
 // switched off in the organisation, so no activity depends on it.
 // Copy rule: no dashes as punctuation (the test checks it).
-import type { Activity, Guide, GuideCopy, Level, Phase, Role } from "@/lib/triple-diamond";
+import type { Activity, Guide, GuideCopy, GuideProcess, Level, Phase, Role, StepId } from "@/lib/triple-diamond";
 
 /** Long and random so nobody finds it by guessing; the page is also noindex. */
 export const TD_DR_SLUG = "ai-design-research-057dc529ef";
@@ -19,8 +20,8 @@ export const TD_DR_META = {
 type DrRole = "res" | "design";
 
 const ROLES: Role<DrRole>[] = [
-  { id: "res", name: "Researcher" },
-  { id: "design", name: "UX-/produktdesigner" },
+  { id: "res", name: "Researcher", short: "Research" },
+  { id: "design", name: "UX-/produktdesigner", short: "Design" },
 ];
 
 const LEVELS: Level[] = [
@@ -31,13 +32,14 @@ const LEVELS: Level[] = [
 
 const a = (title: string, level: Activity["level"], how: string, example: string): Activity => ({ title, level, how, example });
 
-const PHASES: Phase<DrRole>[] = [
+const RAW: Phase<DrRole>[] = [
   {
-    name: "Förstå problemet",
+    name: "Problemet",
     goal: "Etablera en gemensam och kontinuerligt uppdaterad insiktsbas där kvalitativa och kvantitativa insikter samlas, delas och omsätts till prioriterade problemområden som styr designteamets arbete och beslut.",
     subs: [
       {
-        name: "Utforska problem (Fas\u00a01)",
+        name: "Utforska problem",
+        tag: "Fas 1",
         acts: {
           res: [
             a(
@@ -82,7 +84,8 @@ const PHASES: Phase<DrRole>[] = [
         },
       },
       {
-        name: "Definiera problem (Fas\u00a02)",
+        name: "Definiera problem",
+        tag: "Fas 2",
         acts: {
           res: [
             a(
@@ -129,11 +132,12 @@ const PHASES: Phase<DrRole>[] = [
     ],
   },
   {
-    name: "Hitta rätt koncept",
+    name: "Konceptet",
     goal: "Primärt: effektivisera analysen efter användartester genom att minska tiden för transkribering, sammanställning och analys, så att insikter snabbare blir beslut och designförbättringar. Sekundärt: effektivisera utforskandet av designkoncept utifrån insiktsbasen och kravspecen.",
     subs: [
       {
-        name: "Utforska koncept (Fas\u00a03)",
+        name: "Utforska koncept",
+        tag: "Fas 3",
         acts: {
           res: [
             a(
@@ -178,7 +182,8 @@ const PHASES: Phase<DrRole>[] = [
         },
       },
       {
-        name: "Validera koncept (Fas\u00a04)",
+        name: "Validera koncept",
+        tag: "Fas 4",
         acts: {
           res: [
             a(
@@ -225,11 +230,12 @@ const PHASES: Phase<DrRole>[] = [
     ],
   },
   {
-    name: "Skapa lösningen",
+    name: "Lösningen",
     goal: "Ta fram validerade high-fidelity-lösningar baserade på designsystemet, enligt WCAG, som är redo för utveckling och implementering. Skala och förvalta designsystemet effektivt med begränsade resurser.",
     subs: [
       {
-        name: "Designa och utveckla lösningar (Fas\u00a05)",
+        name: "Designa och utveckla lösningar",
+        tag: "Fas 5",
         acts: {
           res: [
             a(
@@ -274,7 +280,8 @@ const PHASES: Phase<DrRole>[] = [
         },
       },
       {
-        name: "Validera lösningar (Fas\u00a06)",
+        name: "Validera lösningar",
+        tag: "Fas 6",
         acts: {
           res: [
             a(
@@ -319,7 +326,8 @@ const PHASES: Phase<DrRole>[] = [
         },
       },
       {
-        name: "Leverera och förfina lösningar (Fas\u00a07)",
+        name: "Leverera och förfina lösningar",
+        tag: "Fas 7",
         acts: {
           res: [
             a(
@@ -367,6 +375,98 @@ const PHASES: Phase<DrRole>[] = [
   },
 ];
 
+// The order to start in, through the whole process: step 1 is easy or the
+// ground the rest stands on, step 2 builds on step 1, step 3 needs a living
+// insight base, routines or documentation. `after` names what each activity
+// builds on: always an earlier step, or the same step earlier in the process.
+export const ROADMAP: Record<string, { step: StepId; after?: string[] }> = {
+  // Fas 1
+  "Bygg en gemensam insiktsbas": { step: 1 },
+  "Granska dagens gränssnitt": { step: 1 },
+  "Koda och tematisera intervjuer": { step: 2, after: ["Bygg en gemensam insiktsbas"] },
+  "Skissa kundresor från insiktsbasen": { step: 2, after: ["Bygg en gemensam insiktsbas"] },
+  "Väv ihop kvalitativ och kvantitativ data": { step: 3, after: ["Koda och tematisera intervjuer"] },
+  "Skissa en tjänsteblueprint": { step: 3, after: ["Skissa kundresor från insiktsbasen"] },
+  // Fas 2
+  "Formulera problemområden": { step: 1, after: ["Bygg en gemensam insiktsbas"] },
+  "Skriv Hur kan vi-frågor": { step: 1, after: ["Formulera problemområden"] },
+  "Bedöm underlaget per problemområde": { step: 2, after: ["Formulera problemområden"] },
+  "Prioritera problemområden med teamet": { step: 2, after: ["Bedöm underlaget per problemområde"] },
+  "Håll insiktsbasen uppdaterad": { step: 3, after: ["Koda och tematisera intervjuer", "Formulera problemområden"] },
+  "Skriv en designbrief per problemområde": { step: 3, after: ["Prioritera problemområden med teamet"] },
+  // Fas 3
+  "Skriv screener och testmanus": { step: 1 },
+  "Planera testet för snabb analys": { step: 1, after: ["Skriv screener och testmanus"] },
+  "Ta fram konceptidéer från kravspecen": { step: 1, after: ["Formulera problemområden"] },
+  "Sammanställ underlag inför idéarbetet": { step: 2, after: ["Bygg en gemensam insiktsbas", "Prioritera problemområden med teamet"] },
+  "Granska koncepten mot kraven": { step: 2, after: ["Ta fram konceptidéer från kravspecen"] },
+  "Bygg snabba kodskisser av flöden": { step: 3, after: ["Ta fram konceptidéer från kravspecen"] },
+  // Fas 4
+  "Transkribera testerna automatiskt": { step: 1 },
+  "Få AI-kritik på designen": { step: 1 },
+  "Sammanställ fynd per uppgift": { step: 2, after: ["Transkribera testerna automatiskt", "Planera testet för snabb analys"] },
+  "Gå från fynd till beslut": { step: 2, after: ["Sammanställ fynd per uppgift"] },
+  "Gå igenom AI-sammanställningen ihop": { step: 2, after: ["Sammanställ fynd per uppgift"] },
+  "Omsätt fynd till designändringar": { step: 3, after: ["Gå igenom AI-sammanställningen ihop"] },
+  // Fas 5
+  "Planera valideringen av lösningen": { step: 1 },
+  "Skriv UI-texter i rätt ton": { step: 1 },
+  "Kör snabba tester på detaljer": { step: 2, after: ["Planera testet för snabb analys"] },
+  "Kontrollera mot designsystemet": { step: 2 },
+  "Skriv specar och annoteringar": { step: 2, after: ["Kontrollera mot designsystemet"] },
+  "Svara på frågor ur insiktsbasen": { step: 3, after: ["Håll insiktsbasen uppdaterad"] },
+  // Fas 6
+  "Granska designen mot WCAG": { step: 1 },
+  "Testa med användare av hjälpmedel": { step: 2, after: ["Planera valideringen av lösningen"] },
+  "Analysera valideringstesterna": { step: 2, after: ["Sammanställ fynd per uppgift", "Planera valideringen av lösningen"] },
+  "Skriv en kort valideringsrapport": { step: 2, after: ["Analysera valideringstesterna"] },
+  "Rätta fynden innan överlämning": { step: 2, after: ["Granska designen mot WCAG", "Analysera valideringstesterna"] },
+  "Jämför byggt mot design": { step: 3, after: ["Kontrollera mot designsystemet"] },
+  // Fas 7
+  "Tematisera feedback efter lansering": { step: 1, after: ["Bygg en gemensam insiktsbas"] },
+  "Fråga teamen om designsystemet": { step: 1 },
+  "Dokumentera komponenter med AI": { step: 1 },
+  "Mät effekten efter lansering": { step: 2, after: ["Formulera problemområden"] },
+  "Hitta avvikelser och dubbletter": { step: 2, after: ["Kontrollera mot designsystemet"] },
+  "AI-stöd för frågor om designsystemet": { step: 3, after: ["Dokumentera komponenter med AI"] },
+};
+
+// Each activity with its step and what it builds on, in step order within its list.
+const PHASES: Phase<DrRole>[] = RAW.map((p) => ({
+  ...p,
+  subs: p.subs.map((s) => ({
+    ...s,
+    acts: Object.fromEntries(
+      Object.entries(s.acts).map(([role, acts]) => [
+        role,
+        acts.map((act) => ({ ...act, ...ROADMAP[act.title] })).sort((x, y) => (x.step ?? 0) - (y.step ?? 0)),
+      ]),
+    ) as Record<DrRole, Activity[]>,
+  })),
+}));
+
+const PROCESS: GuideProcess = {
+  groups: [
+    { name: "Discovery", sub: "Förstå problemet", phases: 2 },
+    { name: "Delivery", sub: "Skapa lösning", phases: 1 },
+  ],
+  milestones: ["Problem eller möjlighet", "Problemdefinition", "Förslag på lösning", "Effekt"],
+  stepsTitle: "Tre steg genom processen",
+  steps: [
+    { id: 1, name: "Kom igång", description: "Enkla aktiviteter med material ni redan har, och grunden som resten bygger på. Börja här i varje fas." },
+    { id: 2, name: "Bygg vidare", description: "Bygger på steg 1: insiktsbasen, testmallen och granskningen mot designsystemet. Kräver lite mer vana och uppsättning." },
+    { id: 3, name: "Skala upp", description: "Kräver att grunden finns: en levande insiktsbas, rutiner och dokumentation. Störst effekt, men mest att sätta upp." },
+  ],
+  step: "Steg",
+  after: "Bygger på",
+  sizesLabel: "Uppdragsstorlek",
+  sizes: [
+    { name: "Small", from: 2, to: 3, range: "Fas 3 och 4" },
+    { name: "Medium", from: 2, to: 6, range: "Fas 3 till 7" },
+    { name: "Large", from: 0, to: 6, range: "Fas 1 till 7" },
+  ],
+};
+
 const COPY: GuideCopy = {
   lead: "Människor granskar och beslutar. AI skissar, grupperar, sammanfattar och genererar.",
   goal: "Mål",
@@ -379,7 +479,7 @@ const COPY: GuideCopy = {
   noRoles: "Inga roller valda. Slå på en eller flera roller ovan för att se deras aktiviteter.",
   noMatch: "Inga aktiviteter matchar valda roller och nivåer. Slå på fler nivåer ovan.",
   footnote:
-    "Aktiviteterna är exempel att starta samtalet med. Välj en för att läsa hur ni kan arbeta med den och se ett exempel. Nivåerna är en grov uppskattning av hur mycket som krävs för att komma igång. Anpassa dem efter hur teamen arbetar och vad era riktlinjer tillåter. Figma Make är avstängt i organisationen, så ingen aktivitet bygger på det.",
+    "Aktiviteterna är exempel att starta samtalet med. Välj en för att läsa hur ni kan arbeta med den och se ett exempel. Nivåerna är en grov uppskattning av hur mycket som krävs för att komma igång. Anpassa dem efter hur teamen arbetar och vad era riktlinjer tillåter. Stegen är ett förslag på ordning utifrån svårighet och beroenden. Figma Make är avstängt i organisationen, så ingen aktivitet bygger på det.",
   close: "Stäng",
   how: "Så arbetar ni med den",
   example: "Exempel",
@@ -387,13 +487,7 @@ const COPY: GuideCopy = {
 
 export const TD_DR_GUIDE: Guide = {
   lang: "sv",
-  image: {
-    src: `/cases/${TD_DR_SLUG}/triple-diamond.png`,
-    alt: "Digitals arbetsprocess som en triple diamond. Discovery, förstå problemet: Utforska problem (Fas\u00a01) och Definiera problem (Fas 2) leder till en problemdefinition, sedan Utforska koncept (Fas 3) och Validera koncept (Fas 4) till ett förslag på lösning. Delivery, skapa lösning: Designa och utveckla lösningar (Fas 5), Validera lösningar (Fas 6) och Leverera och förfina lösningar (Fas 7) leder till effekt. Under processen visar tre staplar hur mycket av den små, mellanstora och stora uppdrag går igenom.",
-    width: 1641,
-    height: 993,
-    caption: "Digitals arbetsprocess (triple diamond). Aktiviteterna nedan följer samma sju faser.",
-  },
+  process: PROCESS,
   roles: ROLES,
   levels: LEVELS,
   phases: PHASES,
