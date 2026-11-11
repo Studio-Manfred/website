@@ -1,18 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { LEVELS, PHASES, ROLES, TD_CASE_DEFAULTS, type Activity, type LevelId, type RoleId } from "@/lib/triple-diamond";
+import { TD_CASE_DEFAULTS, TD_GUIDE, type Activity, type Guide, type Level, type LevelId } from "@/lib/triple-diamond";
 import type { Consultant } from "@/lib/cases";
 
 // Triple Diamond Roles share page (STU-1167): role filters on top, the three
 // diamonds, and per sub-phase the activities of the roles that are on. Same
 // type scale and blue accents as the case pages (CaseStudy, CaseList). Each
 // activity shows its title and level; clicking it opens the details in a
-// modal (STU-1171, STU-1172).
+// modal (STU-1171, STU-1172). The roles, phases, levels and words come from
+// `guide`, so the unlisted design and research copy (Swedish, two roles)
+// uses the same component.
 
 const BLUE = "var(--color-business-blue)";
-const allOn = () => Object.fromEntries(ROLES.map((r) => [r.id, true])) as Record<RoleId, boolean>;
-const allOff = () => Object.fromEntries(ROLES.map((r) => [r.id, false])) as Record<RoleId, boolean>;
+const allRoles = (guide: Guide, value: boolean): Record<string, boolean> => Object.fromEntries(guide.roles.map((r) => [r.id, value]));
 const label = "text-xs font-extrabold uppercase tracking-[0.08em] text-[var(--color-business-blue)]";
 
 // `connect` draws a dashed line from the right tip to the next diamond, across
@@ -46,13 +47,13 @@ function Diamond({ name, connect }: { name: string; connect: boolean }) {
 // Pink. The panel and the modal header use it, so the phases are easy to tell apart.
 const PHASE_BG = ["var(--beige-light)", "var(--blue-50)", "color-mix(in srgb, var(--pink) 60%, white)"];
 
-const levelOf = (id: LevelId) => LEVELS.find((l) => l.id === id)!;
+const levelOf = (levels: Level[], id: LevelId) => levels.find((l) => l.id === id)!;
 
 // Three bars, as many filled as the level is hard. Decorative: the name is
 // always written next to it.
 // `inverted`: white bars for a blue (pressed) button.
-function LevelBars({ id, inverted = false }: { id: LevelId; inverted?: boolean }) {
-  const n = LEVELS.findIndex((l) => l.id === id) + 1;
+function LevelBars({ levels, id, inverted = false }: { levels: Level[]; id: LevelId; inverted?: boolean }) {
+  const n = levels.findIndex((l) => l.id === id) + 1;
   return (
     <span aria-hidden="true" className="inline-flex items-end gap-[2px]">
       {[1, 2, 3].map((i) => (
@@ -66,13 +67,13 @@ function LevelBars({ id, inverted = false }: { id: LevelId; inverted?: boolean }
   );
 }
 
-function LevelTag({ id }: { id: LevelId }) {
+function LevelTag({ guide, id }: { guide: Guide; id: LevelId }) {
   return (
     <span className="inline-flex items-center gap-1.5 text-xs font-light text-[var(--color-text-muted)] whitespace-nowrap">
-      <LevelBars id={id} />
+      <LevelBars levels={guide.levels} id={id} />
       <span>
-        <span className="sr-only">Level: </span>
-        {levelOf(id).name}
+        <span className="sr-only">{guide.copy.level}: </span>
+        {levelOf(guide.levels, id).name}
       </span>
     </span>
   );
@@ -82,7 +83,8 @@ type Open = { activity: Activity; role: string; phase: string; sub: string; bg: 
 
 // A native <dialog> opened with showModal(): the browser traps focus, closes it
 // on Esc and returns focus to the title that opened it.
-function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => void }) {
+function ActivityDialog({ guide, open, onClose }: { guide: Guide; open: Open | null; onClose: () => void }) {
+  const { copy, levels } = guide;
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const d = ref.current;
@@ -111,7 +113,7 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
             <button
               type="button"
               onClick={close}
-              aria-label="Close"
+              aria-label={copy.close}
               className="shrink-0 w-10 h-10 rounded-full bg-white border border-[var(--color-border-default)] flex items-center justify-center hover:border-[var(--color-business-blue)] hover:text-[var(--color-business-blue)]"
             >
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -129,15 +131,15 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
           </header>
           <div className="p-6 md:p-10">
           <div className="flex items-start gap-3 rounded-xl bg-[var(--blue-50)] px-4 py-3 mb-8">
-            <span className="mt-1"><LevelBars id={open.activity.level} /></span>
+            <span className="mt-1"><LevelBars levels={levels} id={open.activity.level} /></span>
             <p className="text-sm font-light text-[var(--color-text-primary)]">
-              <span className="font-extrabold">Level: {levelOf(open.activity.level).name}.</span> {levelOf(open.activity.level).description}
+              <span className="font-extrabold">{copy.level}: {levelOf(levels, open.activity.level).name}.</span> {levelOf(levels, open.activity.level).description}
             </p>
           </div>
-          <h3 className="font-extrabold mb-2">How to work with it</h3>
+          <h3 className="font-extrabold mb-2">{copy.how}</h3>
           <p className="font-light text-[var(--color-text-secondary)] mb-8" style={{ lineHeight: 1.7 }}>{open.activity.how}</p>
           <div className="border-t-4 border-[var(--color-business-blue)] pt-5">
-            <h3 className="font-extrabold mb-2">Example</h3>
+            <h3 className="font-extrabold mb-2">{copy.example}</h3>
             <p className="font-light text-[var(--color-text-secondary)]" style={{ lineHeight: 1.7 }}>{open.activity.example}</p>
           </div>
           </div>
@@ -147,7 +149,7 @@ function ActivityDialog({ open, onClose }: { open: Open | null; onClose: () => v
   );
 }
 
-type Props = { title?: string; intro?: string; categoryLine?: string; consultants?: Consultant[] };
+type Props = { title?: string; intro?: string; categoryLine?: string; consultants?: Consultant[]; guide?: Guide };
 
 // Title, intro, category and consultants come from the case row (STU-1179).
 export function TripleDiamondRoles({
@@ -155,20 +157,22 @@ export function TripleDiamondRoles({
   intro = TD_CASE_DEFAULTS.intro,
   categoryLine = TD_CASE_DEFAULTS.categoryLine,
   consultants = [],
+  guide = TD_GUIDE,
 }: Props = {}) {
-  const [on, setOn] = useState<Record<RoleId, boolean>>(allOn);
+  const { roles, levels, phases, copy } = guide;
+  const [on, setOn] = useState<Record<string, boolean>>(() => allRoles(guide, true));
   const [open, setOpen] = useState<Open | null>(null);
   // Level filter (STU-1182): an activity shows when its role and its level are on.
   const [levelOn, setLevelOn] = useState<Record<LevelId, boolean>>({ easy: true, medium: true, advanced: true });
-  const active = ROLES.filter((r) => on[r.id]);
+  const active = roles.filter((r) => on[r.id]);
   const visible = (acts: Activity[]) => acts.filter((a) => levelOn[a.level]);
-  const count = (roles: typeof ROLES, pick: (acts: Activity[]) => Activity[]) =>
-    PHASES.reduce((n, p) => n + p.subs.reduce((m, s) => m + roles.reduce((k, r) => k + pick(s.acts[r.id]).length, 0), 0), 0);
-  const total = count(ROLES, (acts) => acts);
+  const count = (rs: typeof roles, pick: (acts: Activity[]) => Activity[]) =>
+    phases.reduce((n, p) => n + p.subs.reduce((m, s) => m + rs.reduce((k, r) => k + pick(s.acts[r.id] ?? []).length, 0), 0), 0);
+  const total = count(roles, (acts) => acts);
   const shown = count(active, visible);
 
   return (
-    <section className="bg-white px-6 md:px-12 lg:px-8 py-20 md:py-32">
+    <section lang={guide.lang} className="bg-white px-6 md:px-12 lg:px-8 py-20 md:py-32">
       <div className="mx-auto" style={{ maxWidth: "1600px" }}>
         <div className="mb-16">
           {categoryLine && <p className="text-sm font-light text-[var(--color-text-muted)] mb-4">{categoryLine}</p>}
@@ -182,7 +186,7 @@ export function TripleDiamondRoles({
             {intro}
           </p>
           <p className="font-light text-[var(--color-text-secondary)] max-w-3xl mt-4">
-            People review and decide. AI drafts, clusters, summarises and generates.
+            {copy.lead}
           </p>
           {consultants.map((c, i) => (
             <div key={i} className="flex items-center gap-3 mt-8">
@@ -200,10 +204,26 @@ export function TripleDiamondRoles({
           ))}
         </div>
 
+        {guide.image && (
+          <figure className="mb-20">
+            {/* eslint-disable-next-line @next/next/no-img-element -- a static picture, shown at its own size */}
+            <img
+              src={guide.image.src}
+              alt={guide.image.alt}
+              width={guide.image.width}
+              height={guide.image.height}
+              className="w-full h-auto max-w-[1100px] rounded-2xl border border-[var(--color-border-default)]"
+            />
+            {guide.image.caption && (
+              <figcaption className="text-sm font-light text-[var(--color-text-muted)] mt-3">{guide.image.caption}</figcaption>
+            )}
+          </figure>
+        )}
+
         <div className="border-t-4 border-[var(--color-business-blue)] pt-5 mb-20">
-          <p id="roles-label" className={`${label} mb-4`}>Roles</p>
+          <p id="roles-label" className={`${label} mb-4`}>{copy.roles}</p>
           <div role="group" aria-labelledby="roles-label" className="flex flex-wrap gap-2">
-            {ROLES.map((r) => (
+            {roles.map((r) => (
               <button
                 key={r.id}
                 type="button"
@@ -220,19 +240,19 @@ export function TripleDiamondRoles({
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-4 text-sm">
-            <button type="button" onClick={() => setOn(allOn)} className="font-light underline underline-offset-4 text-[var(--color-text-primary)] hover:text-[var(--color-business-blue)]">
-              Show all roles
+            <button type="button" onClick={() => setOn(allRoles(guide, true))} className="font-light underline underline-offset-4 text-[var(--color-text-primary)] hover:text-[var(--color-business-blue)]">
+              {copy.showAll}
             </button>
-            <button type="button" onClick={() => setOn(allOff)} className="font-light underline underline-offset-4 text-[var(--color-text-primary)] hover:text-[var(--color-business-blue)]">
-              Clear
+            <button type="button" onClick={() => setOn(allRoles(guide, false))} className="font-light underline underline-offset-4 text-[var(--color-text-primary)] hover:text-[var(--color-business-blue)]">
+              {copy.clear}
             </button>
             <p aria-live="polite" className="font-light text-[var(--color-text-muted)]">
-              Showing {shown} of {total} activities
+              {copy.showing.replace("{shown}", String(shown)).replace("{total}", String(total))}
             </p>
           </div>
-          <p id="levels-label" className={`${label} mt-10 mb-4`}>Levels</p>
+          <p id="levels-label" className={`${label} mt-10 mb-4`}>{copy.levels}</p>
           <div role="group" aria-labelledby="levels-label" className="grid gap-4 sm:grid-cols-3">
-            {LEVELS.map((l) => (
+            {levels.map((l) => (
               <div key={l.id}>
                 <button
                   type="button"
@@ -244,7 +264,7 @@ export function TripleDiamondRoles({
                       : "bg-white border-[var(--color-business-blue)] text-[var(--color-business-blue)] hover:bg-[var(--blue-50)]"
                   }`}
                 >
-                  <LevelBars id={l.id} inverted={levelOn[l.id]} />
+                  <LevelBars levels={levels} id={l.id} inverted={levelOn[l.id]} />
                   {l.name}
                 </button>
                 <p className="text-sm font-light text-[var(--color-text-secondary)]">{l.description}</p>
@@ -256,10 +276,10 @@ export function TripleDiamondRoles({
         {/* Mobile values as max-lg: so the design system's second copy of
             .gap-6 / .rounded-2xl can't override the desktop layout (STU-1176). */}
         <div className="grid max-lg:gap-6 lg:grid-cols-3">
-          {PHASES.map((p, pi) => (
+          {phases.map((p, pi) => (
             <section key={p.name} className="relative min-w-0 max-lg:rounded-2xl max-md:p-4 md:max-lg:p-5 lg:px-2 lg:py-5 lg:first:rounded-l-2xl lg:last:rounded-r-2xl" style={{ background: PHASE_BG[pi] }}>
-              <Diamond name={p.name} connect={pi < PHASES.length - 1} />
-              {pi < PHASES.length - 1 && (
+              <Diamond name={p.name} connect={pi < phases.length - 1} />
+              {pi < phases.length - 1 && (
                 // Stacked panels: a dashed line down the gap, under the diamond's centre (STU-1174).
                 <span
                   aria-hidden="true"
@@ -267,15 +287,23 @@ export function TripleDiamondRoles({
                   className="lg:hidden absolute top-full h-6 border-l-2 border-dashed border-[var(--color-business-blue)] left-[calc(1rem+min(210px,50%-1rem))] md:left-[calc(1.25rem+min(210px,50%-1.25rem))]"
                 />
               )}
+              {p.goal && (
+                <div className="mt-6 max-w-[420px] lg:max-w-none sm:px-5 lg:px-3">
+                  <p className={`${label} mb-1`}>{copy.goal}</p>
+                  <p className="text-sm font-light text-[var(--color-text-primary)]" style={{ lineHeight: 1.6 }}>{p.goal}</p>
+                </div>
+              )}
               <div className="grid sm:grid-cols-2 mt-8">
                 {p.subs.map((s, i) => (
-                  <div key={s.name} className={`min-w-0 pt-2 pb-6 sm:px-5 lg:px-3 ${i === 1 ? "sm:border-l border-[var(--color-border-default)]" : ""}`}>
+                  // Two sub-phases side by side; a third one (the design and research
+                  // copy's last diamond) goes on its own row under them.
+                  <div key={s.name} className={`min-w-0 pt-2 pb-6 sm:px-5 lg:px-3 ${i === 1 ? "sm:border-l border-[var(--color-border-default)]" : ""} ${i === 2 ? "sm:col-span-2 sm:border-t sm:pt-6 border-[var(--color-border-default)]" : ""}`}>
                     <h3 className="font-extrabold text-[var(--color-text-primary)] mb-5" style={{ fontSize: "clamp(1.05rem, 1.4vw, 1.2rem)" }}>
                       <span className="block text-xs font-light uppercase tracking-[0.08em] text-[var(--color-text-muted)] mb-1">{p.name}</span>
                       {s.name}
                     </h3>
                     {active.map((r) => {
-                      const acts = visible(s.acts[r.id]);
+                      const acts = visible(s.acts[r.id] ?? []);
                       if (acts.length === 0) return null;
                       // Each role's activities in this sub-phase, as a list named by the role (STU-1175),
                       // with a light line between them (STU-1177).
@@ -296,7 +324,7 @@ export function TripleDiamondRoles({
                                       {a.title}
                                     </span>
                                     <span className="block mt-1">
-                                      <LevelTag id={a.level} />
+                                      <LevelTag guide={guide} id={a.level} />
                                     </span>
                                   </span>
                                   <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-1 text-[var(--color-business-blue)] transition-transform group-hover:translate-x-0.5">
@@ -319,16 +347,16 @@ export function TripleDiamondRoles({
         {shown === 0 && (
           <p className="font-light text-[var(--color-text-secondary)] text-center border border-dashed border-[var(--color-border-default)] rounded-2xl p-8 mt-4">
             {active.length === 0
-              ? "No roles selected. Switch on one or more roles above to see their activities."
-              : "No activities match the selected roles and levels. Switch on more levels above."}
+              ? copy.noRoles
+              : copy.noMatch}
           </p>
         )}
 
         <p className="font-light text-sm text-[var(--color-text-muted)] max-w-[70ch] mt-20 pt-5 border-t border-[var(--color-border-default)]">
-          Activities are examples to start the conversation. Select one to read how to work with it and an example. Levels are a rough guide to how much it takes to get started. Adjust them to how your teams work and what your policies allow.
+          {copy.footnote}
         </p>
       </div>
-      <ActivityDialog open={open} onClose={() => setOpen(null)} />
+      <ActivityDialog guide={guide} open={open} onClose={() => setOpen(null)} />
     </section>
   );
 }
