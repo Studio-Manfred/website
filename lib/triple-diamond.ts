@@ -21,7 +21,7 @@ export type RoleId = "res" | "design" | "pm" | "ba" | "qa" | "dev" | "ds";
 export type LevelId = "easy" | "medium" | "advanced";
 
 // How hard an activity is to get going with (STU-1172).
-export const LEVELS: { id: LevelId; name: string; description: string }[] = [
+export const LEVELS: Level[] = [
   { id: "easy", name: "Easy", description: "A general AI assistant and material you already have. The output is quick to check." },
   { id: "medium", name: "Medium", description: "Needs a specialised tool, some setup, or careful review against the source." },
   { id: "advanced", name: "Advanced", description: "Needs access to data or code and technical or statistical skills. Mistakes are costly." },
@@ -30,13 +30,20 @@ export const LEVELS: { id: LevelId; name: string; description: string }[] = [
 export type Activity = {
   /** Short, for the overview (STU-1172). */
   title: string;
-  level: LevelId;
+  /** Left out in guides without levels (`levels: []`). */
+  level?: LevelId;
   /** How to work with it: a few sentences. */
   how: string;
   example: string;
+  /** Which step of the process roadmap (only guides with a `process`). */
+  step?: StepId;
+  /** Titles of activities in the same guide that this one builds on. */
+  after?: string[];
 };
 
-export const ROLES: { id: RoleId; name: string }[] = [
+export type StepId = 1 | 2 | 3;
+
+export const ROLES: Role[] = [
   { id: "res", name: "Researcher" },
   { id: "design", name: "UX / Product Designer" },
   { id: "pm", name: "PM / PO" },
@@ -46,7 +53,73 @@ export const ROLES: { id: RoleId; name: string }[] = [
   { id: "ds", name: "Data Scientist" },
 ];
 
-export type Phase = { name: string; subs: { name: string; acts: Record<RoleId, Activity[]> }[] };
+export type Role<R extends string = RoleId> = {
+  id: R;
+  name: string;
+  /** For tight spaces, like the process roadmap. */
+  short?: string;
+};
+
+export type Level = { id: LevelId; name: string; description: string };
+
+/**
+ * One phase (diamond). `goal` is optional: when set, it is shown under the
+ * diamond (the unlisted design and research copy uses it).
+ */
+export type Phase<R extends string = RoleId> = {
+  name: string;
+  goal?: string;
+  /** `tag` is the client's own phase number, like "Fas 1". */
+  subs: { name: string; tag?: string; acts: Record<R, Activity[]> }[];
+};
+
+/** The page's own words, so a copy of the guide can be in another language. */
+export type GuideCopy = {
+  lead: string;
+  goal: string;
+  roles: string;
+  showAll: string;
+  clear: string;
+  /** "{shown}" and "{total}" are filled in. A string, not a function, so a server page can pass it to the client component. */
+  showing: string;
+  levels: string;
+  level: string;
+  noRoles: string;
+  noMatch: string;
+  footnote: string;
+  close: string;
+  how: string;
+  example: string;
+};
+
+/**
+ * The process roadmap: the diagram's labels and the three steps. `sizes`
+ * are assignment sizes as bars, `from`/`to` are sub-phase indexes over all
+ * phases (0 based, inclusive).
+ */
+export type GuideProcess = {
+  groups: { name: string; sub: string; phases: number }[];
+  /** One more than there are phases: before, between and after the diamonds. */
+  milestones: string[];
+  steps: { id: StepId; name: string; description: string }[];
+  stepsTitle: string;
+  step: string;
+  after: string;
+  /** `range` names the phases in words, for phones where the bars stack. */
+  sizes?: { name: string; from: number; to: number; range?: string }[];
+  sizesLabel?: string;
+};
+
+/** Everything the TripleDiamondRoles component shows, apart from the case row. */
+export type Guide = {
+  lang?: string;
+  /** When set, the phases are drawn as one process diagram with the activities in steps (TripleDiamondProcess). */
+  process?: GuideProcess;
+  roles: Role<string>[];
+  levels: Level[];
+  phases: Phase<string>[];
+  copy: GuideCopy;
+};
 
 
 export const PHASES: Phase[] = [
@@ -936,3 +1009,24 @@ export const PHASES: Phase[] = [
     ],
   },
 ];
+
+export const TD_COPY: GuideCopy = {
+  lead: "People review and decide. AI drafts, clusters, summarises and generates.",
+  goal: "Goal",
+  roles: "Roles",
+  showAll: "Show all roles",
+  clear: "Clear",
+  showing: "Showing {shown} of {total} activities",
+  levels: "Levels",
+  level: "Level",
+  noRoles: "No roles selected. Switch on one or more roles above to see their activities.",
+  noMatch: "No activities match the selected roles and levels. Switch on more levels above.",
+  footnote:
+    "Activities are examples to start the conversation. Select one to read how to work with it and an example. Levels are a rough guide to how much it takes to get started. Adjust them to how your teams work and what your policies allow.",
+  close: "Close",
+  how: "How to work with it",
+  example: "Example",
+};
+
+/** The original guide: all seven roles, in English. */
+export const TD_GUIDE: Guide = { lang: "en", roles: ROLES, levels: LEVELS, phases: PHASES, copy: TD_COPY };
