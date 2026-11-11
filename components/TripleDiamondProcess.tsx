@@ -171,9 +171,11 @@ export function TripleDiamondProcess({ guide, active, visible, onOpen }: Props) 
                                           <span className="block text-sm font-light text-[var(--color-text-primary)] group-hover:text-[var(--color-business-blue)] group-hover:underline underline-offset-4" style={{ lineHeight: 1.45 }}>
                                             {a.title}
                                           </span>
-                                          <span className="block mt-1">
-                                            <LevelTag guide={guide} id={a.level} />
-                                          </span>
+                                          {a.level && guide.levels.length > 0 && (
+                                            <span className="block mt-1">
+                                              <LevelTag guide={guide} id={a.level} />
+                                            </span>
+                                          )}
                                         </button>
                                       </li>
                                     ))}

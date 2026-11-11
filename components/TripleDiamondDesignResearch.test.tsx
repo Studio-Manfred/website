@@ -15,14 +15,14 @@ beforeAll(() => {
   };
 });
 
-const { roles, phases, levels, process } = TD_DR_GUIDE;
+const { roles, phases, process } = TD_DR_GUIDE;
 const subs = phases.flatMap((p) => p.subs);
 // Reading order: phase, sub-phase, role, activity.
 const all = subs.flatMap((s) => roles.flatMap((r) => (s.acts[r.id] ?? []).map((a) => ({ s, r, a }))));
 const byTitle = new Map(all.map((x, i) => [x.a.title, { ...x, i }]));
 const first = all[0].a;
 
-const page = () => render(<TripleDiamondRoles {...TD_DR_META} guide={TD_DR_GUIDE} />);
+const page = () => render(<TripleDiamondRoles {...TD_DR_META} intro="" guide={TD_DR_GUIDE} />);
 
 describe("unlisted design and research copy", () => {
   it("has only Researcher and Designer, with three distinct activities in each of the client's seven phases", () => {
@@ -37,10 +37,11 @@ describe("unlisted design and research copy", () => {
       }
   });
 
-  it("every activity is short, has a level, and has no dashes as punctuation", () => {
+  it("every activity is short, has no level, and has no dashes as punctuation", () => {
+    expect(TD_DR_GUIDE.levels).toEqual([]);
     for (const { s, r, a } of all) {
       expect(a.title.length, `${s.name} / ${r.name}: ${a.title}`).toBeLessThanOrEqual(42);
-      expect(levels.map((l) => l.id)).toContain(a.level);
+      expect(a.level, a.title).toBeUndefined();
       expect(a.how && a.example, a.title).toBeTruthy();
       expect(`${a.title} ${a.how} ${a.example}`, a.title).not.toMatch(/[—–]/);
     }
@@ -107,14 +108,21 @@ describe("the process diagram with the activities", () => {
     for (const z of process!.sizes!) expect(screen.getByText(z.name, { exact: false })).toBeInTheDocument();
   });
 
-  it("filters by role and level", async () => {
+  it("filters by role; no levels anywhere", async () => {
     page();
+    expect(screen.queryByText("Nivåer")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Nivå/)).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Researcher" }));
     expect(screen.getAllByRole("listitem")).toHaveLength(all.filter((x) => x.r.id === "design").length);
     await userEvent.click(screen.getByRole("button", { name: "Visa alla roller" }));
-    await userEvent.click(screen.getByRole("button", { name: "Avancerad" }));
-    await userEvent.click(screen.getByRole("button", { name: "Medel" }));
-    expect(screen.getAllByRole("listitem")).toHaveLength(all.filter((x) => x.a.level === "easy").length);
+    expect(screen.getAllByRole("listitem")).toHaveLength(all.length);
+  });
+
+  it("has the title and no intro", () => {
+    page();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Triple Diamond AI");
+    expect(screen.queryByText(/En interaktiv guide|An interactive guide/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Människor granskar|People review/)).not.toBeInTheDocument();
   });
 
   it("opens the details with the step and what it builds on", async () => {
@@ -125,6 +133,7 @@ describe("the process diagram with the activities", () => {
     expect(dialog).toHaveTextContent("Så arbetar ni med den");
     expect(dialog).toHaveTextContent(`Steg ${x.a.step}`);
     expect(dialog).toHaveTextContent(`${x.s.tag} · ${x.s.name}`);
+    expect(dialog).not.toHaveTextContent("Nivå");
     expect(within(dialog).getByRole("heading", { name: "Bygger på" })).toBeInTheDocument();
     for (const t of x.a.after!) expect(dialog).toHaveTextContent(t);
     await userEvent.click(within(dialog).getByRole("button", { name: "Stäng" }));

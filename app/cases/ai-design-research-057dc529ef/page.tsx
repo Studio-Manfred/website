@@ -9,12 +9,12 @@ import { TD_DR_GUIDE, TD_DR_META } from "@/lib/triple-diamond-design-research";
 // Unlisted copy of the Triple Diamond guide: Researcher and Designer only, in
 // Swedish, for one client team. No case row of its own, so it is not listed
 // under Cases; the long slug and noindex keep it out of search. The
-// consultant is borrowed from the original guide's case row.
+// consultant is borrowed from the original guide's case row. No intro: an
+// empty string, so the component doesn't fall back to the original's.
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: `${TD_DR_META.title} — Studio Manfred`,
-  description: TD_DR_META.intro,
   robots: { index: false, follow: false },
 };
 
@@ -24,7 +24,7 @@ export default async function TripleDiamondDesignResearchPage() {
     <>
       <PageNav variant="white" />
       <main id="main" tabIndex={-1}>
-        <TripleDiamondRoles {...TD_DR_META} consultants={c?.sidebar.consultants ?? []} guide={TD_DR_GUIDE} />
+        <TripleDiamondRoles {...TD_DR_META} intro="" consultants={c?.sidebar.consultants ?? []} guide={TD_DR_GUIDE} />
       </main>
       <Footer />
     </>

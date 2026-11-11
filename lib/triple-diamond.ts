@@ -30,7 +30,8 @@ export const LEVELS: Level[] = [
 export type Activity = {
   /** Short, for the overview (STU-1172). */
   title: string;
-  level: LevelId;
+  /** Left out in guides without levels (`levels: []`). */
+  level?: LevelId;
   /** How to work with it: a few sentences. */
   how: string;
   example: string;

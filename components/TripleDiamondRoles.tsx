@@ -95,12 +95,14 @@ function ActivityDialog({ guide, open, onClose }: { guide: Guide; open: Open | n
           </h2>
           </header>
           <div className="p-6 md:p-10">
+          {open.activity.level && levels.length > 0 && (
           <div className="flex items-start gap-3 rounded-xl bg-[var(--blue-50)] px-4 py-3 mb-8">
             <span className="mt-1"><LevelBars levels={levels} id={open.activity.level} /></span>
             <p className="text-sm font-light text-[var(--color-text-primary)]">
               <span className="font-extrabold">{copy.level}: {levelOf(levels, open.activity.level).name}.</span> {levelOf(levels, open.activity.level).description}
             </p>
           </div>
+          )}
           {guide.process && open.activity.step && (
             <div className="mb-8 text-sm font-light text-[var(--color-text-primary)]">
               <p>
@@ -150,7 +152,7 @@ export function TripleDiamondRoles({
   // Level filter (STU-1182): an activity shows when its role and its level are on.
   const [levelOn, setLevelOn] = useState<Record<LevelId, boolean>>({ easy: true, medium: true, advanced: true });
   const active = roles.filter((r) => on[r.id]);
-  const visible = (acts: Activity[]) => acts.filter((a) => levelOn[a.level]);
+  const visible = (acts: Activity[]) => acts.filter((a) => !a.level || levelOn[a.level]);
   const count = (rs: typeof roles, pick: (acts: Activity[]) => Activity[]) =>
     phases.reduce((n, p) => n + p.subs.reduce((m, s) => m + rs.reduce((k, r) => k + pick(s.acts[r.id] ?? []).length, 0), 0), 0);
   const total = count(roles, (acts) => acts);
@@ -167,12 +169,16 @@ export function TripleDiamondRoles({
           >
             {title}
           </h1>
-          <p className="font-light text-[var(--color-text-primary)] max-w-3xl" style={{ fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)", lineHeight: 1.7 }}>
-            {intro}
-          </p>
-          <p className="font-light text-[var(--color-text-secondary)] max-w-3xl mt-4">
-            {copy.lead}
-          </p>
+          {intro && (
+            <p className="font-light text-[var(--color-text-primary)] max-w-3xl" style={{ fontSize: "clamp(1.1rem, 1.8vw, 1.4rem)", lineHeight: 1.7 }}>
+              {intro}
+            </p>
+          )}
+          {copy.lead && (
+            <p className="font-light text-[var(--color-text-secondary)] max-w-3xl mt-4">
+              {copy.lead}
+            </p>
+          )}
           {consultants.map((c, i) => (
             <div key={i} className="flex items-center gap-3 mt-8">
               {c.photoUrl && (
@@ -219,6 +225,9 @@ export function TripleDiamondRoles({
               {copy.showing.replace("{shown}", String(shown)).replace("{total}", String(total))}
             </p>
           </div>
+          {/* A guide without levels (the design and research copy) has no level filter. */}
+          {levels.length > 0 && (
+          <>
           <p id="levels-label" className={`${label} mt-10 mb-4`}>{copy.levels}</p>
           <div role="group" aria-labelledby="levels-label" className="grid gap-4 sm:grid-cols-3">
             {levels.map((l) => (
@@ -240,6 +249,8 @@ export function TripleDiamondRoles({
               </div>
             ))}
           </div>
+          </>
+          )}
         </div>
 
         {guide.process ? (
@@ -295,7 +306,7 @@ export function TripleDiamondRoles({
                                       {a.title}
                                     </span>
                                     <span className="block mt-1">
-                                      <LevelTag guide={guide} id={a.level} />
+                                      {a.level && <LevelTag guide={guide} id={a.level} />}
                                     </span>
                                   </span>
                                   <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-1 text-[var(--color-business-blue)] transition-transform group-hover:translate-x-0.5">
