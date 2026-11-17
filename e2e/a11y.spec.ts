@@ -21,6 +21,7 @@ const ROUTES = [
   "/cases/example-case",
   "/join-us",
   "/privacy-policy",
+  "/group",
 ] as const;
 
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];

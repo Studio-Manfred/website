@@ -1,7 +1,7 @@
 # studiomanfred.com
 
 Marketing site for [Studio Manfred](https://studiomanfred.com). Home, writing,
-training-and-courses, join-us, privacy-policy — plus a writing CMS backed by
+training-and-courses, join-us, group, privacy-policy — plus a writing CMS backed by
 Supabase.
 
 ## Stack

@@ -17,6 +17,7 @@ const ROUTES = [
   "/cases/example-case",
   "/join-us",
   "/privacy-policy",
+  "/group",
 ] as const;
 
 for (const route of ROUTES) {
