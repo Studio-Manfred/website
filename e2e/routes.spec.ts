@@ -14,6 +14,7 @@ const ROUTES = [
   "/writing/hello-world",
   "/join-us",
   "/privacy-policy",
+  "/group",
 ] as const;
 
 for (const route of ROUTES) {

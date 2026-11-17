@@ -17,6 +17,7 @@ const ROUTES = [
   "/writing/hello-world",
   "/join-us",
   "/privacy-policy",
+  "/group",
 ] as const;
 
 const WCAG_TAGS = [

@@ -57,7 +57,7 @@ carry them).
 
 ## Page anatomy
 
-- **Top nav**: every public route except `/` uses [components/PageNav.tsx](components/PageNav.tsx) — `variant="blue"` on `/writing`, `/writing/[slug]`, `/training-and-courses`, `/join-us`, `/privacy-policy`; `variant="white"` inside [components/CourseDetail.tsx](components/CourseDetail.tsx).
+- **Top nav**: every public route except `/` uses [components/PageNav.tsx](components/PageNav.tsx) — `variant="blue"` on `/writing`, `/writing/[slug]`, `/training-and-courses`, `/join-us`, `/group`, `/privacy-policy`; `variant="white"` inside [components/CourseDetail.tsx](components/CourseDetail.tsx).
 - **`/` is intentionally nav-less.** The Hero's 100 px wordmark IS the nav — the dramatic full-viewport hero is part of the brand impression and a sticky bar would compete with it. Decision recorded under STU-315 (2026-05-25) after `NavBar.tsx` lived as dead code for several weeks. Don't reintroduce a top-bar on home without a separate decision.
 - **`<main>` requirements** (a11y baseline below): every route's `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link lands focus. Blue-background `<main>`s also need `cursor-white` (custom-cursor system).
 
@@ -121,7 +121,7 @@ work but restore the ad-blocker-catches-us problem.
 - `<html lang="en">` in [app/layout.tsx](app/layout.tsx); skip-link is the first
   focusable element of `<body>`.
 - Every `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link can
-  land focus. Pages: home, /join-us, /privacy-policy, /training-and-courses,
+  land focus. Pages: home, /join-us, /group, /privacy-policy, /training-and-courses,
   /writing, /writing/[slug], plus `<main>` inside
   [components/CourseDetail.tsx](components/CourseDetail.tsx).
 - Images: meaningful → descriptive `alt`; decorative photos → `alt=""`.
