@@ -1,0 +1,12 @@
+{
+  "token": "testtokentesttokentesttokentesttokentesttok",
+  "cv": {
+    "title": "Senior UX @ Example Bank",
+    "language": "en",
+    "content": "<h2>Introduction</h2><p>Moa is a <strong>researcher</strong>.</p><ul><li>Research</li></ul><script>alert(1)</script><p><a href=\"javascript:alert(1)\">bad</a> <a href=\"https://studiomanfred.com\">good</a></p><img src=x onerror=alert(1)>",
+    "name": "Moa Bogren",
+    "email": "moa@studiomanfred.com",
+    "avatar_url": "https://example.supabase.co/storage/v1/object/public/content/avatars/moa.jpg",
+    "cases": [{ "title": "Example Client", "slug": "example-case" }]
+  }
+}

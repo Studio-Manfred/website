@@ -15,18 +15,16 @@ const ROUTES = [
   "/training-and-courses/product-discovery",
   "/writing",
   "/writing/hello-world",
+  "/cases",
+  "/cases/locked-case",
+  "/cv/testtokentesttokentesttokentesttokentesttok",
+  "/cases/example-case",
   "/join-us",
   "/privacy-policy",
   "/group",
 ] as const;
 
-const WCAG_TAGS = [
-  "wcag2a",
-  "wcag2aa",
-  "wcag21a",
-  "wcag21aa",
-  "wcag22aa",
-];
+const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 // STU-288 (focus styles) and STU-289 (low-contrast text) landed
 // 2026-05-15 — serious/critical violations now hard-fail the build.
@@ -38,6 +36,13 @@ for (const route of ROUTES) {
   test(`a11y: ${route}`, async ({ page }, testInfo) => {
     await page.goto(route);
     await page.waitForLoadState("networkidle");
+    if (route === "/") {
+      // The hero intro fades text in for about 3 s; axe must see the settled page.
+      await expect(page.locator("[data-intro] .fade-up").last()).toHaveCSS(
+        "opacity",
+        "1",
+      );
+    }
 
     const results = await new AxeBuilder({ page })
       .withTags(WCAG_TAGS)
@@ -69,7 +74,10 @@ for (const route of ROUTES) {
 
     if (blocking.length > 0) {
       const summary = blocking
-        .map((v) => `${v.id} (${v.impact}, ${v.nodes.length} node${v.nodes.length === 1 ? "" : "s"})`)
+        .map(
+          (v) =>
+            `${v.id} (${v.impact}, ${v.nodes.length} node${v.nodes.length === 1 ? "" : "s"})`,
+        )
         .join("; ");
 
       testInfo.annotations.push({
@@ -78,10 +86,61 @@ for (const route of ROUTES) {
       });
 
       if (AXE_ENFORCE) {
-        expect(blocking, `${route}: serious/critical violations — ${summary}`).toEqual([]);
+        expect(
+          blocking,
+          `${route}: serious/critical violations — ${summary}`,
+        ).toEqual([]);
       } else {
         console.warn(`axe (warn-only) ${route}: ${summary}`);
       }
     }
   });
 }
+
+test("a11y: / with the menu open", async ({ page }, testInfo) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  // Let the hero intro settle first, so axe does not see text mid-fade.
+  await expect(page.locator("[data-intro] .fade-up").last()).toHaveCSS(
+    "opacity",
+    "1",
+  );
+  await page.getByRole("button", { name: "Open menu" }).click();
+  const panel = page.getByRole("dialog", { name: "Menu" });
+  await expect(panel).toBeVisible();
+  // Wait for the wipe and the icon morph to finish so axe measures the settled panel.
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+        .map((a) => a.finished.catch(() => undefined)),
+    ),
+  );
+
+  const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+  const blocking = results.violations.filter(
+    (v) => v.impact === "serious" || v.impact === "critical",
+  );
+
+  if (blocking.length > 0) {
+    const summary = blocking
+      .map(
+        (v) =>
+          `${v.id} (${v.impact}, ${v.nodes.length} node${v.nodes.length === 1 ? "" : "s"})`,
+      )
+      .join("; ");
+    testInfo.annotations.push({
+      type: AXE_ENFORCE ? "a11y-fail" : "a11y-warn",
+      description: `${blocking.length} serious/critical: ${summary}`,
+    });
+    if (AXE_ENFORCE) {
+      expect(
+        blocking,
+        `/ (menu open): serious/critical violations — ${summary}`,
+      ).toEqual([]);
+    } else {
+      console.warn(`axe (warn-only) / (menu open): ${summary}`);
+    }
+  }
+});

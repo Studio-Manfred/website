@@ -6,17 +6,63 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Join us**: no sideways scroll on a phone. The two-column blocks stack and the photo cluster shrinks with the screen.
+
+### Changed
+
+- **Menu**: the open menu is white on blue pages (home, writing, training) and blue on white pages (cases, course pages). The wipe no longer shows a dark band under its edge, which looked like a stutter.
+- **Top nav**: the nav is 1200 px wide on every page, so the top bar looks the same everywhere. The rows of the open menu line up with it at every screen size. Text-only pages keep a narrower column.
+
 ### Added
 
 - **Group page** (`/group`): introduces SeventyOne, Manfred and Mather as a collective — pillars of value, how we work, capability areas, selected cases and partners. Linked from the "SeventyOne Group" heading in the footer.
+- **Evaluation service (prototype)**: a page at `/evaluation` (not linked from the site) that evaluates a web page or screenshots as the archetypes of a chosen industry. It runs plain WCAG checks on the page's HTML and, when `ANTHROPIC_API_KEY` is set, a persona walkthrough with Claude; without a key it shows demo findings from the journey data. The report ranks findings by estimated value per effort from the segment and business data, shows which archetypes each one affects, and lets you change the assumptions. Each archetype is tied to the journey's business segments, so it has a revenue per customer and the report shows which archetypes are worth the most; every backlog item shows how it spreads over archetypes and segments, with customers, reach and value. You choose what to evaluate against: the ten usability heuristics, WCAG 2.2 AA areas, and experience and business criteria. The form and the report link to the industry's customer journey, and the phase shows what the journey says about it. Sites that block automated visits can be evaluated from screenshots; if the page can't be fetched but screenshots are given, the report uses those and says so. The page is not indexed, and the API only answers requests from the site's own page.
+- **Menu**: the menu button is a plain hamburger, with no ring, and it turns into a cross when the menu opens (and back when it closes). The menu wipes in from the top, and its links fade in one after the other. The logo and the menu button are now flush with the page content's edges. On phones the nav shows the full wordmark, and the M only on very narrow screens (below 340 px), where the M is bigger than before (STU-1185).
+- **Menu**: every page has the menu now, in the top nav after Get in touch (all pages except the shared CV). On a phone the nav shows the M instead of the wordmark so everything fits. The nav is the same width as the page content. The menu panel is the opposite colour of the page (white on blue pages, blue on white pages), and the close button sits in the same place as the menu button (STU-1185).
+- **Menu**: Cases is back in the home menu ("Work we're proud of. Mostly."), and the menu has a Home link ("Back to start.") that is hidden on the home page. The link to the page you are on is never shown. The menu is now one shared component, ready for the other pages (STU-1185).
+- **Cases**: each industry on the Customer Journey Intelligence case has its own address (`/cases/customer-journey-intelligence/hotel`, `/retail-bank`, `/insurance`, `/grocery`, `/e-commerce`), so a link opens the journey on that industry. Switching industry updates the address and the tab title; an unknown industry is a 404.
+- **Cases**: on the Customer Journey Intelligence case the gap analysis and journey instrument headings stand alone, with what they mean behind a small info button, for a tighter page.
+- **Home**: the wordmark in the hero draws itself when the page loads, in 1.6 s. When it is done, the headline rises, and the button 0.3 s later, with the same rise as before. Visitors who prefer reduced motion, visitors without JavaScript and a failed load all get the whole hero at once (STU-1183).
+- **Home**: the open menu has no Manfred wordmark any more. The panel header holds only the close button, in the same place as the menu button (STU-1184).
+- **Cases**: the AI Activities (Triple Diamond) page filters by level (Easy, Medium, Advanced) as well as by role (STU-1182).
+- **Home**: a hamburger menu on the home page only. The button sits top right of the hero and scrolls away with the page: there is no sticky bar. The menu opens full screen with links to Writing and Training & Courses, a Get in touch button, the email and the phone number. A row turns white with blue text on hover, focus and tap. The close button takes the place of the menu button when the menu opens. Other pages keep their nav (STU-1181).
+- **Cases**: the Customer Journey Intelligence demo is rebuilt in React in the site's brand at `/cases/customer-journey-intelligence`: industry switch (bank, insurer, grocery, e-commerce and hotel), filters in one panel at the top, gap analysis with ranked opportunities, emotion curve, touchpoints, metrics matrix, an Insights drawer, and build steps (step 1 easy to step 3 advanced) in a quiet row under the industry switch, folded away at first so the whole journey is easy to demo; opened, they filter the page to the parts of one step. The gap analysis and the journey instrument read as one section. Synthetic data, in English. It lists under Cases once a case row with that slug is published from the intranet.
+- **Cases**: the Triple Diamond page is listed under Cases as "AI Activities throughout the triple diamond process" at `/cases/ai-activities-triple-diamond`, with title, intro, category and consultant from its case row (published from the intranet); the old share links redirect there (STU-1179).
+- **Share**: a light line between the activities in each Triple Diamond Roles role group, and a blue tinted line between roles, so each activity is easy to tell apart (STU-1177).
+- **Share**: on desktop the Triple Diamond Roles phase panels sit edge to edge with wider lanes (content up to 1600 px, less padding); phones keep the stacked panels (STU-1176).
+- **Share**: three AI activities per role and sub-phase on the Triple Diamond Roles page, 126 in total, each with how, tools, an example and a level; the overview groups them under the role (STU-1175).
+- **Share**: dashed lines connect the three Triple Diamond Roles diamonds, across on desktop and down between the stacked panels on phones (STU-1174).
+- **Share**: each Triple Diamond Roles phase sits on its own brand tint (Light Beige, Blue 50, Human Pink), and the modal header uses the phase's tint (STU-1173).
+- **Share**: Triple Diamond Roles activities have shorter titles and a difficulty level (Easy, Medium, Advanced), shown in the overview, explained in a legend and in the modal (STU-1172).
+- **Share**: the Triple Diamond Roles overview shows each activity's title; selecting it opens a modal with how to work with it, tools and an example (STU-1171).
+- **Share**: UX / Product Designer is a role on the Triple Diamond Roles page, with an AI activity in every sub-phase (STU-1170).
+- **Share**: the Triple Diamond Roles page (where each role can use AI) on an unlisted, noindex share link under `/share/`, as a site page with the site's nav, footer and case-page type (STU-1167). The first `.html` link redirects there.
+- **Shared CV**: the name, role and `---` the CV text starts with are taken out of the text; the role shows under the name in the Consultant box (STU-1164).
+- **Cases**: an optional hero image under the intro of a case page, full width at 2:1 (STU-1153).
+- **Cases**: outcomes can show a big key figure (for example +28%) in two columns, one column when narrow (STU-1153).
+- **Cases**: the Process section is an accordion: several steps open at once, step 01 open first, a slowly pulsing ring on open steps (STU-1153).
+- **Cases**: a case can be password protected; it's listed with a lock and opens with its password, remembered for 30 days (STU-1156).
+- **CV**: CVs shared from the intranet open at `/cv/<link>` in the case-page style, with Download PDF (STU-1155).
+- **Cases**: `/cases` lists every published case with its title and consultant (STU-1148).
+- **Cases**: case pages at `/cases/<slug>` come from the intranet's Case CMS, live when published there (STU-1146).
 - **Team**: Markus Dahlbom joins the team section.
+
+### Fixed
+
+- **Cases**: a consultant on the team shows their website team photo, not the intranet avatar the case editor copied (STU-1169).
+- **Cases**: the process timeline's step names now meet WCAG AA contrast (they were light grey, 1.6:1) (STU-1146).
 
 ### Removed
 
+- **Cases**: suggested tools and software are gone from the AI Activities (Triple Diamond) page, in the data, the modal and the copy (STU-1182).
+- **Cases**: the hardcoded Fishbrain and Bokadirekt pages; both are now edited in the intranet's Case CMS (STU-1147).
 - **Team**: Axel Nathorst-Böös has left Studio Manfred and is removed from the team section.
 
 ### Changed
 
+- **Shared CV**: Download PDF is the design system's outline Button with a down arrow; on phones it is a round icon-only button next to the kicker line (STU-1164).
 - **Design system 0.36 → 0.37.1.** Adds a `ColorPicker` component (not used on the site yet) and a packaging fix; no visible change.
 - **Design system 0.33 → 0.36** (STU-944). The site's Tailwind entry now imports the DS `tokens.css` (so token utilities like `bg-muted` work in the site's own code) and has an `@source` for the DS `dist`, which keeps DS-only responsive classes in production builds. Added with `manfred-ds-cli doctor --fix`, which now reports 8/8 checks green. The custom cursor is unaffected: its unlayered `cursor: none` still beats the DS base-layer `cursor: pointer`.
 

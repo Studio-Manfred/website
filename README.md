@@ -87,7 +87,7 @@ but see the "DS consumption" note below):
   primitive. `background` (transparent / white / cream / blue), `width`
   (narrow=720 / default=960 / xl=1100 / wide=1200 px), `padding` (first /
   default / tight / roomy / none), `align` (left / center), `as` (section /
-  main / article / div). Blue background auto-includes `cursor-white`.
+  main / article / div). Blue background auto-includes `cursor-white` (a no-op now).
 - **[`lib/typography.ts`](lib/typography.ts)** — `clamp()` font-size tokens
   for hero-scale text the DS doesn't yet ship as fluid variants.
 
@@ -98,10 +98,20 @@ overlays need to sit outside the max-width wrapper.
 
 ### Nav story
 
-- `/` **has no top nav** — the Hero's 100 px wordmark IS the nav (dramatic
-  first-impression brand moment). Do not reintroduce a top-bar on home
-  without discussion.
-- All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx).
+- `/` has no top bar over the hero. The Hero's 100 px wordmark is its nav, and a
+  hamburger button sits top right (STU-1181). It scrolls away with the page: there
+  is no sticky bar. The button opens a full-screen menu
+  ([`SiteMenu`](components/SiteMenu.tsx), placed by [`HomeMenu`](components/HomeMenu.tsx)). The menu is on `/` only for now.
+- All other public routes use [`<PageNav variant="blue"|"white">`](components/PageNav.tsx); the nav row is 1200 px wide on every page ([lib/layout.ts](lib/layout.ts)).
+
+### Home hero intro
+
+The wordmark in the home hero draws itself on load, then the headline and the
+button rise (STU-1183). [`HeroIntro`](components/HeroIntro.tsx) runs the phases and
+[`WordmarkReveal`](components/WordmarkReveal.tsx) draws the real wordmark through
+a stencil ([`lib/wordmark-stencil.json`](lib/wordmark-stencil.json)). Reduced
+motion, no JavaScript and a failed load all show the hero at once. The stencil is
+made by [`scripts/build-wordmark-stencil.mjs`](scripts/build-wordmark-stencil.mjs).
 
 ### Analytics
 

@@ -1,0 +1,156 @@
+import { supabase } from "./supabase";
+import { teamPhoto } from "./team";
+
+// Case pages from the intranet's Case CMS (STU-1143). Rows live in the
+// intranet Supabase `cases` table; RLS lets the anon key read published rows
+// only. Blocks and sidebar are JSON in the shapes of the intranet's
+// src/lib/case-model.ts — change both repos together. Unknown block types are
+// skipped, so an intranet that ships a new block first never breaks a page.
+
+export type ProcessStep = { title: string; methods: string[]; description: string };
+/** `figure` is the big key figure (STU-1153), e.g. "+28%"; left out when empty. */
+export type Outcome = { heading: string; text: string; figure?: string };
+export type HeroImage = { src: string; alt: string };
+export type CaseImage = { src: string; alt: string; label: string; note: string; showNote: boolean };
+
+export type CaseBlock =
+  | { id: string; type: "brief"; heading: string; text: string; bullets: string[] }
+  | { id: string; type: "process"; heading: string; steps: ProcessStep[]; stakeholders: string[] }
+  | { id: string; type: "deliverables"; heading: string; text: string; bullets: string[]; images: CaseImage[] }
+  | { id: string; type: "outcomes"; heading: string; items: Outcome[] };
+
+export type Consultant = { name: string; title: string; photoUrl: string };
+export type FactBox = { label: string; items: string[] };
+
+export type CaseStudy = {
+  slug: string;
+  title: string;
+  categoryLine: string;
+  intro: string;
+  heroImage: HeroImage | null;
+  blocks: CaseBlock[];
+  sidebar: { consultants: Consultant[]; facts: FactBox[] };
+};
+
+type Obj = Record<string, unknown>;
+const isObj = (v: unknown): v is Obj => !!v && typeof v === "object" && !Array.isArray(v);
+const str = (v: unknown) => (typeof v === "string" ? v : "");
+const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []);
+const objects = (v: unknown) => (Array.isArray(v) ? v.filter(isObj) : []);
+
+function parseBlock(r: Obj, index: number): CaseBlock | null {
+  const id = str(r.id) || `block-${index}`;
+  const heading = str(r.heading);
+  switch (r.type) {
+    case "brief":
+      return { id, type: "brief", heading, text: str(r.text), bullets: strings(r.bullets) };
+    case "process":
+      return {
+        id,
+        type: "process",
+        heading,
+        steps: objects(r.steps).map((s) => ({ title: str(s.title), methods: strings(s.methods), description: str(s.description) })),
+        stakeholders: strings(r.stakeholders),
+      };
+    case "deliverables":
+      return {
+        id,
+        type: "deliverables",
+        heading,
+        text: str(r.text),
+        bullets: strings(r.bullets),
+        images: objects(r.images)
+          .map((i) => ({ src: str(i.src), alt: str(i.alt), label: str(i.label), note: str(i.note), showNote: i.show_note === true }))
+          .filter((i) => i.src),
+      };
+    case "outcomes":
+      return {
+        id,
+        type: "outcomes",
+        heading,
+        items: objects(r.items).map((i) => ({ heading: str(i.heading), text: str(i.text), ...(str(i.figure) ? { figure: str(i.figure) } : {}) })),
+      };
+    default:
+      return null;
+  }
+}
+
+/** A stored hero image; anything without a picture address is no image (STU-1153). */
+function parseHero(raw: unknown): HeroImage | null {
+  if (!isObj(raw) || !str(raw.src).trim()) return null;
+  return { src: str(raw.src), alt: str(raw.alt) };
+}
+
+export function parseCase(row: Obj): CaseStudy {
+  const sidebar = isObj(row.sidebar) ? row.sidebar : {};
+  return {
+    slug: str(row.slug),
+    title: str(row.title),
+    categoryLine: str(row.category_line),
+    intro: str(row.intro),
+    heroImage: parseHero(row.hero_image),
+    blocks: objects(row.blocks)
+      .map(parseBlock)
+      .filter((b): b is CaseBlock => b !== null),
+    sidebar: {
+      // STU-1169: a team member gets the website photo, not the intranet avatar
+      // the case editor copied from their profile.
+      consultants: objects(sidebar.consultants).map((c) => ({ name: str(c.name), title: str(c.title), photoUrl: teamPhoto(str(c.name)) ?? str(c.photo_url) })),
+      facts: objects(sidebar.facts).map((f) => ({ label: str(f.label), items: strings(f.items) })),
+    },
+  };
+}
+
+/** A published case by slug, or null (unknown, draft, or the read failed). */
+export async function getCase(slug: string): Promise<CaseStudy | null> {
+  const { data, error } = await supabase
+    .from("cases")
+    .select("*")
+    .eq("slug", slug)
+    .eq("published", true)
+    .limit(1);
+  if (error) console.error(`getCase(${slug}):`, error.message);
+  if (error || !data?.length) return null;
+  return parseCase(data[0]);
+}
+
+export type CaseSummary = Pick<CaseStudy, "slug" | "title" | "categoryLine"> & {
+  consultants: Consultant[];
+  /** Password-protected (STU-1156): listed with a lock, opened with the password. */
+  locked: boolean;
+};
+
+/**
+ * Published cases for the /cases overview, newest first. Through the
+ * list_case_summaries() function, because locked cases are not readable
+ * from the table (STU-1156) but are still listed.
+ */
+export async function listCases(): Promise<CaseSummary[]> {
+  const { data, error } = await supabase.rpc("list_case_summaries");
+  if (error) {
+    console.error("listCases:", error.message);
+    return [];
+  }
+  return (Array.isArray(data) ? data : [])
+    .filter((r): r is Obj => isObj(r))
+    .map((r) => {
+      const c = parseCase({ ...r, sidebar: { consultants: r.consultants } });
+      return { slug: c.slug, title: c.title, categoryLine: c.categoryLine, consultants: c.sidebar.consultants, locked: r.locked === true };
+    });
+}
+
+/** Is there a published, password-protected case at this slug? (STU-1156) */
+export async function isCaseLocked(slug: string): Promise<boolean> {
+  const { data, error } = await supabase.rpc("case_is_locked", { p_slug: slug });
+  if (error) console.error("isCaseLocked:", error.message);
+  return data === true;
+}
+
+/** A locked case's content for the right password, else null (STU-1156). */
+export async function getLockedCase(slug: string, password: string): Promise<CaseStudy | null> {
+  if (!password) return null;
+  const { data, error } = await supabase.rpc("get_locked_case", { p_slug: slug, p_password: password });
+  if (error) console.error("getLockedCase:", error.message);
+  if (error || !isObj(data)) return null;
+  return parseCase(data);
+}

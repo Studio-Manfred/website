@@ -5,6 +5,12 @@
 export {
   Button,
   Container,
+  Icon,
   Logo,
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
   Typography,
 } from "@studio-manfred/manfred-design-system";

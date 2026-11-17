@@ -7,14 +7,21 @@ interface FadeInProps {
   children: React.ReactNode;
   className?: string;
   delay?: 0 | 1 | 2 | 3;
+  /** Hold the rise until a parent says so (the home hero intro). Default: start at once. */
+  start?: boolean;
 }
 
-export function FadeIn({ children, className = "", delay = 0 }: FadeInProps) {
+export function FadeIn({
+  children,
+  className = "",
+  delay = 0,
+  start = true,
+}: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !start) return;
 
     // STU-290: reduced-motion users get the final state immediately and we
     // skip the observer entirely.
@@ -37,12 +44,12 @@ export function FadeIn({ children, className = "", delay = 0 }: FadeInProps) {
           observer.unobserve(el);
         }
       },
-      { threshold: 0, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0, rootMargin: "0px 0px -40px 0px" },
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [start]);
 
   const delayClass = delay > 0 ? `fade-up-delay-${delay}` : "";
 

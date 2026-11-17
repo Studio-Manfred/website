@@ -15,7 +15,7 @@ start.
 - Design system: `@studio-manfred/manfred-design-system` **v0.37.1** from
   **GitHub Packages** — Dependabot auto-bumps weekly (see
   [`.github/dependabot.yml`](.github/dependabot.yml)).
-- Data: `@supabase/supabase-js` reading the `blog_posts` table from the intranet
+- Data: `@supabase/supabase-js` reading the `blog_posts` and (STU-1146) published `cases` tables, and (STU-1155) shared CVs via the `get_shared_cv` function, from the intranet
   Supabase project.
 - No `vercel.json` / `vercel.ts` — Vercel picks up `next build` automatically.
   URL rewrites live in [`next.config.ts`](next.config.ts) (see "Analytics
@@ -57,9 +57,10 @@ carry them).
 
 ## Page anatomy
 
-- **Top nav**: every public route except `/` uses [components/PageNav.tsx](components/PageNav.tsx) — `variant="blue"` on `/writing`, `/writing/[slug]`, `/training-and-courses`, `/join-us`, `/group`, `/privacy-policy`; `variant="white"` inside [components/CourseDetail.tsx](components/CourseDetail.tsx).
-- **`/` is intentionally nav-less.** The Hero's 100 px wordmark IS the nav — the dramatic full-viewport hero is part of the brand impression and a sticky bar would compete with it. Decision recorded under STU-315 (2026-05-25) after `NavBar.tsx` lived as dead code for several weeks. Don't reintroduce a top-bar on home without a separate decision.
-- **`<main>` requirements** (a11y baseline below): every route's `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link lands focus. Blue-background `<main>`s also need `cursor-white` (custom-cursor system).
+- **Top nav**: every public route except `/` uses [components/PageNav.tsx](components/PageNav.tsx) — `variant="blue"` on `/writing`, `/writing/[slug]`, `/training-and-courses`, `/join-us`, `/group`, `/privacy-policy`; `variant="white"` inside [components/CourseDetail.tsx](components/CourseDetail.tsx). The nav row is 1200 px wide on every page (`WIDTH_PX.wide` in [lib/layout.ts](lib/layout.ts)), whatever the width of the content, so the top bar looks the same everywhere. Text-only pages (`/writing`, `/privacy-policy`) keep a narrower column on purpose, so their text has more side margin than the nav; do not narrow the nav to match. The open menu's rows, rules, arrows and Get in touch block use the same inset (`pageInset(1200)` in [lib/menu-layout.ts](lib/menu-layout.ts), passed by `PageNav` as `SiteMenu`'s `inset`), so they line up with the nav row and the close button. The home page has no nav and keeps its own gutter (`menuGutter`). `e2e/page-menu.spec.ts` measures both at 1440, 1024 and 390 px.
+- **`/` has no top bar over the hero, and a hamburger menu instead (STU-1181, 2026-10-23).** The Hero's 100 px wordmark is its nav (STU-315, 2026-05-25). [components/HomeMenu.tsx](components/HomeMenu.tsx) adds a hamburger button top right (absolute, so it scrolls away with the page; **no sticky bar**, decided 2026-10-23) and a full-screen DS `Sheet` panel. The menu is on `/` only. Other pages keep `PageNav`. Do not add a top bar over the hero.
+- **SiteMenu rules (STU-1185).** [components/SiteMenu.tsx](components/SiteMenu.tsx) is the one menu (button + full-screen panel). `HomeMenu` is a thin wrapper that places it on the home page; `PageNav` places it on the other pages (all except the shared CV, which passes `menu={false}`): logo, Get in touch, then the menu button last, in the same row, with the wordmark (44 px high on a phone, 56 px from `md`) and the M ([components/Monogram.tsx](components/Monogram.tsx), a tight box around the glyph from [lib/monogram.ts](lib/monogram.ts)) only below 340 px, where the row is too tight. The nav row is one height (48 px, 56 px from `md`) and the panel header copies the row (same padding and max width), so the close button sits exactly where the menu button was; `e2e/page-menu.spec.ts` measures it on six page kinds. Links: Home ("Back to start."), Writing, Training & Courses, Cases ("Work we're proud of. Mostly."). The link to the page you are on is hidden (exact path from `usePathname()`; an article `/writing/x` keeps Writing). The panel is the opposite colour of the page (see **Panel colour** below); the menu button follows the page (`tone="white"` on blue, `tone="blue"` on white). The menu button and the close button are bare icons: no ring and no fill (owner decision 2026-10-26). The icon is three lines ([components/MenuIcon.tsx](components/MenuIcon.tsx)); the close button is the same three lines resting as a cross, and they morph (600 ms) when the panel opens and back (350 ms, so it ends with the panel) when it closes (CSS in `app/globals.css`, driven by Radix `data-state`). The panel wipes in with a `clip-path` instead of sliding, so the close button sits still while it morphs. Then the rows and the Get in touch block fade in and rise 8 px (350 ms, the first after 100 ms, 50 ms apart; `.menu-reveal` and `--menu-reveal-index`); closing has no such animation, so it stays fast. Reduced motion: no wipe, the cross at once. **Optical alignment:** the wordmark's letters sit about 10 % inside its box and the lines 12 px (16 px from `md`) inside the button box, so the wordmark has `-ml-[9.5px]` (`md:-ml-[12px]`) and both buttons have `-mr-[12px]` (`md:-mr-[16px]`); then the visible letters and lines are flush with the content edges (`e2e/page-menu.spec.ts` measures it). There is no Manfred wordmark in the panel; the header holds only the close button (STU-1184). The page gives the menu its own geometry (`triggerClassName`, `headerClassName`) so the close button sits where the menu button was. Get in touch uses `GetInTouchLink location="menu"`. Email and phone come from [lib/contact.ts](lib/contact.ts); the phone is plain text, as in the footer. **No-jump rule:** the close button in the panel sits exactly where the menu button was (same size and position; e2e test `e2e/home-menu.spec.ts` measures it). Rows invert on hover, focus and tap (the panel's text colour becomes the fill). The panel closes from component state, because Next's `Link` prevents the default click and Radix `SheetClose` skips prevented clicks. Sizes that switch at `md` use arbitrary values (see "Known fragile areas"). **Panel colour:** the opposite of the page: white panel on blue pages (`tone="white"`: home, writing, training list), blue panel on white pages (`tone="blue"`: cases, course detail). The DS sheet overlay is cleared by `body:has(.menu-panel)` in [app/globals.css](app/globals.css); left alone it fades in 50 % black under the wipe and shows as a dark band.
+- **`<main>` requirements** (a11y baseline below): every route's `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link lands focus. `cursor-white` is a no-op now (the M cursor is the `CustomCursor` component), so new markup does not need it.
 
 ### Section primitive + typography tokens (STU-312, 2026-05-25)
 
@@ -68,7 +69,7 @@ carry them).
   inside a `<section>` (or `<main>` / `<article>` via `as`). Props: `background`
   (`transparent` / `white` / `blue` / `cream`), `width` (`narrow` 720 / `default`
   960 / `wide` 1200 px), `padding` (`first` / `default` / `tight` / `roomy` /
-  `none`), `align`. `blue` background auto-includes `cursor-white`.
+  `none`), `align`. `blue` background auto-includes `cursor-white` (a no-op now).
 - **DS `Container` size presets** (`sm` 640 / `md` 768 / `lg` 1024 / `xl` 1280 /
   `2xl` 1536 px) don't align with our 720 / 960 / 1200 widths (chosen for
   line-length, not container bands), so we use `Container` as the semantic
@@ -94,6 +95,10 @@ VStack / Grid). Root cause: [`components/ds.tsx`](components/ds.tsx)
 re-exports only 4 components, so per the "import DS primitives via
 `@/components/ds`" rule everything else is structurally unreachable.
 
+`components/ds.tsx` now also re-exports `Icon` and the `Sheet` family
+(`Sheet`, `SheetClose`, `SheetContent`, `SheetTitle`, `SheetTrigger`) for the
+home menu (STU-1181).
+
 Widening the re-export (add Typography variants, layout primitives,
 Accordion family) unblocks Typography adoption and lets the training-page
 accordion migrate to DS Accordion. See STU-448 for the umbrella + child
@@ -115,6 +120,27 @@ The tracker computes its POST endpoint from
 own domain automatically routes events to own domain. **Don't** hardcode
 `manfred-analytics.vercel.app` into the layout script tag again — it will
 work but restore the ad-blocker-catches-us problem.
+
+### Home hero intro (STU-1183, 2026-10-23)
+
+The hero wordmark draws itself, then the headline and the button rise.
+[components/HeroIntro.tsx](components/HeroIntro.tsx) runs it; [components/WordmarkReveal.tsx](components/WordmarkReveal.tsx) draws.
+
+- **Phases** (`lib/hero-intro.ts`): `pending` → `playing` → `done`. Reduced motion (`skip`), a failed stencil load (`error`) and a 4 s timeout all end in `done`, so the hero is never empty. The headline starts when the drawing is done, the button 300 ms later, both with the existing `FadeIn` (its `start` prop holds the rise). Speed is 25 fps × 1.75, so the word takes 1.62 s.
+- **The picture is the real wordmark.** `lib/wordmark.ts` is a typed copy of the DS `Logo` paths (the DS `Logo` cannot take a mask). `lib/wordmark.test.tsx` fails if the DS changes the artwork. A mask shows it only where the pen is, frame by frame, from `lib/wordmark-stencil.json` (72 frames, 12.6 KB gzip, loaded lazily). Nothing is swapped at the end: the mask is removed.
+- **Why a stencil and not the Lottie.** The owner's Lottie is a coarse trace of a GIF (292 points in whole pixels), so the round top of the "d" looks chopped. It also ends empty (it erases the word). We use it only for the pen path. The Lottie and the GIF are not in the repo. Regenerate the stencil with `node scripts/build-wordmark-stencil.mjs <lottie.json> 0 71`. The hold frame is 71 because the pen draws the "d" stem last (the stencil covers 99.7 % of the wordmark there, 96.4 % at frame 62).
+- **First paint.** The server renders the whole hero. `globals.css` hides the wordmark while `data-intro="pending"` under `@media (scripting: enabled)`, so it does not flash before it draws. Another rule, `@media (scripting: none)`, shows `.fade-up` content, since nothing can add `.in-view` without JavaScript. The home menu button shows from the first frame; it does not wait for the intro.
+- Tests: `e2e/hero-intro.spec.ts` records the hero on every frame to check the order, that the whole wordmark never shows early, and the box size. Run it with `--repeat-each=10` after you touch the timing.
+
+### AI landing page under /ai
+
+`/ai` is served by a separate Next.js app (`web/` in
+`Studio-Manfred/manfred-ai-in-da-box`, `basePath: "/ai"`). Two rewrites in
+[`next.config.ts`](next.config.ts) forward `/ai` and `/ai/:path*` to
+`$AI_LANDING_ORIGIN`. The rewrites exist only when `AI_LANDING_ORIGIN` is set
+(for example `https://<project>.vercel.app`, no trailing slash needed). Without
+it, `/ai` is a 404 and nothing else changes. Set the variable in the Vercel
+project for each environment that should serve the page.
 
 ## Accessibility baseline
 
@@ -257,7 +283,19 @@ The PR template (`.github/pull_request_template.md`) makes the rule explicit at 
   initial canvas dimensions consistent between server and client.
 - **Custom cursor system** ([app/globals.css](app/globals.css) `*` selector) —
   overrides default cursors globally. If you re-introduce interactive elements,
-  double-check `cursor: pointer` isn't lost; see Linear STU-291.
+  double-check `cursor: pointer` isn't lost; see Linear STU-291. The M is a fixed
+  `div` (`CustomCursor`, `z-index` 10000) and the OS cursor is `cursor: none`.
+  A native `<dialog>` sits in the top layer above the M, so it gets the OS
+  cursor (STU-1171). Do not use a native `<dialog>` for new overlays. Radix
+  portals (DS `Sheet`, `Dialog`) are fine. Do not add `cursor-*` classes.
+- **DS stylesheet order** — the DS stylesheet repeats Tailwind utilities later
+  in the same layer. A base class the DS also ships (`h-12`, `flex-col`,
+  `w-full`) beats our `md:` variant, so the `md:` size never applies. For a
+  size that switches at a breakpoint use arbitrary values (`h-[48px]
+  md:h-[56px]`) or `max-md:`. `SiteMenu` shows the pattern.
+- **Focus ring on full-bleed rows** — the global `a:focus-visible` rule is
+  unlayered, so it beats a `focus-visible:outline-offset-*` utility. Use a class
+  in `globals.css` (`.menu-row:focus-visible`).
 - **[components/CursorBlob.tsx](components/CursorBlob.tsx)** — `aria-hidden`,
   must stay decorative; AT users see nothing.
 - **Writing pages** depend on Supabase reachability at build time. Lose the env
