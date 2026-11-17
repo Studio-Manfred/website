@@ -8,7 +8,7 @@ version-tag releases, so dates below correspond to production deploys of `main`.
 
 ### Added
 
-- **Group page** (`/group`): introduces SeventyOne, Manfred and Mather as a collective — pillars of value, how we work, capability areas, selected cases and partners.
+- **Group page** (`/group`): introduces SeventyOne, Manfred and Mather as a collective — pillars of value, how we work, capability areas, selected cases and partners. Linked from the "SeventyOne Group" heading in the footer.
 - **Team**: Markus Dahlbom joins the team section.
 
 ### Removed

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Section } from "@/components/Section";
 
 export function Footer() {
@@ -41,7 +42,7 @@ export function Footer() {
           className="font-extrabold text-white mb-8"
           style={{ fontSize: "clamp(2rem, 4vw, 2.75rem)", letterSpacing: "-0.02em" }}
         >
-          SeventyOne Group
+          <Link href="/group">SeventyOne Group</Link>
         </h2>
         <p
           className="font-light text-white/90 mb-8"
