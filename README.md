@@ -174,6 +174,8 @@ Preview URLs are auth-protected (Vercel deployment protection).
 | `NPM_RC_TOKEN` | Preview + Production | Classic PAT with `read:packages` for DS install from GitHub Packages |
 | `NEXT_PUBLIC_SUPABASE_URL` | Preview + Production | Supabase project URL (used by writing routes) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Preview + Production | Supabase anon key (public-by-design; ships in bundle) |
+| `ANTHROPIC_API_KEY` | Preview + Production | Claude API key for the Ask us chat on `/cases/71collective` (server-only; without it the chat returns an error) |
+| `PUBLIC_STATUS_KEY` | Preview + Production | Shared key for the intranet's `sync-availability-sheet` `public-status` read, which gives the People network on `/cases/71collective` its assignment statuses (server-only; must equal the intranet function's `PUBLIC_STATUS_KEY`; without it no statuses show) |
 
 **GitHub repo Secrets** (for Actions):
 

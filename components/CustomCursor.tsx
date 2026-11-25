@@ -52,7 +52,7 @@ export function CustomCursor() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed top-0 left-0 z-[10000]"
+      className="custom-cursor pointer-events-none fixed top-0 left-0 z-[10000]"
       style={{
         width: 44,
         height: 44,

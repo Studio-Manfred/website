@@ -58,6 +58,7 @@ carry them).
 ## Page anatomy
 
 - **Top nav**: every public route except `/` uses [components/PageNav.tsx](components/PageNav.tsx) — `variant="blue"` on `/writing`, `/writing/[slug]`, `/training-and-courses`, `/join-us`, `/group`, `/privacy-policy`; `variant="white"` inside [components/CourseDetail.tsx](components/CourseDetail.tsx). The nav row is 1200 px wide on every page (`WIDTH_PX.wide` in [lib/layout.ts](lib/layout.ts)), whatever the width of the content, so the top bar looks the same everywhere. Text-only pages (`/writing`, `/privacy-policy`) keep a narrower column on purpose, so their text has more side margin than the nav; do not narrow the nav to match. The open menu's rows, rules, arrows and Get in touch block use the same inset (`pageInset(1200)` in [lib/menu-layout.ts](lib/menu-layout.ts), passed by `PageNav` as `SiteMenu`'s `inset`), so they line up with the nav row and the close button. The home page has no nav and keeps its own gutter (`menuGutter`). `e2e/page-menu.spec.ts` measures both at 1440, 1024 and 390 px.
+- **`/cases/71collective` is also nav- and footer-less**: a clean, unlisted landing page for the three group companies, not a Studio Manfred page.
 - **`/` has no top bar over the hero, and a hamburger menu instead (STU-1181, 2026-10-23).** The Hero's 100 px wordmark is its nav (STU-315, 2026-05-25). [components/HomeMenu.tsx](components/HomeMenu.tsx) adds a hamburger button top right (absolute, so it scrolls away with the page; **no sticky bar**, decided 2026-10-23) and a full-screen DS `Sheet` panel. The menu is on `/` only. Other pages keep `PageNav`. Do not add a top bar over the hero.
 - **SiteMenu rules (STU-1185).** [components/SiteMenu.tsx](components/SiteMenu.tsx) is the one menu (button + full-screen panel). `HomeMenu` is a thin wrapper that places it on the home page; `PageNav` places it on the other pages (all except the shared CV, which passes `menu={false}`): logo, Get in touch, then the menu button last, in the same row, with the wordmark (44 px high on a phone, 56 px from `md`) and the M ([components/Monogram.tsx](components/Monogram.tsx), a tight box around the glyph from [lib/monogram.ts](lib/monogram.ts)) only below 340 px, where the row is too tight. The nav row is one height (48 px, 56 px from `md`) and the panel header copies the row (same padding and max width), so the close button sits exactly where the menu button was; `e2e/page-menu.spec.ts` measures it on six page kinds. Links: Home ("Back to start."), Writing, Training & Courses, Cases ("Work we're proud of. Mostly."). The link to the page you are on is hidden (exact path from `usePathname()`; an article `/writing/x` keeps Writing). The panel is the opposite colour of the page (see **Panel colour** below); the menu button follows the page (`tone="white"` on blue, `tone="blue"` on white). The menu button and the close button are bare icons: no ring and no fill (owner decision 2026-10-26). The icon is three lines ([components/MenuIcon.tsx](components/MenuIcon.tsx)); the close button is the same three lines resting as a cross, and they morph (600 ms) when the panel opens and back (350 ms, so it ends with the panel) when it closes (CSS in `app/globals.css`, driven by Radix `data-state`). The panel wipes in with a `clip-path` instead of sliding, so the close button sits still while it morphs. Then the rows and the Get in touch block fade in and rise 8 px (350 ms, the first after 100 ms, 50 ms apart; `.menu-reveal` and `--menu-reveal-index`); closing has no such animation, so it stays fast. Reduced motion: no wipe, the cross at once. **Optical alignment:** the wordmark's letters sit about 10 % inside its box and the lines 12 px (16 px from `md`) inside the button box, so the wordmark has `-ml-[9.5px]` (`md:-ml-[12px]`) and both buttons have `-mr-[12px]` (`md:-mr-[16px]`); then the visible letters and lines are flush with the content edges (`e2e/page-menu.spec.ts` measures it). There is no Manfred wordmark in the panel; the header holds only the close button (STU-1184). The page gives the menu its own geometry (`triggerClassName`, `headerClassName`) so the close button sits where the menu button was. Get in touch uses `GetInTouchLink location="menu"`. Email and phone come from [lib/contact.ts](lib/contact.ts); the phone is plain text, as in the footer. **No-jump rule:** the close button in the panel sits exactly where the menu button was (same size and position; e2e test `e2e/home-menu.spec.ts` measures it). Rows invert on hover, focus and tap (the panel's text colour becomes the fill). The panel closes from component state, because Next's `Link` prevents the default click and Radix `SheetClose` skips prevented clicks. Sizes that switch at `md` use arbitrary values (see "Known fragile areas"). **Panel colour:** the opposite of the page: white panel on blue pages (`tone="white"`: home, writing, training list), blue panel on white pages (`tone="blue"`: cases, course detail). The DS sheet overlay is cleared by `body:has(.menu-panel)` in [app/globals.css](app/globals.css); left alone it fades in 50 % black under the wipe and shows as a dark band.
 - **`<main>` requirements** (a11y baseline below): every route's `<main>` must have `id="main"` and `tabIndex={-1}` so the skip-link lands focus. `cursor-white` is a no-op now (the M cursor is the `CustomCursor` component), so new markup does not need it.
@@ -275,6 +276,49 @@ The PR template (`.github/pull_request_template.md`) makes the rule explicit at 
     build until the missing env var got noticed).
   - `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase
     intranet project; only writing routes need them.
+  - `ANTHROPIC_API_KEY` — server-only, for the Ask us chat on the unlisted
+    `/cases/71collective` page.
+  - `PUBLIC_STATUS_KEY` — server-only, the shared key for the intranet's
+    `sync-availability-sheet` `{ action: "public-status" }` read (header
+    `x-public-status-key`); must match the intranet function's secret of the same name.
+
+### SeventyOne Group page (unlisted)
+
+`/cases/71collective` presents the three group companies (SeventyOne
+Consulting, Studio Manfred, Mather Studio): a small "71collective" wordmark in a `<header>` (the page's `<main>` lives in
+[components/GroupLanding.tsx](components/GroupLanding.tsx) so the header can sit
+outside it), a typewriter headline
+([components/GroupHeadline.tsx](components/GroupHeadline.tsx), steps in
+[lib/typewriter.ts](lib/typewriter.ts)) that types "We are …" plus one word at a
+time in its company's typeface and colour, a lead line, and the Ask us chat;
+no nav, no footer. It has no case row, so `/cases` doesn't list it, and it is
+`noindex`. Company facts, each company's voice and the headline words live in
+[lib/group.ts](lib/group.ts). The Ask us chat
+([components/GroupChat.tsx](components/GroupChat.tsx)) posts to
+`app/cases/71collective/ask/route.ts`, which makes one Claude call
+([lib/group-ask.ts](lib/group-ask.ts)) returning one answer per company as
+structured JSON. Each answer marks its 1–3 key words with `**…**`;
+`emphasisParts` splits them out and the chat highlights them in the company's
+colours (`highlight` in [components/group-brands.ts](components/group-brands.ts)). Each answer card wears that company's palette (tokens in
+[app/globals.css](app/globals.css)) and typefaces
+(`app/cases/71collective/fonts.ts`). Below the chat, [components/GroupPeople.tsx](components/GroupPeople.tsx) shows
+everyone in the group as a network: skills are hubs, people sit between the hubs
+of their skills (placement in [lib/network.ts](lib/network.ts), deterministic so
+server and client match), skill chips dim everyone else, and clicking a person
+opens a panel with bio and profile link. The skill hubs are joined into one ring (`ring` from
+`layoutNetwork`). Assignment status comes from the group's shared sheet through
+the intranet ([lib/group-status.ts](lib/group-status.ts), fetched in the page,
+`revalidate = 300`): only company, name and status ever leave the intranet,
+shown as a dot, a panel label and a "Visa tillgängliga" toggle; no key or no
+answer means no statuses (`GROUP_PEOPLE` and `GROUP_SKILLS` in
+[lib/group.ts](lib/group.ts); Manfred reuses `TEAM`, SeventyOne's photos are copied
+from their site into `public/group/people/`, and their roles are summarised from
+their profile pages since the site names none; bios are the first two sentences
+of those pages, and Manfred has no bios yet). Company brand classes shared by the chat and the cards
+live in [components/group-brands.ts](components/group-brands.ts), outside the
+`"use client"` chat file so server components can read them. The page opts out of the M cursor with
+`data-plain-cursor` on its wrapper (rules in [app/globals.css](app/globals.css)). The endpoint is public and has no
+rate limit; the only guards are a 500-character question and a 6-turn history.
 
 ## Known fragile areas
 
