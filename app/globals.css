@@ -11,6 +11,46 @@
     0%, 100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.1); opacity: 0.7; }
   }
+
+  /* SeventyOne Group page: each company "thinks" in its own way while the
+     chat waits for an answer. SeventyOne's leaf sways, Manfred's M bounces,
+     Mather's pixel mark builds block by block. Used with motion-safe: only. */
+  --animate-think-sway: think-sway 1.8s ease-in-out infinite;
+  --animate-think-bounce: think-bounce 0.9s cubic-bezier(0.3, 0, 0.3, 1) infinite;
+  --animate-think-build: think-build 2.2s steps(1, end) infinite;
+
+  @keyframes think-sway {
+    0%, 100% { transform: rotate(-12deg); }
+    50% { transform: rotate(12deg); }
+  }
+  @keyframes think-bounce {
+    0%, 100% { transform: translateY(0) scale(1.12, 0.88); }
+    15% { transform: translateY(0) scale(1, 1); }
+    45% { transform: translateY(-40%) scale(0.95, 1.05); }
+    75% { transform: translateY(0) scale(1, 1); }
+  }
+  /* Chat messages ease in; `both` keeps a delayed message hidden until its turn. */
+  --animate-msg-in: msg-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-msg-in-right: msg-in-right 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-msg-reveal: msg-reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes msg-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes msg-in-right {
+    from { opacity: 0; transform: translateX(18px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes msg-reveal {
+    from { opacity: 0; filter: blur(6px); transform: translateY(6px); }
+    to { opacity: 1; filter: none; transform: none; }
+  }
+  @keyframes think-build {
+    0% { opacity: 0; }
+    8%, 70% { opacity: 1; }
+    78%, 100% { opacity: 0; }
+  }
 }
 
 /* Pre-checked muted white for body text on --color-business-blue. 80% opacity
@@ -18,6 +58,15 @@
    fail (STU-289). */
 :root {
   --color-text-on-brand-muted: rgba(255, 255, 255, 0.8);
+
+  /* Sister-company palettes for the SeventyOne Group page's Ask us answers,
+     taken from their own sites (Squarespace theme colours). */
+  --color-s71-teal: #00968c;
+  --color-s71-teal-dark: #004d47;
+  --color-s71-ink: #1b3540;
+  --color-s71-cream: #faf9f6;
+  --color-mather-ink: #1c1c1d;
+  --color-mather-paper: #f5f5f3;
 }
 
 /* Muted brand-blue text on a white surface — 5.4:1 on white. Used on the home
@@ -204,6 +253,20 @@ dialog, dialog *, dialog::backdrop {
   cursor: auto;
 }
 dialog button, dialog a {
+  cursor: pointer;
+}
+
+/* Pages that aren't Manfred's own (the SeventyOne Group page) opt out of the
+   M cursor with data-plain-cursor and get the OS cursor back. */
+body:has([data-plain-cursor]) .custom-cursor {
+  display: none;
+}
+body:has([data-plain-cursor]) *,
+body:has([data-plain-cursor]) *::before,
+body:has([data-plain-cursor]) *::after {
+  cursor: auto;
+}
+body:has([data-plain-cursor]) :is(a, button:not(:disabled), [role="button"], summary) {
   cursor: pointer;
 }
 
